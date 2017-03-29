@@ -16,16 +16,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.takin.emmet.util.SelectorUtil;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
 import com.takin.rpc.remoting.codec.KyroMsgEncoder;
-import com.takin.rpc.remoting.damon.ChannelWrapper;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
 import com.takin.rpc.remoting.exception.RemotingSendRequestException;
 import com.takin.rpc.remoting.exception.RemotingTimeoutException;
+import com.takin.rpc.remoting.netty5.ChannelWrapper;
 import com.takin.rpc.remoting.netty5.NettyClientConfig;
 import com.takin.rpc.remoting.netty5.RemotingAbstract;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
@@ -35,6 +35,7 @@ import com.takin.rpc.remoting.util.RemotingHelper;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -44,7 +45,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class RemotingNettyClient extends RemotingAbstract {
 
-    private static final Logger logger = Logger.getLogger(RemotingNettyClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemotingNettyClient.class);
 
     private final Bootstrap bootstrap = new Bootstrap();
     private final EventLoopGroup group;
@@ -226,7 +227,7 @@ public class RemotingNettyClient extends RemotingAbstract {
                     if (removeItemFromTable) {
                         this.channelTables.remove(addrRemote);
                     }
-                    SelectorUtil.closeChannel(channel);
+                    closeChannel(channel);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -235,6 +236,16 @@ public class RemotingNettyClient extends RemotingAbstract {
             e1.printStackTrace();
         }
 
+    }
+
+    private void closeChannel(Channel channel) {
+        final String addrRemote = RemotingHelper.parseChannelRemoteAddr(channel);
+        channel.close().addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                logger.info("closeChannel: close the connection to remote address[{}] result: {}", addrRemote, future.isSuccess());
+            }
+        });
     }
 
     /**
