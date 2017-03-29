@@ -39,6 +39,7 @@ public class RPCServer {
             }
             initConf();
             initDI();
+            initService();
             GuiceDI.getInstance(RemotingNettyServer.class).start();
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {
@@ -46,10 +47,17 @@ public class RPCServer {
         }
     }
 
+    private void initService() throws Exception {
+        GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath());
+
+    }
+
     private void runEclipse(String rootPath) throws Exception {
         String appFolder = rootPath;
         String appConfigFolder = appFolder + File.separator + "conf";
+        String serviceFolder = appFolder + File.separator + "target";
         context.setConfigPath(appConfigFolder);
+        context.setServicePath(serviceFolder);
     }
 
     private void runOnline(String rpcName, String rootPath) throws Exception {
@@ -59,6 +67,7 @@ public class RPCServer {
         //        String log4jFilePath = rootPath + File.separator + "log" + File.separator + rpcName;
         //        String appClassLib = appFolder + File.separator + "lib";
         context.setConfigPath(appConfigFolder);
+        context.setServicePath(appFolder);
         context.setRpcName(rpcName);
     }
 
