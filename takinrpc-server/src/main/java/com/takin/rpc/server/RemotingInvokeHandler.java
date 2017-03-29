@@ -55,7 +55,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             }
             if (StringUtil.isNotNullOrEmpty(clazzName)) {
                 Class<?> clazz = Class.forName(clazzName);
-                Object target = GuiceDI.getInstance(clazz);
+                Object target = getOjbectFromClass(clazzName);
 
                 //                Method[] methods = target.getClass().getDeclaredMethods();
                 //                    for (Method m : methods) {

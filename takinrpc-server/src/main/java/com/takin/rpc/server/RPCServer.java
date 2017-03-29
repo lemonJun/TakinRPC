@@ -59,7 +59,7 @@ public class RPCServer {
         logger.info(JSON.toJSONString(contract));
         //        GuiceDI.createChildInjector(new InnerModul(contract));
     }
-
+    
     private void runEclipse(String rootPath) throws Exception {
         String appFolder = rootPath;
         String appConfigFolder = appFolder + File.separator + "conf";
