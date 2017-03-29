@@ -19,7 +19,6 @@
 		<module>takinrpc-tcc</module>
 		<module>takinrpc-soa</module>
 		<module>takinrpc-example</module>
-		<module>takinrpc-io</module>
 		<module>takinrpc-remoting</module>
 	</modules>
 

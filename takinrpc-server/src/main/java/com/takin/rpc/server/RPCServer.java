@@ -6,13 +6,13 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServerBootstrap {
+public class RPCServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerBootstrap.class);
+    private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
 
     public static void main(String[] args) {
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            RPCServer bootstrap = new RPCServer();
             bootstrap.initConf();
 
             bootstrap.initDI();
@@ -26,13 +26,14 @@ public class ServerBootstrap {
 
     private void initConf() {
         try {
-            String path = Path.getCurrentPath() + File.separator + "conf" + File.separator;
-            PropertyConfigurator.configure(path + "/log4j.properties");
+            String logpath = Path.getCurrentPath() + File.separator + "conf" + File.separator + "/log4j.properties";
+            PropertyConfigurator.configure(logpath);
+            logger.info(String.format("log4j path:%s", logpath));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     private void initDI() {
         try {
             GuiceDI.init();
