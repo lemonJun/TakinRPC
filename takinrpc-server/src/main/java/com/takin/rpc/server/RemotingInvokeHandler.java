@@ -53,7 +53,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
                     mc[i] = primc;
                 }
             }
-            if (StringUtil.isNullOrEmpty(clazzName)) {
+            if (StringUtil.isNotNullOrEmpty(clazzName)) {
                 Class<?> clazz = Class.forName(clazzName);
                 Object target = GuiceDI.getInstance(clazz);
 
