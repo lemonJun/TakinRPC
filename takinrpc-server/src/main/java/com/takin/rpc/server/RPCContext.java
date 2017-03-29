@@ -3,15 +3,15 @@ package com.takin.rpc.server;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TakinRPCContext {
+public class RPCContext {
     private String rpcName;
     private Set<Class<?>> classSets = new HashSet<Class<?>>();
     private String configPath = null;
-
+    
     public String getRpcName() {
         return rpcName;
     }
-
+    
     public void setRpcName(String rpcName) {
         this.rpcName = rpcName;
     }
@@ -23,7 +23,7 @@ public class TakinRPCContext {
     public void setClassSets(Set<Class<?>> classSets) {
         this.classSets = classSets;
     }
-
+    
     public String getConfigPath() {
         return configPath;
     }

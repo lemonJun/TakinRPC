@@ -15,7 +15,7 @@ public class RPCServer {
         rpc.init(args, true);
     }
 
-    private TakinRPCContext context = new TakinRPCContext();
+    private final RPCContext context = new RPCContext();
 
     public void init(String[] args, boolean online) {
         try {
