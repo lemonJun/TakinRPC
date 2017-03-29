@@ -22,4 +22,12 @@ public class ChannelWrapper {
     public ChannelFuture getChannelFuture() {
         return channelFuture;
     }
+
+    public boolean isOpen() {
+        return channelFuture.channel().isOpen();
+    }
+
+    public boolean isClosed() {
+        return !channelFuture.channel().isOpen();
+    }
 }
