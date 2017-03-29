@@ -10,10 +10,10 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lemon.takinmq.common.util.SerializeUtil;
-import com.lemon.takinmq.remoting.netty5.RemotingProtocol;
 import com.lemon.takinmq.remoting.netty5.RemotingNettyClient;
-import com.lemon.takinmq.remoting.util.GenericsUtils;
+import com.lemon.takinmq.remoting.netty5.RemotingProtocol;
+import com.lemon.takinmq.remoting.util.SerializeUtil;
+import com.takin.emmet.reflect.GenericsUtils;
 
 /**
  * 在原实现中，是直接调用的remoting的方法，没有使用代理

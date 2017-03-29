@@ -10,8 +10,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.lemon.takinmq.common.anno.ImplementBy;
-import com.lemon.takinmq.common.util.SerializeUtil;
 import com.lemon.takinmq.remoting.GlobalContext;
+import com.lemon.takinmq.remoting.util.SerializeUtil;
 import com.takin.emmet.string.StringUtil;
 
 import io.netty.channel.ChannelHandlerAdapter;
