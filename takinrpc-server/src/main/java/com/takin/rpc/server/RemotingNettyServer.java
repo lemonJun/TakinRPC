@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.takin.emmet.reflect.GenericsUtils;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
@@ -25,6 +27,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+@Singleton
 public class RemotingNettyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RemotingNettyServer.class);
@@ -36,6 +39,7 @@ public class RemotingNettyServer {
     private final NettyServerConfig serverconfig;
     public static final ConcurrentHashMap<Integer, ResponseFuture> responseTable = GenericsUtils.newConcurrentHashMap();
 
+    @Inject
     public RemotingNettyServer(final NettyServerConfig serverconfig) {
         this.bossGroup = new NioEventLoopGroup();
         this.workerGroup = new NioEventLoopGroup();
