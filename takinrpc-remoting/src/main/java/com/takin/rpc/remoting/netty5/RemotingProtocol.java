@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @see 
  * @since
  */
-public final class RemotingProtocol {
+public final class RemotingProtocol<T> {
 
     private static AtomicLong RequestId = new AtomicLong(1);
     private String clazz;
@@ -25,7 +25,7 @@ public final class RemotingProtocol {
     private long opaque = RequestId.getAndIncrement();
     private String identity;//这个是节点组的唯一标识符 可能是task也可能是job
     private int flag = 0;
-    private String resultJson;
+    private T resultJson;
     private int version = 0;
 
     public String getUuid() {
@@ -104,11 +104,11 @@ public final class RemotingProtocol {
         this.flag = flag;
     }
 
-    public String getResultJson() {
+    public T getResultJson() {
         return resultJson;
     }
 
-    public void setResultJson(String resultJson) {
+    public void setResultJson(T resultJson) {
         this.resultJson = resultJson;
     }
 

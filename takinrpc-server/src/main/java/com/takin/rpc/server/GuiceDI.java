@@ -14,5 +14,5 @@ public class GuiceDI {
     public static <T> T getInstance(Class<T> type) {
         return injector.getInstance(type);
     }
-
+    
 }

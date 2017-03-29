@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.takin.emmet.string.StringUtil;
 import com.takin.rpc.remoting.GlobalContext;
 import com.takin.rpc.remoting.netty5.RemotingContext;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
@@ -52,30 +53,28 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
                     mc[i] = primc;
                 }
             }
-            //            if (StringUtils.isNotEmpty(clazzName)) {
-            //                //反射调用
-            //                Class<?> clazz = Class.forName(clazzName);
-            //                if (clazz.isAnnotationPresent(ImplementBy.class)) {
-            //                    ImplementBy impl = (ImplementBy) clazz.getAnnotation(ImplementBy.class);
-            //                    Object target = getOjbectFromClass(impl.implclass());
-            //                    Method[] methods = target.getClass().getDeclaredMethods();
-            //                    //                    for (Method m : methods) {
-            //                    //                        logger.info(m.toString());
-            //                    //                    }
-            //                    Method method = getMethod(target, methodName, mParamsType, mc);
-            //                    if (method != null) {
-            //                        method.setAccessible(true);
-            //                        Object result = method.invoke(target, args);
-            //                        if (!method.getReturnType().getName().equals("void")) {
-            //                            msg.setResultJson(SerializeUtil.jsonSerialize(result));
-            //                        }
-            //                    } else {
-            //                        msg.setResultJson("");
-            //                    }
-            //                }
-            //            } else {
-            //                msg.setResultJson("no class name content");
-            //            }
+            if (StringUtil.isNullOrEmpty(clazzName)) {
+                Class<?> clazz = Class.forName(clazzName);
+                Object target = GuiceDI.getInstance(clazz);
+
+                //                Method[] methods = target.getClass().getDeclaredMethods();
+                //                    for (Method m : methods) {
+                //                        logger.info(m.toString());
+                //                    }
+                //此步反射 非常耗时
+                Method method = getMethod(target, methodName, mParamsType, mc);
+                if (method != null) {
+                    method.setAccessible(true);
+                    Object result = method.invoke(target, args);
+                    if (!method.getReturnType().getName().equals("void")) {
+                        msg.setResultJson(result);
+                    }
+                } else {
+                    msg.setResultJson("");
+                }
+            } else {
+                msg.setResultJson("no class name content");
+            }
             logger.info("RESPONSE: " + JSON.toJSONString(msg));
         } catch (Exception e) {
             logger.error("netty server handler error", e);
