@@ -8,9 +8,6 @@
 	</parent>
 	<artifactId>takinrpc-server</artifactId>
 
-
-
-
 	<dependencies>
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -22,11 +19,12 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
+
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.takin</groupId>
 			<artifactId>emmet</artifactId>
