@@ -24,7 +24,7 @@ public class ClientTest {
                 System.out.println(hello.say("xiaoming"));
                 TimeUnit.SECONDS.sleep(1);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
