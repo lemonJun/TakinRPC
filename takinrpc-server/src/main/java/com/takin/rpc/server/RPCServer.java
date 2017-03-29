@@ -11,12 +11,34 @@ public class RPCServer {
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
 
     public static void main(String[] args) {
+        RPCServer rpc = new RPCServer();
+        rpc.init(args, true);
+    }
+
+    private TakinRPCContext context = new TakinRPCContext();
+
+    public void init(String[] args, boolean online) {
         try {
-            RPCServer bootstrap = new RPCServer();
-            bootstrap.initConf();
-
-            bootstrap.initDI();
-
+            if (!online) {
+                String userDir = System.getProperty("user.dir");
+                runEclipse(userDir);
+            } else {
+                String appName = null;
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i].startsWith("-D")) {
+                        String[] aryArg = args[i].split("=");
+                        if (aryArg.length == 2) {
+                            if (aryArg[0].equalsIgnoreCase("-rpc.name")) {
+                                appName = aryArg[1];
+                            }
+                        }
+                    }
+                }
+                String userDir = System.getProperty("app.dir");
+                runOnline(appName, userDir);
+            }
+            initConf();
+            initDI();
             GuiceDI.getInstance(RemotingNettyServer.class).start();
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {
@@ -24,9 +46,25 @@ public class RPCServer {
         }
     }
 
+    private void runEclipse(String rootPath) throws Exception {
+        String appFolder = rootPath;
+        String appConfigFolder = appFolder + File.separator + "conf";
+        context.setConfigPath(appConfigFolder);
+    }
+
+    private void runOnline(String rpcName, String rootPath) throws Exception {
+        String appFolder = rootPath + File.separator + "app" + File.separator + rpcName;
+        String appConfigFolder = appFolder + File.separator + "conf";
+        //        String appConfigDefaultPath = appConfigFolder + File.separator + "app_config.xml";
+        //        String log4jFilePath = rootPath + File.separator + "log" + File.separator + rpcName;
+        //        String appClassLib = appFolder + File.separator + "lib";
+        context.setConfigPath(appConfigFolder);
+        context.setRpcName(rpcName);
+    }
+
     private void initConf() {
         try {
-            String logpath = Path.getCurrentPath() + File.separator + "conf" + File.separator + "/log4j.properties";
+            String logpath = context.getConfigPath() + File.separator + "log4j.properties";
             PropertyConfigurator.configure(logpath);
             logger.info(String.format("log4j path:%s", logpath));
         } catch (Exception e) {
