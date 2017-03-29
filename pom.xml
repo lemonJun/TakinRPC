@@ -48,23 +48,28 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>lemon.takinrpc</groupId>
+				<groupId>com.takinrpc</groupId>
 				<artifactId>takinrpc-server</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>lemon.takinrpc</groupId>
+				<groupId>com.takinrpc</groupId>
 				<artifactId>takinrpc-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>lemon.takinrpc</groupId>
+				<groupId>com.takinrpc</groupId>
 				<artifactId>takinrpc-tcc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>lemon.takinrpc</groupId>
+				<groupId>com.takinrpc</groupId>
 				<artifactId>takinrpc-soa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.takinrpc</groupId>
+				<artifactId>takinrpc-remoting</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
