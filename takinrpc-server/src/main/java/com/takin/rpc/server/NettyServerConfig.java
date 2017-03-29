@@ -14,7 +14,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.takin.rpc.remoting.netty5;
+package com.takin.rpc.server;
+
+import com.takin.rpc.remoting.netty5.NettySystemConfig;
 
 /**
 
@@ -30,7 +32,7 @@ public class NettyServerConfig implements Cloneable {
     private int serverOnewaySemaphoreValue = 256;
     private int serverAsyncSemaphoreValue = 64;
     private int serverChannelMaxIdleTimeSeconds = 120;
-
+    
     private int serverSocketSndBufSize = NettySystemConfig.socketSndbufSize;
     private int serverSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
     private boolean serverPooledByteBufAllocatorEnable = true;

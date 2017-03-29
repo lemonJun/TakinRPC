@@ -26,7 +26,6 @@ import com.takin.rpc.remoting.exception.RemotingConnectException;
 import com.takin.rpc.remoting.exception.RemotingSendRequestException;
 import com.takin.rpc.remoting.exception.RemotingTimeoutException;
 import com.takin.rpc.remoting.netty5.ChannelWrapper;
-import com.takin.rpc.remoting.netty5.NettyClientConfig;
 import com.takin.rpc.remoting.netty5.RemotingAbstract;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.remoting.netty5.ResponseFuture;

@@ -15,7 +15,6 @@ import com.takin.emmet.reflect.GenericsUtils;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
 import com.takin.rpc.remoting.codec.KyroMsgEncoder;
-import com.takin.rpc.remoting.netty5.NettyServerConfig;
 import com.takin.rpc.remoting.netty5.ResponseFuture;
 
 import io.netty.bootstrap.ServerBootstrap;
