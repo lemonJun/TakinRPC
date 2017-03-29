@@ -20,72 +20,29 @@ import com.takin.rpc.server.ContractInfo.SessionBean;
 public class ScanClass {
 
     private static final Logger logger = LoggerFactory.getLogger(ScanClass.class);
+    private ContractInfo contractInfo = null;
 
-    private static ContractInfo contractInfo = null;
-
-    private static List<ClassInfo> contractClassInfos = null;
-
-    private static List<ClassInfo> behaviorClassInfos = null;
-
-    private static Object lockHelper = new Object();
+    private List<ClassInfo> contractClassInfos = null;
+    private List<ClassInfo> behaviorClassInfos = null;
 
     /**
-     * 
+     * 从jar中扫描出服务类
      * @param path
      * @param classLoader
      * @return
      * @throws Exception
      */
-    public static ContractInfo getContractInfo(String path, DynamicClassLoader classLoader) throws Exception {
+    public ContractInfo getContractInfo(String path, DynamicClassLoader classLoader) throws Exception {
         if (contractInfo == null) {
-            synchronized (lockHelper) {
+            synchronized (ScanClass.class) {
                 if (contractInfo == null) {
                     scan(path, classLoader);
                 }
             }
         }
-
         return contractInfo;
     }
 
-    /**
-     * 
-     * @param path
-     * @param classLoader
-     * @return
-     * @throws Exception
-     */
-    public static List<ClassInfo> getContractClassInfos(String path, DynamicClassLoader classLoader) throws Exception {
-        if (contractInfo == null) {
-            synchronized (lockHelper) {
-                if (contractInfo == null) {
-                    scan(path, classLoader);
-                }
-            }
-        }
-
-        return contractClassInfos;
-    }
-
-    /**
-     * 
-     * @param path
-     * @param classLoader
-     * @return
-     * @throws Exception
-     */
-    public static List<ClassInfo> getBehaviorClassInfos(String path, DynamicClassLoader classLoader) throws Exception {
-        if (contractInfo == null) {
-            synchronized (lockHelper) {
-                if (contractInfo == null) {
-                    scan(path, classLoader);
-                }
-            }
-        }
-
-        return behaviorClassInfos;
-    }
-    
     /**
      * scan jars create ContractInfo
      * @param path
@@ -93,7 +50,7 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    private static void scan(String path, DynamicClassLoader classLoader) throws Exception {
+    private void scan(String path, DynamicClassLoader classLoader) throws Exception {
         logger.info("begin scan jar from path:" + path);
 
         List<String> jarPathList = FileHelper.getUniqueLibPath(path);
@@ -151,7 +108,7 @@ public class ScanClass {
      * @param ignoreAnnotation
      * @return
      */
-    protected static ClassInfo contract(Class<?> cls, boolean ignoreAnnotation) {
+    protected ClassInfo contract(Class<?> cls, boolean ignoreAnnotation) {
         if (ignoreAnnotation) {
             ClassInfo ci = new ClassInfo();
             ci.setCls(cls);
@@ -180,7 +137,7 @@ public class ScanClass {
      * @param cls
      * @return
      */
-    protected static ClassInfo contract(Class<?> cls) {
+    protected ClassInfo contract(Class<?> cls) {
         ServiceDefine contractAnn = cls.getAnnotation(ServiceDefine.class);
 
         ClassInfo ci = new ClassInfo();
@@ -226,7 +183,7 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    protected static ClassInfo behavior(Class<?> cls) throws Exception {
+    protected ClassInfo behavior(Class<?> cls) throws Exception {
         ServiceImpl behaviorAnn = cls.getAnnotation(ServiceImpl.class);
 
         ClassInfo ci = new ClassInfo();
@@ -273,7 +230,7 @@ public class ScanClass {
      * @param behaviors
      * @return
      */
-    private static ContractInfo createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
+    private ContractInfo createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
 
         ContractInfo contractInfo = new ContractInfo();
         List<SessionBean> sessionBeanList = new ArrayList<SessionBean>();
@@ -305,7 +262,7 @@ public class ScanClass {
      * @param cls
      * @return
      */
-    private static List<Class<?>> getInterfaces(Class<?> cls) {
+    private List<Class<?>> getInterfaces(Class<?> cls) {
         List<Class<?>> clsList = new ArrayList<Class<?>>();
         getInterfaces(cls, clsList);
         return clsList;
@@ -316,7 +273,7 @@ public class ScanClass {
      * @param cls
      * @param clsList
      */
-    private static void getInterfaces(Class<?> cls, List<Class<?>> clsList) {
+    private void getInterfaces(Class<?> cls, List<Class<?>> clsList) {
         clsList.add(cls);
         Class<?>[] aryCls = cls.getInterfaces();
 

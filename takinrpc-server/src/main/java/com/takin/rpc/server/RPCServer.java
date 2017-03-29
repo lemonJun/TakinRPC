@@ -6,6 +6,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+
 public class RPCServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
@@ -49,7 +51,8 @@ public class RPCServer {
 
     private void initService() throws Exception {
         GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath());
-
+        ContractInfo contract = GuiceDI.getInstance(ScanClass.class).getContractInfo(context.getServicePath(), GuiceDI.getInstance(DynamicClassLoader.class));
+        logger.info(JSON.toJSONString(contract));
     }
 
     private void runEclipse(String rootPath) throws Exception {

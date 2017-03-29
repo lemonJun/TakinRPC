@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public class ContractInfo {
 
-    //	private String serviceName;
-
     private List<SessionBean> sessionBeanList;
 
     public ContractInfo() {
