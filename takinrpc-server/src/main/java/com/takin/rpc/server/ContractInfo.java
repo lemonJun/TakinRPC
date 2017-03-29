@@ -36,6 +36,7 @@ public class ContractInfo {
         private String interfaceName;
         private Map<String, String> instanceMap;
         private ClassInfo interfaceClass;
+        private ClassInfo implClass;
 
         public SessionBean() {
 
@@ -64,12 +65,21 @@ public class ContractInfo {
             return instanceMap;
         }
 
+        public ClassInfo getInterfaceClass() {
+            return interfaceClass;
+        }
+
         public void setInterfaceClass(ClassInfo interfaceClass) {
             this.interfaceClass = interfaceClass;
         }
 
-        public ClassInfo getInterfaceClass() {
-            return interfaceClass;
+        public ClassInfo getImplClass() {
+            return implClass;
         }
+
+        public void setImplClass(ClassInfo implClass) {
+            this.implClass = implClass;
+        }
+
     }
 }

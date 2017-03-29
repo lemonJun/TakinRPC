@@ -231,7 +231,6 @@ public class ScanClass {
      * @return
      */
     private ContractInfo createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
-
         ContractInfo contractInfo = new ContractInfo();
         List<SessionBean> sessionBeanList = new ArrayList<SessionBean>();
         for (ClassInfo c : contracts) {
@@ -245,6 +244,7 @@ public class ScanClass {
                 for (Class<?> item : interfaceAry) {
                     if (item == c.getCls()) {
                         implMap.put(b.getLookUP(), b.getCls().getName());
+                        bean.setImplClass(b);
                         break;
                     }
                 }
