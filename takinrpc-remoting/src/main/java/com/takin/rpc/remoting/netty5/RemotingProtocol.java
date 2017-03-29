@@ -1,6 +1,5 @@
 package com.takin.rpc.remoting.netty5;
 
-import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**

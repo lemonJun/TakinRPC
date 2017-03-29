@@ -8,13 +8,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
 import com.takin.rpc.remoting.exception.RemotingSendRequestException;
 import com.takin.rpc.remoting.exception.RemotingTimeoutException;
 import com.takin.rpc.remoting.exception.RemotingTooMuchRequestException;
 import com.takin.rpc.remoting.util.RemotingHelper;
-import com.takin.rpc.remoting.util.SemaphoreReleaseOnlyOnce;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -106,7 +106,7 @@ public abstract class RemotingAbstract {
         final long opaque = request.getOpaque();
         boolean acquired = this.semaphoreAsync.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
         if (acquired) {
-            final SemaphoreReleaseOnlyOnce once = new SemaphoreReleaseOnlyOnce(this.semaphoreAsync);
+            final SemaphoreOnce once = new SemaphoreOnce(this.semaphoreAsync);
 
             final ResponseFuture responseFuture = new ResponseFuture(opaque, timeoutMillis, invokeCallback, once);
             this.responseTable.put(opaque, responseFuture);
@@ -200,7 +200,7 @@ public abstract class RemotingAbstract {
         //        request.markOnewayRPC();//把一个标记   目前还未用到
         boolean acquired = this.semaphoreOneway.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
         if (acquired) {
-            final SemaphoreReleaseOnlyOnce once = new SemaphoreReleaseOnlyOnce(this.semaphoreOneway);
+            final SemaphoreOnce once = new SemaphoreOnce(this.semaphoreOneway);
             try {
                 channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
                     @Override

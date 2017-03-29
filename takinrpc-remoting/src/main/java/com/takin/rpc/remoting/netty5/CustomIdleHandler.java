@@ -1,14 +1,12 @@
 package com.takin.rpc.remoting.netty5;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-
-import org.apache.log4j.Logger;
-
-import com.takin.rpc.remoting.netty5.MessageType;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 /**
  * 检测空闲连接
@@ -23,7 +21,7 @@ import com.takin.rpc.remoting.netty5.RemotingProtocol;
  */
 public class CustomIdleHandler extends ChannelHandlerAdapter {
 
-    private static final Logger logger = Logger.getLogger(CustomIdleHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomIdleHandler.class);
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -35,7 +33,6 @@ public class CustomIdleHandler extends ChannelHandlerAdapter {
             } else if (e.state() == IdleState.WRITER_IDLE) {
                 RemotingProtocol msg = new RemotingProtocol();
                 msg.setTimestamp(System.currentTimeMillis());
-                msg.setType(MessageType.HEARTBEAT_RES.value());
                 msg.setResultJson(String.format("Channed Write Idle ,id=%s", ctx.channel().id()));
                 logger.info(String.format("Channed Write Idle ,id=%s", ctx.channel().id()));
                 ctx.writeAndFlush(msg);

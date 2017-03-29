@@ -4,8 +4,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
-import com.takin.rpc.remoting.util.SemaphoreReleaseOnlyOnce;
 
 /**
  * 异步请求应答封装
@@ -24,14 +24,14 @@ public class ResponseFuture {
 
     private InvokeCallback invokeCallback;
 
-    private SemaphoreReleaseOnlyOnce once;
+    private SemaphoreOnce once;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
     }
 
-    public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, SemaphoreReleaseOnlyOnce once) {
+    public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, SemaphoreOnce once) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
         this.invokeCallback = invokeCallback;
