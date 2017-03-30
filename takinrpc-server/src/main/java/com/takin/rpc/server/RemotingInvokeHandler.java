@@ -2,13 +2,14 @@ package com.takin.rpc.server;
 
 import java.lang.reflect.Method;
 import java.net.SocketAddress;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Maps;
+import com.google.common.base.Stopwatch;
 import com.takin.emmet.reflect.RMethodUtils;
 import com.takin.rpc.remoting.GlobalContext;
 import com.takin.rpc.remoting.exception.NoImplClassException;
@@ -31,13 +32,15 @@ import io.netty.channel.ChannelPromise;
  */
 public class RemotingInvokeHandler extends ChannelHandlerAdapter {
 
-    private static final Logger logger = Logger.getLogger(RemotingInvokeHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemotingInvokeHandler.class);
 
-    //设置环境变量 
+    private final ConcurrentHashMap<String, Method> methodCache = new ConcurrentHashMap<String, Method>();
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
         RemotingProtocol msg = (RemotingProtocol) obj;
         try {
+            Stopwatch watch = Stopwatch.createStarted();
             if (logger.isDebugEnabled()) {
                 logger.debug("REQUEST: " + JSON.toJSONString(msg));
             }
@@ -55,15 +58,20 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             if (implClass == null) {
                 throw new NoImplClassException(msg.getDefineClass().getName());
             }
+            String mkey = String.format("%s_%s", implClass.getSimpleName(), methodName);
 
-            Method method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
+            Method method = methodCache.get(mkey);
+            if (method == null) {
+                method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
+                methodCache.put(mkey, method);
+            }
 
             if (method == null) {
                 throw new NoImplClassException(msg.getDefineClass().getName());
             }
-            Object target = getOjbectFromClass(implClass.getName());
+            Object target = GuiceDI.getInstance(ServiceInfosHolder.class).getOjbectFromClass(implClass.getName());
 
-            //此步反射 非常耗时
+            //此步反射 非常耗时 
             if (method != null) {
                 method.setAccessible(true);
                 Object result = method.invoke(target, args);
@@ -74,6 +82,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             if (logger.isDebugEnabled()) {
                 logger.debug("RESPONSE: " + JSON.toJSONString(msg));
             }
+            logger.info(String.format("invoke use:%s", watch.toString()));
         } catch (Exception e) {
             logger.error("netty server handler error", e);
             throw e;
@@ -81,28 +90,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             GlobalContext.getSingleton().removeThreadLocal();
             ctx.writeAndFlush(msg);
         }
-        return;
     }
-
-    //获取实现类
-    private Object getOjbectFromClass(String clazz) {
-        if (implMap.get(clazz) == null) {
-            synchronized (RemotingInvokeHandler.class) {
-                if (implMap.get(clazz) == null) {
-                    try {
-                        //此处需要无参的构造器
-                        Object obj = Class.forName(clazz).newInstance();
-                        implMap.put(clazz, obj);
-                    } catch (Exception e) {
-                        logger.error(e);
-                    }
-                }
-            }
-        }
-        return implMap.get(clazz);
-    }
-
-    private final Map<String, Object> implMap = Maps.newConcurrentMap();
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
