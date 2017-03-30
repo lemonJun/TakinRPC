@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class ClassInfo<T> {
-
     private Class<?> cls;
     private List<MethodInfo> methodList;
     private ClassType classType;

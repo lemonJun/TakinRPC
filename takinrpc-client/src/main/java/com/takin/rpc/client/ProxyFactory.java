@@ -35,7 +35,7 @@ public class ProxyFactory {
             proxy = cache.get(key);
         }
         if (proxy == null) {
-            proxy = createStandardProxy(interfaceclass, serviceName, "", null);
+            proxy = createStandardProxy(interfaceclass, serviceName, null, null);
             if (proxy != null) {
                 cache.put(key, proxy);
             }
@@ -43,7 +43,7 @@ public class ProxyFactory {
         return (T) proxy;
     }
 
-    public static <T> T create(Class<?> interfaceclass, String serviceName, String implMethod, LoadBalance balance) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
+    public static <T> T create(Class<?> interfaceclass, String serviceName, Class<?> implMethod, LoadBalance balance) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
         String key = String.format("%s_%s", interfaceclass.getName(), serviceName);
         Object proxy = null;
         if (cache.containsKey(key)) {
@@ -64,7 +64,7 @@ public class ProxyFactory {
      * @param interfaceClass  接口类
      * @return
      */
-    private static Object createStandardProxy(Class<?> interfaceclass, String serviceName, String implMethod, LoadBalance balance) {
+    private static Object createStandardProxy(Class<?> interfaceclass, String serviceName, Class<?> implMethod, LoadBalance balance) {
         InvocationHandler handler = new ProxyStandard(interfaceclass, serviceName, implMethod, balance);
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceclass }, handler);
     }

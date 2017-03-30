@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.takin.emmet.reflect.RMethodUtils;
 import com.takin.emmet.string.StringUtil;
 import com.takin.rpc.remoting.GlobalContext;
+import com.takin.rpc.remoting.exception.NoImplClassException;
 import com.takin.rpc.remoting.netty5.RemotingContext;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
@@ -32,77 +34,52 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
 
     private static final Logger logger = Logger.getLogger(RemotingInvokeHandler.class);
 
-    //设置环境变量
+    //设置环境变量 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
         RemotingProtocol msg = (RemotingProtocol) obj;
         try {
             logger.info("REQUEST: " + JSON.toJSONString(msg));
             RemotingContext context = new RemotingContext(ctx);
+
             GlobalContext.getSingleton().setThreadLocal(context);
-            String clazzName = msg.getClazz().getName();
             String methodName = msg.getMethod();
             Object[] args = msg.getArgs();
             Class<?>[] mParamsType = msg.getmParamsTypes();
-            logger.info(String.format("invoke class:%s method:%s params:%s", clazzName, methodName, args != null ? Joiner.on(",").join(args) : ""));
-            Class<?> mc[] = null;
-            if (args != null) {//存在
-                mc = new Class[args.length];
-                for (int i = 0; i < args.length; i++) {
-                    Class<?> primc = args[i].getClass();
-                    mc[i] = primc;
-                }
-            }
-            if (StringUtil.isNotNullOrEmpty(clazzName)) {
-                Class<?> clazz = Class.forName(clazzName);
-                Object target = getOjbectFromClass(clazzName);
 
-                //                Method[] methods = target.getClass().getDeclaredMethods();
-                //                    for (Method m : methods) {
-                //                        logger.info(m.toString());
-                //                    }
-                //此步反射 非常耗时
-                Method method = getMethod(target, methodName, mParamsType, mc);
-                if (method != null) {
-                    method.setAccessible(true);
-                    Object result = method.invoke(target, args);
-                    if (!method.getReturnType().getName().equals("void")) {
-                        msg.setResultJson(result);
-                    }
-                } else {
-                    msg.setResultJson("");
+            logger.info(String.format("invoke class:%s method:%s params:%s", msg.getDefineClass(), methodName, args != null ? Joiner.on(",").join(args) : ""));
+
+            Class<?> implClass = GuiceDI.getInstance(ServiceInfosHolder.class).getImplClass(msg.getDefineClass(), msg.getImplClass());
+
+            if (implClass == null) {
+                throw new NoImplClassException(msg.getDefineClass().getName());
+            }
+
+            Method method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
+
+            if (method == null) {
+                throw new NoImplClassException(msg.getDefineClass().getName());
+            }
+            Object target = getOjbectFromClass(implClass.getName());
+
+            //此步反射 非常耗时
+            if (method != null) {
+                method.setAccessible(true);
+                Object result = method.invoke(target, args);
+                if (!method.getReturnType().getName().equals("void")) {
+                    logger.info("result:" + JSON.toJSONString(result));
+                    msg.setResultJson(result);
                 }
-            } else {
-                msg.setResultJson("no class name content");
             }
             logger.info("RESPONSE: " + JSON.toJSONString(msg));
         } catch (Exception e) {
             logger.error("netty server handler error", e);
+            throw e;
         } finally {
             GlobalContext.getSingleton().removeThreadLocal();
             ctx.writeAndFlush(msg);
         }
         return;
-    }
-
-    //根据参数获取指定的方法
-    private Method getMethod(Object target, String methodName, Class<?>[] mParamsType, Class<?>[] mParamsType2) {
-        Method method = null;
-        try {
-            method = target.getClass().getDeclaredMethod(methodName, mParamsType);
-            logger.info(String.format("get method:%s succ params:%s", methodName, Joiner.on(",").join(mParamsType)));
-        } catch (Exception e) {
-            logger.error(String.format("get method:%s is null params:%s", methodName, Joiner.on(",").join(mParamsType)));
-        }
-        if (method == null) {
-            try {
-                method = target.getClass().getDeclaredMethod(methodName, mParamsType2);
-                logger.info(String.format("get method:%s succ params:%s", methodName, Joiner.on(",").join(mParamsType2)));
-            } catch (Exception e) {
-                logger.error(String.format("get method:%s is null params:%s", methodName, Joiner.on(",").join(mParamsType2)));
-            }
-        }
-        return method;
     }
 
     //获取实现类

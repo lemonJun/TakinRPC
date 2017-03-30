@@ -25,7 +25,7 @@ public class ResponseFuture {
     private InvokeCallback invokeCallback;
 
     private SemaphoreOnce once;
-
+    
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;

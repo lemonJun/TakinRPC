@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.takin.emmet.reflect.FileHelper;
+import com.takin.emmet.file.FileHelper;
 
 /**
  * A ClassLoader for dynamic load class from jar

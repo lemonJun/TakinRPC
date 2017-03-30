@@ -11,15 +11,15 @@ import java.util.Map;
  * <a href="http://www.58.com">website</a>
  * 
  */
-public class ContractInfo {
+public class ServiceInfos {
 
     private List<SessionBean> sessionBeanList;
 
-    public ContractInfo() {
+    public ServiceInfos() {
 
     }
 
-    public ContractInfo(List<SessionBean> sessionBeanList) {
+    public ServiceInfos(List<SessionBean> sessionBeanList) {
         super();
         this.sessionBeanList = sessionBeanList;
     }
@@ -33,28 +33,36 @@ public class ContractInfo {
     }
 
     public static class SessionBean {
-        private String interfaceName;
+        private String defineName;
         private Map<String, String> instanceMap;
-        private ClassInfo interfaceClass;
+        private ClassInfo defineClass;
         private ClassInfo implClass;
 
         public SessionBean() {
 
         }
 
-        public SessionBean(String interfaceName, Map<String, String> instanceMap, ClassInfo interfaceClass) {
+        public SessionBean(String defineName, Map<String, String> instanceMap, ClassInfo defineClass) {
             super();
-            this.interfaceName = interfaceName;
+            this.defineName = defineName;
             this.instanceMap = instanceMap;
-            this.interfaceClass = interfaceClass;
+            this.defineClass = defineClass;
         }
 
-        public String getInterfaceName() {
-            return interfaceName;
+        public String getDefineName() {
+            return defineName;
         }
 
-        public void setInterfaceName(String interfaceName) {
-            this.interfaceName = interfaceName;
+        public void setDefineName(String defineName) {
+            this.defineName = defineName;
+        }
+
+        public ClassInfo getDefineClass() {
+            return defineClass;
+        }
+
+        public void setDefineClass(ClassInfo defineClass) {
+            this.defineClass = defineClass;
         }
 
         public void setInstanceMap(Map<String, String> instanceMap) {
@@ -63,14 +71,6 @@ public class ContractInfo {
 
         public Map<String, String> getInstanceMap() {
             return instanceMap;
-        }
-
-        public ClassInfo getInterfaceClass() {
-            return interfaceClass;
-        }
-
-        public void setInterfaceClass(ClassInfo interfaceClass) {
-            this.interfaceClass = interfaceClass;
         }
 
         public ClassInfo getImplClass() {

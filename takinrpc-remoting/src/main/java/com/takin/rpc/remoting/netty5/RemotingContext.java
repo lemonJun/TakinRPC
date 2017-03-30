@@ -17,7 +17,7 @@ public class RemotingContext {
     private ChannelHandlerContext context;
 
     private boolean monitor;
-
+    
     private StopWatch stopWatch = new StopWatch();
 
     private Throwable error;

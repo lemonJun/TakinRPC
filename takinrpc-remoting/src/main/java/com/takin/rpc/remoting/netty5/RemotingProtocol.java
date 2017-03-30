@@ -2,6 +2,8 @@ package com.takin.rpc.remoting.netty5;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.takin.emmet.util.AddressUtil;
+
 /**
  * netty 服务交互的实体类
  * 目前使用的是marshalling解码器   城朵实现序列化接口
@@ -15,29 +17,46 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class RemotingProtocol<T> {
 
     private static final AtomicLong RequestId = new AtomicLong(1);
-    private Class<?> clazz;
-    private String method;
-    private Object[] args;
-    private Class<?>[] mParamsTypes;
-
-    private int type;// 消息类型 对应messagetype中的枚举类型
-    private Long timestamp = System.currentTimeMillis();
-    private long opaque = RequestId.getAndIncrement();
-    private String identity = "1";//这个是节点组的唯一标识符 可能是task也可能是job
+    private final String identity = AddressUtil.getLocalAddress();//这个是节点组的唯一标识符 可能是task也可能是job
+    private long start = System.currentTimeMillis();
     private int flag = 0;
+    private final long opaque = RequestId.getAndIncrement();
+
+    /**-----------------*/
+    private Class<?> defineClass;//接口类
+    private Class<?> implClass;//实现类
+    private String method;//调用方法
+    private Object[] args;//方法参数
+    private Class<?>[] mParamsTypes;//方法的参数类型
+
     private T resultJson;
-    private int version = 0;
 
-    public String getUuid() {
-        return String.format("%s-%d", getIdentity(), getOpaque());
+    public String getUUID() {//此次调用的唯一标识
+        return String.format("%s-%d", getIdentity(), opaque);
     }
 
-    public Class<?> getClazz() {
-        return clazz;
+    public Class<?> getDefineClass() {
+        return defineClass;
     }
 
-    public void setClazz(Class<?> clazz) {
-        this.clazz = clazz;
+    public long getOpaque() {
+        return opaque;
+    }
+
+    public void setDefineClass(Class<?> defineClass) {
+        this.defineClass = defineClass;
+    }
+
+    public Class<?> getImplClass() {
+        return implClass;
+    }
+
+    public void setImplClass(Class<?> implClass) {
+        this.implClass = implClass;
+    }
+
+    public static AtomicLong getRequestid() {
+        return RequestId;
     }
 
     public String getMethod() {
@@ -64,36 +83,12 @@ public final class RemotingProtocol<T> {
         this.mParamsTypes = mParamsTypes;
     }
 
-    public int getType() {
-        return type;
+    public long getStart() {
+        return start;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public long getOpaque() {
-        return opaque;
-    }
-
-    public void setOpaque(long opaque) {
-        this.opaque = opaque;
-    }
-
-    public String getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(String identity) {
-        this.identity = identity;
+    public void setStart(long start) {
+        this.start = start;
     }
 
     public int getFlag() {
@@ -112,31 +107,8 @@ public final class RemotingProtocol<T> {
         this.resultJson = resultJson;
     }
 
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    private String nodeGroup;
-    private String nodeType;
-
-    public String getNodeGroup() {
-        return nodeGroup;
-    }
-
-    public void setNodeGroup(String nodeGroup) {
-        this.nodeGroup = nodeGroup;
-    }
-
-    public String getNodeType() {
-        return nodeType;
-    }
-
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
+    public String getIdentity() {
+        return identity;
     }
 
 }

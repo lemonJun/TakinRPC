@@ -14,17 +14,17 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.takin.emmet.reflect.FileHelper;
-import com.takin.rpc.server.ContractInfo.SessionBean;
+import com.takin.emmet.file.FileHelper;
+import com.takin.rpc.server.ServiceInfos.SessionBean;
 import com.takin.rpc.server.anno.ServiceDefine;
 import com.takin.rpc.server.anno.ServiceImpl;
 import com.takin.rpc.server.anno.ServiceMethod;
 
 @Singleton
+@SuppressWarnings("rawtypes")
 public class ScanClass {
-
     private static final Logger logger = LoggerFactory.getLogger(ScanClass.class);
-    private ContractInfo contractInfo = null;
+    private ServiceInfos contractInfo = null;
 
     private List<ClassInfo> contractClassInfos = null;
     private List<ClassInfo> behaviorClassInfos = null;
@@ -36,7 +36,7 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    public ContractInfo getContractInfo(String path, DynamicClassLoader classLoader) throws Exception {
+    public ServiceInfos getContractInfo(String path, DynamicClassLoader classLoader) throws Exception {
         if (contractInfo == null) {
             synchronized (ScanClass.class) {
                 if (contractInfo == null) {
@@ -234,13 +234,14 @@ public class ScanClass {
      * @param behaviors
      * @return
      */
-    private ContractInfo createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
-        ContractInfo contractInfo = new ContractInfo();
+
+    private ServiceInfos createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
+        ServiceInfos contractInfo = new ServiceInfos();
         List<SessionBean> sessionBeanList = new ArrayList<SessionBean>();
         for (ClassInfo c : contracts) {
             SessionBean bean = new SessionBean();
-            bean.setInterfaceClass(c);
-            bean.setInterfaceName(c.getCls().getName());
+            bean.setDefineClass(c);
+            bean.setDefineName(c.getCls().getName());
             Map<String, String> implMap = new HashMap<String, String>();
 
             for (ClassInfo b : behaviors) {
