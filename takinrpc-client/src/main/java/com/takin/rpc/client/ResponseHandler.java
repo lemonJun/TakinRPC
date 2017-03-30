@@ -2,6 +2,7 @@ package com.takin.rpc.client;
 
 import org.apache.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.remoting.netty5.ResponseFuture;
 
@@ -22,10 +23,8 @@ public class ResponseHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RemotingProtocol message = (RemotingProtocol) msg;
-        logger.info(message.getResultJson());
-
+        logger.info("rsponse:" + JSON.toJSONString(message));
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
-
         if (responseFuture != null) {
             responseFuture.putResponse(message);
         }

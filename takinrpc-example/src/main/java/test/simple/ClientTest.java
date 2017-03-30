@@ -14,7 +14,7 @@ public class ClientTest {
 
             Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
             for (int i = 0; i < 1; i++) {
-                System.out.println(hello.say("xiaoming"));
+                System.out.println("result: " + hello.say("xiaoming"));
                 TimeUnit.SECONDS.sleep(1);
             }
         } catch (Exception e) {
