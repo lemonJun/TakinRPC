@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.takin.emmet.reflect.RMethodUtils;
-import com.takin.emmet.string.StringUtil;
 import com.takin.rpc.remoting.GlobalContext;
 import com.takin.rpc.remoting.exception.NoImplClassException;
 import com.takin.rpc.remoting.netty5.RemotingContext;
@@ -39,16 +38,18 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
         RemotingProtocol msg = (RemotingProtocol) obj;
         try {
-            logger.info("REQUEST: " + JSON.toJSONString(msg));
+            if (logger.isDebugEnabled()) {
+                logger.debug("REQUEST: " + JSON.toJSONString(msg));
+            }
             RemotingContext context = new RemotingContext(ctx);
 
             GlobalContext.getSingleton().setThreadLocal(context);
             String methodName = msg.getMethod();
             Object[] args = msg.getArgs();
             Class<?>[] mParamsType = msg.getmParamsTypes();
-
-            logger.info(String.format("invoke class:%s method:%s params:%s", msg.getDefineClass(), methodName, args != null ? Joiner.on(",").join(args) : ""));
-
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("invoke class:%s method:%s params:%s", msg.getDefineClass(), methodName, args != null ? Joiner.on(",").join(args) : ""));
+            }
             Class<?> implClass = GuiceDI.getInstance(ServiceInfosHolder.class).getImplClass(msg.getDefineClass(), msg.getImplClass());
 
             if (implClass == null) {
@@ -67,11 +68,12 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
                 method.setAccessible(true);
                 Object result = method.invoke(target, args);
                 if (!method.getReturnType().getName().equals("void")) {
-                    logger.info("result:" + JSON.toJSONString(result));
                     msg.setResultJson(result);
                 }
             }
-            logger.info("RESPONSE: " + JSON.toJSONString(msg));
+            if (logger.isDebugEnabled()) {
+                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
+            }
         } catch (Exception e) {
             logger.error("netty server handler error", e);
             throw e;
@@ -84,7 +86,6 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
 
     //获取实现类
     private Object getOjbectFromClass(String clazz) {
-        logger.info("implclass:" + clazz);
         if (implMap.get(clazz) == null) {
             synchronized (RemotingInvokeHandler.class) {
                 if (implMap.get(clazz) == null) {

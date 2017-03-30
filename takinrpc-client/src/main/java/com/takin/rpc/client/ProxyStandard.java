@@ -62,10 +62,13 @@ public class ProxyStandard extends AbstractInvocationHandler {
             message.setArgs(args);
             message.setmParamsTypes(clsAry);
             address = balance.select(NamingFactory.getInstance().getConfigAddr(serviceName), "");
-
-            logger.info(String.format("request: %s", JSON.toJSONString(message)));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("request: %s", JSON.toJSONString(message)));
+            }
             message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
-            logger.info(String.format("response: %s", JSON.toJSONString(message)));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("response: %s", JSON.toJSONString(message)));
+            }
             return message.getResultJson();
         } catch (Exception e) {
             logger.error("invoke error", e);

@@ -23,7 +23,6 @@ public class ResponseHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RemotingProtocol message = (RemotingProtocol) msg;
-        logger.info("rsponse:" + JSON.toJSONString(message));
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
         if (responseFuture != null) {
             responseFuture.putResponse(message);

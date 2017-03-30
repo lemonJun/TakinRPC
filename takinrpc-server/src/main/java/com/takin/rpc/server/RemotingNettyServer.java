@@ -46,7 +46,7 @@ public class RemotingNettyServer {
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }
-    
+
     public void start() throws Exception {
         bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
         bootstrap.option(ChannelOption.SO_BACKLOG, 65536);
@@ -73,7 +73,7 @@ public class RemotingNettyServer {
             public void run() {
                 scanResponseTable(5000);
             }
-        }, 5000, 5000, TimeUnit.MILLISECONDS);
+        }, 60 * 1000, 60 * 1000, TimeUnit.MILLISECONDS);
     }
 
     /**

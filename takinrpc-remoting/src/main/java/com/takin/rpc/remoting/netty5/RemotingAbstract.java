@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
@@ -34,7 +35,7 @@ public abstract class RemotingAbstract {
 
     protected final Semaphore semaphoreAsync;
 
-    public static final ConcurrentHashMap<Long, ResponseFuture> responseTable = new ConcurrentHashMap<Long, ResponseFuture>(256);
+    public final static ConcurrentHashMap<Long, ResponseFuture> responseTable = new ConcurrentHashMap<Long, ResponseFuture>(256);
 
     public RemotingAbstract(final int permitsOneway, final int permitsAsync) {
         this.semaphoreOneway = new Semaphore(permitsOneway, true);
@@ -54,7 +55,7 @@ public abstract class RemotingAbstract {
      * @throws Exception
      */
     protected RemotingProtocol invokeSyncImpl(final Channel channel, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        long start = System.currentTimeMillis();
+        Stopwatch watch = Stopwatch.createStarted();
         try {
             final ResponseFuture responseFuture = new ResponseFuture(message.getOpaque(), timeout);
             responseTable.put(message.getOpaque(), responseFuture);
@@ -83,8 +84,7 @@ public abstract class RemotingAbstract {
                     throw new Exception("request error");
                 }
             }
-            long end = System.currentTimeMillis();
-            logger.info(String.format("invoke channel:%s , use time:%dms", channel.toString(), (end - start)));
+            logger.info(String.format("invoke channel:%s , use:%s", channel.toString(), watch.toString()));
             return result;
         } catch (Exception e) {
             throw e;

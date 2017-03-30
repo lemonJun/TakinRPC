@@ -16,7 +16,7 @@ public class StatMethod implements MethodInterceptor {
         Stopwatch watch = Stopwatch.createStarted();
         invocation.getClass().getName();
         Object obj = invocation.proceed();
-        logger.info(String.format("%s.%s use:%s", invocation.getClass().getName(), invocation.getMethod().getName(), watch.toString()));
+        logger.info(String.format("use:%s %s.%s ", watch.toString(), invocation.getMethod().getDeclaringClass().getSimpleName(), invocation.getMethod().getName()));
         return obj;
     }
 

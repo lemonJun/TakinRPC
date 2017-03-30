@@ -18,7 +18,7 @@ public class ServiceInfosHolder {
     private ServiceInfos serviceInfos;
 
     @Inject
-    private ServiceInfosHolder() {
+    public ServiceInfosHolder() {
     }
 
     public ServiceInfos getServiceInfos() {
