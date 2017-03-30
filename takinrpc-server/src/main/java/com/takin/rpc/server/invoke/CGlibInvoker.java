@@ -2,6 +2,11 @@ package com.takin.rpc.server.invoke;
 
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Stopwatch;
+import com.google.inject.Inject;
 import com.takin.rpc.remoting.exception.NoImplClassException;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
@@ -12,12 +17,17 @@ import net.sf.cglib.reflect.FastMethod;
 
 @Singleton
 public class CGlibInvoker implements Invoker {
+
+    private static final Logger logger = LoggerFactory.getLogger(CGlibInvoker.class);
+
+    @Inject
+    public CGlibInvoker() {
+    } 
     
     @Override
     public Object invoke(RemotingProtocol msg) throws Exception {
-        String methodName = msg.getMethod();
+        Stopwatch watch = Stopwatch.createStarted();
         Object[] args = msg.getArgs();
-        Class<?>[] mParamsType = msg.getmParamsTypes();
         Class<?> implClass = GuiceDI.getInstance(ServiceInfosHolder.class).getImplClass(msg.getDefineClass(), msg.getImplClass());
 
         if (implClass == null) {
@@ -28,7 +38,9 @@ public class CGlibInvoker implements Invoker {
         Object target = fastClazz.newInstance();
 
         FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
-        return method.invoke(target, args);
+        Object obj = method.invoke(target, args);
+        logger.info(String.format("cglib invoke use:%s", watch.toString()));
+        return obj;
     }
 
 }

@@ -34,25 +34,21 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
         RemotingProtocol msg = (RemotingProtocol) obj;
         try {
             Stopwatch watch = Stopwatch.createStarted();
-            if (logger.isDebugEnabled()) {
-                logger.debug("REQUEST: " + JSON.toJSONString(msg));
-            }
+            //            if (logger.isDebugEnabled()) {
+            //                logger.debug("REQUEST: " + JSON.toJSONString(msg));
+            //            }
             //            RemotingContext context = new RemotingContext(ctx);
             //            GlobalContext.getSingleton().setThreadLocal(context);
-
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("invoke class:%s method:%s params:%s", msg.getDefineClass(), msg.getMethod(), msg.getArgs() != null ? Joiner.on(",").join(msg.getArgs()) : ""));
-            }
 
             Object result = GuiceDI.getInstance(Invoker.class).invoke(msg);
             msg.setResultJson(result);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
-            }
-            logger.info(String.format("invoke use:%s", watch.toString()));
+            //            if (logger.isDebugEnabled()) {
+            //                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
+            //            }
+            logger.info(String.format("server invoke use:%s", watch.toString()));
         } catch (Exception e) {
-            logger.error("netty server handler error", e);
+            logger.error("netty server invoke error", e);
             throw e;
         } finally {
             //            GlobalContext.getSingleton().removeThreadLocal();

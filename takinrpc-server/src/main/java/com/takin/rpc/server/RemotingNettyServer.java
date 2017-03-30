@@ -46,7 +46,7 @@ public class RemotingNettyServer {
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }
-    
+
     public void start() throws Exception {
         bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
         bootstrap.option(ChannelOption.SO_BACKLOG, 65536);

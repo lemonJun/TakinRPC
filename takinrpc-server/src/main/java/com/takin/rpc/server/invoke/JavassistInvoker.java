@@ -24,7 +24,7 @@ public class JavassistInvoker implements Invoker {
 
     @Inject
     public JavassistInvoker() {
-
+        
     }
 
     public Object invoke(RemotingProtocol msg) throws Exception {
