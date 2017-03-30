@@ -14,7 +14,12 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.takin.emmet.reflect.DynamicClassLoader;
+import com.takin.emmet.reflect.FileHelper;
 import com.takin.rpc.server.ContractInfo.SessionBean;
+import com.takin.rpc.server.anno.ServiceDefine;
+import com.takin.rpc.server.anno.ServiceImpl;
+import com.takin.rpc.server.anno.ServiceMethod;
 
 @Singleton
 public class ScanClass {
@@ -160,7 +165,7 @@ public class ScanClass {
             } else {
                 for (Method m : methods) {
                     if (Modifier.isPublic(m.getModifiers()) || Modifier.isProtected(m.getModifiers())) {
-                        OperationContract oc = m.getAnnotation(OperationContract.class);
+                        ServiceMethod oc = m.getAnnotation(ServiceMethod.class);
                         if (oc != null) {
                             ClassInfo.MethodInfo mi = new ClassInfo.MethodInfo();
                             mi.setMethod(m);

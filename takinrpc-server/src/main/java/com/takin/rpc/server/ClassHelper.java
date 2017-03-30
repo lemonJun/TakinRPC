@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.takin.emmet.reflect.DynamicClassLoader;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;

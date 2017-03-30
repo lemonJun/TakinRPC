@@ -4,7 +4,7 @@
  *
  */
 
-package com.takin.rpc.server;
+package com.takin.rpc.server.anno;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,6 +25,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface OperationContract {
+public @interface ServiceMethod {
     public String methodName();
 }

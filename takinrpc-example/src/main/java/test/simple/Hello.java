@@ -1,6 +1,6 @@
 package test.simple;
 
-import com.takin.rpc.server.ServiceDefine;
+import com.takin.rpc.server.anno.ServiceDefine;
 
 @ServiceDefine
 public interface Hello {

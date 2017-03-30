@@ -1,6 +1,6 @@
 package test.simple;
 
-import com.takin.rpc.server.ServiceImpl;
+import com.takin.rpc.server.anno.ServiceImpl;
 
 @ServiceImpl
 public class HelloImpl implements Hello {

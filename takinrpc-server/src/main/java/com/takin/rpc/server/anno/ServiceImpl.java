@@ -1,4 +1,4 @@
-package com.takin.rpc.server;
+package com.takin.rpc.server.anno;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
