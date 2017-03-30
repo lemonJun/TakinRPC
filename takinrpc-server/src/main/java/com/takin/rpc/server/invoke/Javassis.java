@@ -21,11 +21,11 @@ import javassist.CtMethod;
  * @author 
  *  
  */
-public class Invokers {
+public class Javassis {
     /** 
      * 调用器池 
      */
-    final private static Map<Method, Invoker> INVOKER_MAP = new WeakHashMap<Method, Invokers.Invoker>();
+    final private static Map<Method, Invoker> INVOKER_MAP = new WeakHashMap<Method, Javassis.Invoker>();
     /** 
      * 公共调用器池 
      */

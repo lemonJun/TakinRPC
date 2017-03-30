@@ -14,20 +14,20 @@ import com.takin.rpc.remoting.exception.NoImplClassException;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.ServiceInfosHolder;
-import com.takin.rpc.server.invoke.Invokers.Invoker;
 
 @Singleton
-public class JavassistReflect {
+public class JDKInvoker implements Invoker {
 
-    private static final Logger logger = LoggerFactory.getLogger(JavassistReflect.class);
+    private static final Logger logger = LoggerFactory.getLogger(JDKInvoker.class);
 
     private final ConcurrentHashMap<String, Method> methodCache = new ConcurrentHashMap<String, Method>();
 
     @Inject
-    public JavassistReflect() {
+    public JDKInvoker() {
 
     }
 
+    @Override
     public Object invoke(RemotingProtocol msg) throws Exception {
         String methodName = msg.getMethod();
         Object[] args = msg.getArgs();
@@ -45,8 +45,6 @@ public class JavassistReflect {
             logger.info(String.format("search method:%s", methodName));
             methodCache.put(mkey, method);
         }
-
-        Object invoker = Invokers.newInvoker(msg.getDefineClass(), implClass, methodName, msg.getmParamsTypes(), msg.getmReturnType());
 
         if (method == null) {
             throw new NoImplClassException(msg.getDefineClass().getName());

@@ -16,14 +16,14 @@ import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.ServiceInfosHolder;
 
 @Singleton
-public class JDKReflect {
+public class JavassistInvoker implements Invoker {
 
-    private static final Logger logger = LoggerFactory.getLogger(JDKReflect.class);
+    private static final Logger logger = LoggerFactory.getLogger(JavassistInvoker.class);
 
     private final ConcurrentHashMap<String, Method> methodCache = new ConcurrentHashMap<String, Method>();
 
     @Inject
-    public JDKReflect() {
+    public JavassistInvoker() {
 
     }
 
@@ -44,6 +44,8 @@ public class JDKReflect {
             logger.info(String.format("search method:%s", methodName));
             methodCache.put(mkey, method);
         }
+
+        Object invoker = Javassis.newInvoker(msg.getDefineClass(), implClass, methodName, msg.getmParamsTypes(), msg.getmReturnType());
 
         if (method == null) {
             throw new NoImplClassException(msg.getDefineClass().getName());

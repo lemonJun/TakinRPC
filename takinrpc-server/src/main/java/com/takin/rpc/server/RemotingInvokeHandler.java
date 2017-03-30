@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
-import com.takin.rpc.server.invoke.JDKReflect;
+import com.takin.rpc.server.invoke.Invoker;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -44,7 +44,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
                 logger.debug(String.format("invoke class:%s method:%s params:%s", msg.getDefineClass(), msg.getMethod(), msg.getArgs() != null ? Joiner.on(",").join(msg.getArgs()) : ""));
             }
 
-            Object result = GuiceDI.getInstance(JDKReflect.class).invoke(msg);
+            Object result = GuiceDI.getInstance(Invoker.class).invoke(msg);
             msg.setResultJson(result);
 
             if (logger.isDebugEnabled()) {
