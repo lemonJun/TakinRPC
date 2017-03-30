@@ -47,7 +47,7 @@ public class JDKProxy {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 RemotingProtocol message = new RemotingProtocol();
-                message.setClazz(clazz.getName());
+                //                message.setClazz(clazz.getName());
                 message.setMethod(method.getName());
                 message.setArgs(args);
                 message.setmParamsTypes(method.getParameterTypes());

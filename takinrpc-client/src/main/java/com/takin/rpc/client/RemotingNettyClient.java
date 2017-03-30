@@ -48,13 +48,27 @@ public class RemotingNettyClient extends RemotingAbstract {
 
     private final Bootstrap bootstrap = new Bootstrap();
     private final EventLoopGroup group;
+    @SuppressWarnings("unused")
     private final ExecutorService publicExecutor;
     //保存所有服务端的地址   
     private final AtomicReference<List<String>> namesrvAddrList = new AtomicReference<List<String>>();
 
     private ConcurrentHashMap<String, ChannelWrapper> channelTables = new ConcurrentHashMap<String, ChannelWrapper>();
 
-    public RemotingNettyClient(final NettyClientConfig nettyClientConfig) {
+    public static volatile RemotingNettyClient instance;
+
+    public static RemotingNettyClient getInstance() {
+        if (instance == null) {
+            synchronized (RemotingNettyClient.class) {
+                if (instance == null) {
+                    instance = new RemotingNettyClient(new NettyClientConfig());
+                }
+            }
+        }
+        return instance;
+    }
+
+    private RemotingNettyClient(final NettyClientConfig nettyClientConfig) {
         super(nettyClientConfig.getClientOnewaySemaphoreValue(), nettyClientConfig.getClientAsyncSemaphoreValue());
         int publicThreadNums = nettyClientConfig.getClientCallbackExecutorThreads();
         if (publicThreadNums <= 0) {
