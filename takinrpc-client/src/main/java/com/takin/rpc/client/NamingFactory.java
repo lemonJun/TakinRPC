@@ -42,7 +42,7 @@ public class NamingFactory {
     public void initServiceConfig() {
         ServiceConfig config = new ServiceConfig();
         config.setServicename("test");
-        config.setAddress(ImmutableList.of("127.0.0.1:6781", "127.0.0.1:6782"));
+        config.setAddress(ImmutableList.of("127.0.0.1:6871", "127.0.0.1:6872"));
         serviceconfigs.put(config.getServicename(), config);
     }
 
