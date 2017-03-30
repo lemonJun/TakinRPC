@@ -14,8 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class RemotingProtocol<T> {
 
-    private static AtomicLong RequestId = new AtomicLong(1);
-    private String clazz;
+    private static final AtomicLong RequestId = new AtomicLong(1);
+    private Class<?> clazz;
     private String method;
     private Object[] args;
     private Class<?>[] mParamsTypes;
@@ -23,7 +23,7 @@ public final class RemotingProtocol<T> {
     private int type;// 消息类型 对应messagetype中的枚举类型
     private Long timestamp = System.currentTimeMillis();
     private long opaque = RequestId.getAndIncrement();
-    private String identity;//这个是节点组的唯一标识符 可能是task也可能是job
+    private String identity = "1";//这个是节点组的唯一标识符 可能是task也可能是job
     private int flag = 0;
     private T resultJson;
     private int version = 0;
@@ -32,11 +32,11 @@ public final class RemotingProtocol<T> {
         return String.format("%s-%d", getIdentity(), getOpaque());
     }
 
-    public String getClazz() {
+    public Class<?> getClazz() {
         return clazz;
     }
 
-    public void setClazz(String clazz) {
+    public void setClazz(Class<?> clazz) {
         this.clazz = clazz;
     }
 

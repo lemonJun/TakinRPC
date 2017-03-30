@@ -62,6 +62,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             synchronized (RemotingNettyClient.class) {
                 if (instance == null) {
                     instance = new RemotingNettyClient(new NettyClientConfig());
+                    instance.start();
                 }
             }
         }
@@ -97,7 +98,7 @@ public class RemotingNettyClient extends RemotingAbstract {
                 //                ch.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingEncoder());
                 ch.pipeline().addLast(new KyroMsgDecoder());
                 ch.pipeline().addLast(new KyroMsgEncoder());
-                ch.pipeline().addLast(new ClientMessageHandler());
+                ch.pipeline().addLast(new ResponseHandler());
             }
         });
 

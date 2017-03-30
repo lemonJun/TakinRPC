@@ -40,7 +40,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             logger.info("REQUEST: " + JSON.toJSONString(msg));
             RemotingContext context = new RemotingContext(ctx);
             GlobalContext.getSingleton().setThreadLocal(context);
-            String clazzName = msg.getClazz();
+            String clazzName = msg.getClazz().getName();
             String methodName = msg.getMethod();
             Object[] args = msg.getArgs();
             Class<?>[] mParamsType = msg.getmParamsTypes();

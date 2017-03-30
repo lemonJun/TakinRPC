@@ -15,9 +15,9 @@ import io.netty.channel.ChannelHandlerContext;
  * @date  2017年2月12日 下午8:18:41
  * @see
  */
-public class ClientMessageHandler extends ChannelHandlerAdapter {
+public class ResponseHandler extends ChannelHandlerAdapter {
 
-    private static final Logger logger = Logger.getLogger(ClientMessageHandler.class);
+    private static final Logger logger = Logger.getLogger(ResponseHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
