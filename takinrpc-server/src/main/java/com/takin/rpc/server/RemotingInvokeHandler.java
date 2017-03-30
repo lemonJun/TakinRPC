@@ -100,36 +100,44 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        logger.debug("welcom channelRegistered");
+        logger.info("channelRegistered ");
         super.channelRegistered(ctx);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        logger.debug("welcom channelActive");
+        logger.info("welcom channelActive");
         super.channelActive(ctx);
     }
 
     @Override
     public void bind(ChannelHandlerContext ctx, SocketAddress localAddress, ChannelPromise promise) throws Exception {
-        logger.debug("welcom bind");
+        logger.info("welcom bind");
         super.bind(ctx, localAddress, promise);
     }
 
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
-        logger.debug("welcom connect");
+        logger.info("welcom connect");
         super.connect(ctx, remoteAddress, localAddress, promise);
     }
 
-    //    @Override
-    //    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-    //        super.channelReadComplete(ctx);
-    //    }
-    //
-    //    @Override
-    //    public void flush(ChannelHandlerContext ctx) throws Exception {
-    //        super.flush(ctx);
-    //    }
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        logger.info("welcom channelUnregistered");
+        super.channelUnregistered(ctx);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("welcom channelInactive");
+        super.channelInactive(ctx);
+    }
+
+    @Override
+    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        logger.info("welcom disconnect");
+        super.disconnect(ctx, promise);
+    }
 
 }

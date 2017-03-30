@@ -70,8 +70,8 @@ public class RemotingNettyClient extends RemotingAbstract {
     }
 
     private RemotingNettyClient(final NettyClientConfig nettyClientConfig) {
-        super(nettyClientConfig.getClientOnewaySemaphoreValue(), nettyClientConfig.getClientAsyncSemaphoreValue());
-        int publicThreadNums = nettyClientConfig.getClientCallbackExecutorThreads();
+        super(nettyClientConfig.getOnewaySemaphoreValue(), nettyClientConfig.getAsyncSemaphoreValue());
+        int publicThreadNums = nettyClientConfig.getCallbackExecutorThreads();
         if (publicThreadNums <= 0) {
             publicThreadNums = 4;
         }
@@ -85,7 +85,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             }
         });
 
-        group = new NioEventLoopGroup();
+        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads());
     }
 
     public void start() {
@@ -118,13 +118,12 @@ public class RemotingNettyClient extends RemotingAbstract {
      * @return
      */
     private Channel createChannel(final String address) {
-        logger.info("addresss:" + address);
         ChannelWrapper cw = channelTables.get(address);
         if (cw != null && cw.isOK()) {
             return cw.getChannel();
         }
         try {
-            if (this.lockChannelTables.tryLock(1000, TimeUnit.MILLISECONDS)) {
+            if (this.lockChannelTables.tryLock(5000, TimeUnit.MILLISECONDS)) {
                 boolean createNewConnection = false;
                 cw = this.channelTables.get(address);
                 if (cw != null) {
@@ -158,7 +157,7 @@ public class RemotingNettyClient extends RemotingAbstract {
         } finally {
             this.lockChannelTables.unlock();
         }
-
+        logger.info(String.format("create new channel for:%S", address));
         if (cw != null) {
             ChannelFuture channelFuture = cw.getChannelFuture();
             if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
@@ -183,13 +182,9 @@ public class RemotingNettyClient extends RemotingAbstract {
      */
     public RemotingProtocol invokeSync(String address, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
         final Channel channel = this.createChannel(address);
-        long start = System.currentTimeMillis();
         if (channel != null && channel.isActive()) {
             try {
-                RemotingProtocol result = invokeSyncImpl(channel, message, timeout);
-                long end = System.currentTimeMillis();
-                logger.info(String.format("invoke address:%s , use time:%dms", address, (end - start)));
-                return result;
+                return invokeSyncImpl(channel, message, timeout);
             } catch (Exception e) {
                 logger.error("", e);
                 throw e;

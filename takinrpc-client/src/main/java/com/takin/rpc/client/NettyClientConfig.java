@@ -16,20 +16,15 @@
  */
 package com.takin.rpc.client;
 
-import com.takin.rpc.remoting.netty5.NettySystemConfig;
-
 /**
  * @author lemon
  *
  */
 public class NettyClientConfig {
-    /**
-     * Worker thread number
-     */
-    private int clientWorkerThreads = 4;
-    private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
-    private int clientOnewaySemaphoreValue = NettySystemConfig.CLIENT_ONEWAY_SEMAPHORE_VALUE;
-    private int clientAsyncSemaphoreValue = NettySystemConfig.CLIENT_ASYNC_SEMAPHORE_VALUE;
+    private int workerThreads = Runtime.getRuntime().availableProcessors() * 4;
+    private int callbackExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
+    private int onewaySemaphoreValue = 64;
+    private int asyncSemaphoreValue = 64;
     private int connectTimeoutMillis = 3000;
     private long channelNotActiveInterval = 1000 * 60;
 
@@ -37,35 +32,43 @@ public class NettyClientConfig {
      * IdleStateEvent will be triggered when neither read nor write was performed for
      * the specified period of this time. Specify {@code 0} to disable
      */
-    private int clientChannelMaxIdleTimeSeconds = 120;
+    private int channelMaxIdleTimeSeconds = 120;
 
-    private int clientSocketSndBufSize = NettySystemConfig.socketSndbufSize;
-    private int clientSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
-    private boolean clientPooledByteBufAllocatorEnable = false;
-    private boolean clientCloseSocketIfTimeout = false;
+    private int sndBufSize = 4096;
+    private int socketRcvBufSize = 4096;
+    private boolean pooledByteBufAllocatorEnable = false;
+    private boolean closeSocketIfTimeout = false;
 
-    public boolean isClientCloseSocketIfTimeout() {
-        return clientCloseSocketIfTimeout;
+    public int getWorkerThreads() {
+        return workerThreads;
     }
 
-    public void setClientCloseSocketIfTimeout(final boolean clientCloseSocketIfTimeout) {
-        this.clientCloseSocketIfTimeout = clientCloseSocketIfTimeout;
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
     }
 
-    public int getClientWorkerThreads() {
-        return clientWorkerThreads;
+    public int getCallbackExecutorThreads() {
+        return callbackExecutorThreads;
     }
 
-    public void setClientWorkerThreads(int clientWorkerThreads) {
-        this.clientWorkerThreads = clientWorkerThreads;
+    public void setCallbackExecutorThreads(int callbackExecutorThreads) {
+        this.callbackExecutorThreads = callbackExecutorThreads;
     }
 
-    public int getClientOnewaySemaphoreValue() {
-        return clientOnewaySemaphoreValue;
+    public int getOnewaySemaphoreValue() {
+        return onewaySemaphoreValue;
     }
 
-    public void setClientOnewaySemaphoreValue(int clientOnewaySemaphoreValue) {
-        this.clientOnewaySemaphoreValue = clientOnewaySemaphoreValue;
+    public void setOnewaySemaphoreValue(int onewaySemaphoreValue) {
+        this.onewaySemaphoreValue = onewaySemaphoreValue;
+    }
+
+    public int getAsyncSemaphoreValue() {
+        return asyncSemaphoreValue;
+    }
+
+    public void setAsyncSemaphoreValue(int asyncSemaphoreValue) {
+        this.asyncSemaphoreValue = asyncSemaphoreValue;
     }
 
     public int getConnectTimeoutMillis() {
@@ -76,14 +79,6 @@ public class NettyClientConfig {
         this.connectTimeoutMillis = connectTimeoutMillis;
     }
 
-    public int getClientCallbackExecutorThreads() {
-        return clientCallbackExecutorThreads;
-    }
-
-    public void setClientCallbackExecutorThreads(int clientCallbackExecutorThreads) {
-        this.clientCallbackExecutorThreads = clientCallbackExecutorThreads;
-    }
-
     public long getChannelNotActiveInterval() {
         return channelNotActiveInterval;
     }
@@ -92,43 +87,44 @@ public class NettyClientConfig {
         this.channelNotActiveInterval = channelNotActiveInterval;
     }
 
-    public int getClientAsyncSemaphoreValue() {
-        return clientAsyncSemaphoreValue;
+    public int getChannelMaxIdleTimeSeconds() {
+        return channelMaxIdleTimeSeconds;
     }
 
-    public void setClientAsyncSemaphoreValue(int clientAsyncSemaphoreValue) {
-        this.clientAsyncSemaphoreValue = clientAsyncSemaphoreValue;
+    public void setChannelMaxIdleTimeSeconds(int channelMaxIdleTimeSeconds) {
+        this.channelMaxIdleTimeSeconds = channelMaxIdleTimeSeconds;
     }
 
-    public int getClientChannelMaxIdleTimeSeconds() {
-        return clientChannelMaxIdleTimeSeconds;
+    public int getSndBufSize() {
+        return sndBufSize;
     }
 
-    public void setClientChannelMaxIdleTimeSeconds(int clientChannelMaxIdleTimeSeconds) {
-        this.clientChannelMaxIdleTimeSeconds = clientChannelMaxIdleTimeSeconds;
+    public void setSndBufSize(int sndBufSize) {
+        this.sndBufSize = sndBufSize;
     }
 
-    public int getClientSocketSndBufSize() {
-        return clientSocketSndBufSize;
+    public int getSocketRcvBufSize() {
+        return socketRcvBufSize;
     }
 
-    public void setClientSocketSndBufSize(int clientSocketSndBufSize) {
-        this.clientSocketSndBufSize = clientSocketSndBufSize;
+    public void setSocketRcvBufSize(int socketRcvBufSize) {
+        this.socketRcvBufSize = socketRcvBufSize;
     }
 
-    public int getClientSocketRcvBufSize() {
-        return clientSocketRcvBufSize;
+    public boolean isPooledByteBufAllocatorEnable() {
+        return pooledByteBufAllocatorEnable;
     }
 
-    public void setClientSocketRcvBufSize(int clientSocketRcvBufSize) {
-        this.clientSocketRcvBufSize = clientSocketRcvBufSize;
+    public void setPooledByteBufAllocatorEnable(boolean pooledByteBufAllocatorEnable) {
+        this.pooledByteBufAllocatorEnable = pooledByteBufAllocatorEnable;
     }
 
-    public boolean isClientPooledByteBufAllocatorEnable() {
-        return clientPooledByteBufAllocatorEnable;
+    public boolean isCloseSocketIfTimeout() {
+        return closeSocketIfTimeout;
     }
 
-    public void setClientPooledByteBufAllocatorEnable(boolean clientPooledByteBufAllocatorEnable) {
-        this.clientPooledByteBufAllocatorEnable = clientPooledByteBufAllocatorEnable;
+    public void setCloseSocketIfTimeout(boolean closeSocketIfTimeout) {
+        this.closeSocketIfTimeout = closeSocketIfTimeout;
     }
+
 }

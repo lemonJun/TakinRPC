@@ -5,6 +5,9 @@ import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.takin.rpc.client.loadbalance.LoadBalance;
 
 /**
@@ -14,6 +17,8 @@ import com.takin.rpc.client.loadbalance.LoadBalance;
  * 
  */
 public class ProxyFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProxyFactory.class);
 
     private final static ConcurrentHashMap<String, Object> cache = new ConcurrentHashMap<String, Object>(); //同步map
 
@@ -66,7 +71,9 @@ public class ProxyFactory {
      */
     private static Object createStandardProxy(Class<?> interfaceclass, String serviceName, Class<?> implMethod, LoadBalance balance) {
         InvocationHandler handler = new ProxyStandard(interfaceclass, serviceName, implMethod, balance);
-        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceclass }, handler);
+        Object obj = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceclass }, handler);
+        logger.info(String.format("create proxy for %s ", interfaceclass.getName()));
+        return obj;
     }
 
 }

@@ -18,8 +18,6 @@ package com.takin.rpc.server;
 
 import javax.inject.Singleton;
 
-import com.takin.rpc.remoting.netty5.NettySystemConfig;
-
 /**
 
  *
@@ -29,18 +27,18 @@ import com.takin.rpc.remoting.netty5.NettySystemConfig;
 @Singleton
 public class NettyServerConfig {
     private int listenPort = 6871;
-    private int serverWorkerThreads = 8;
-    private int serverCallbackExecutorThreads = 0;
-    private int serverSelectorThreads = 3;
-    private int serverOnewaySemaphoreValue = 256;
-    private int serverAsyncSemaphoreValue = 64;
-    private int serverChannelMaxIdleTimeSeconds = 120;
+    private int workerThreads = Runtime.getRuntime().availableProcessors() * 4;
+    private int callbackExecutorThreads = 0;
+    private int selectorThreads = 3;
+    private int onewaySemaphoreValue = 256;
+    private int asyncSemaphoreValue = 64;
+    private int channelMaxIdleTimeSeconds = 120;
 
-    private int serverSocketSndBufSize = NettySystemConfig.socketSndbufSize;
-    private int serverSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
-    private boolean serverPooledByteBufAllocatorEnable = true;
+    private int socketSndBufSize = 4096;
+    private int socketRcvBufSize = 4096;
+    private boolean pooledByteBufAllocatorEnable = true;
 
-    private boolean useEpollNativeSelector = false;
+    private boolean useEpollNativeSelector = true;
 
     public int getListenPort() {
         return listenPort;
@@ -50,76 +48,76 @@ public class NettyServerConfig {
         this.listenPort = listenPort;
     }
 
-    public int getServerWorkerThreads() {
-        return serverWorkerThreads;
+    public int getWorkerThreads() {
+        return workerThreads;
     }
 
-    public void setServerWorkerThreads(int serverWorkerThreads) {
-        this.serverWorkerThreads = serverWorkerThreads;
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
     }
 
-    public int getServerSelectorThreads() {
-        return serverSelectorThreads;
+    public int getCallbackExecutorThreads() {
+        return callbackExecutorThreads;
     }
 
-    public void setServerSelectorThreads(int serverSelectorThreads) {
-        this.serverSelectorThreads = serverSelectorThreads;
+    public void setCallbackExecutorThreads(int callbackExecutorThreads) {
+        this.callbackExecutorThreads = callbackExecutorThreads;
     }
 
-    public int getServerOnewaySemaphoreValue() {
-        return serverOnewaySemaphoreValue;
+    public int getSelectorThreads() {
+        return selectorThreads;
     }
 
-    public void setServerOnewaySemaphoreValue(int serverOnewaySemaphoreValue) {
-        this.serverOnewaySemaphoreValue = serverOnewaySemaphoreValue;
+    public void setSelectorThreads(int selectorThreads) {
+        this.selectorThreads = selectorThreads;
     }
 
-    public int getServerCallbackExecutorThreads() {
-        return serverCallbackExecutorThreads;
+    public int getOnewaySemaphoreValue() {
+        return onewaySemaphoreValue;
     }
 
-    public void setServerCallbackExecutorThreads(int serverCallbackExecutorThreads) {
-        this.serverCallbackExecutorThreads = serverCallbackExecutorThreads;
+    public void setOnewaySemaphoreValue(int onewaySemaphoreValue) {
+        this.onewaySemaphoreValue = onewaySemaphoreValue;
     }
 
-    public int getServerAsyncSemaphoreValue() {
-        return serverAsyncSemaphoreValue;
+    public int getAsyncSemaphoreValue() {
+        return asyncSemaphoreValue;
     }
 
-    public void setServerAsyncSemaphoreValue(int serverAsyncSemaphoreValue) {
-        this.serverAsyncSemaphoreValue = serverAsyncSemaphoreValue;
+    public void setAsyncSemaphoreValue(int asyncSemaphoreValue) {
+        this.asyncSemaphoreValue = asyncSemaphoreValue;
     }
 
-    public int getServerChannelMaxIdleTimeSeconds() {
-        return serverChannelMaxIdleTimeSeconds;
+    public int getChannelMaxIdleTimeSeconds() {
+        return channelMaxIdleTimeSeconds;
     }
 
-    public void setServerChannelMaxIdleTimeSeconds(int serverChannelMaxIdleTimeSeconds) {
-        this.serverChannelMaxIdleTimeSeconds = serverChannelMaxIdleTimeSeconds;
+    public void setChannelMaxIdleTimeSeconds(int channelMaxIdleTimeSeconds) {
+        this.channelMaxIdleTimeSeconds = channelMaxIdleTimeSeconds;
     }
 
-    public int getServerSocketSndBufSize() {
-        return serverSocketSndBufSize;
+    public int getSocketSndBufSize() {
+        return socketSndBufSize;
     }
 
-    public void setServerSocketSndBufSize(int serverSocketSndBufSize) {
-        this.serverSocketSndBufSize = serverSocketSndBufSize;
+    public void setSocketSndBufSize(int socketSndBufSize) {
+        this.socketSndBufSize = socketSndBufSize;
     }
 
-    public int getServerSocketRcvBufSize() {
-        return serverSocketRcvBufSize;
+    public int getSocketRcvBufSize() {
+        return socketRcvBufSize;
     }
 
-    public void setServerSocketRcvBufSize(int serverSocketRcvBufSize) {
-        this.serverSocketRcvBufSize = serverSocketRcvBufSize;
+    public void setSocketRcvBufSize(int socketRcvBufSize) {
+        this.socketRcvBufSize = socketRcvBufSize;
     }
 
-    public boolean isServerPooledByteBufAllocatorEnable() {
-        return serverPooledByteBufAllocatorEnable;
+    public boolean isPooledByteBufAllocatorEnable() {
+        return pooledByteBufAllocatorEnable;
     }
 
-    public void setServerPooledByteBufAllocatorEnable(boolean serverPooledByteBufAllocatorEnable) {
-        this.serverPooledByteBufAllocatorEnable = serverPooledByteBufAllocatorEnable;
+    public void setPooledByteBufAllocatorEnable(boolean pooledByteBufAllocatorEnable) {
+        this.pooledByteBufAllocatorEnable = pooledByteBufAllocatorEnable;
     }
 
     public boolean isUseEpollNativeSelector() {

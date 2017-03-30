@@ -14,7 +14,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class KyroMsgEncoder extends MessageToByteEncoder<RemotingProtocol> {
 
-    private Kryo kryo = new Kryo();
+    private final Kryo kryo = new Kryo();
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RemotingProtocol msg, ByteBuf out) throws Exception {
@@ -25,7 +25,6 @@ public class KyroMsgEncoder extends MessageToByteEncoder<RemotingProtocol> {
     }
 
     private byte[] convertToBytes(RemotingProtocol car) {
-
         ByteArrayOutputStream bos = null;
         Output output = null;
         try {

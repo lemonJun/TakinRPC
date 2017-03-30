@@ -64,7 +64,6 @@ public abstract class RemotingAbstract {
                 @Override
                 public void operationComplete(ChannelFuture f) throws Exception {
                     if (f.isSuccess()) {
-                        //                    if (f.isDone()) {
                         responseFuture.setSendRequestOK(true);
                         return;
                     } else {
@@ -84,7 +83,7 @@ public abstract class RemotingAbstract {
                     throw new Exception("request error");
                 }
             }
-            logger.info(String.format("invoke channel:%s , use:%s", channel.toString(), watch.toString()));
+            logger.info(String.format("invoke channel:%s,use:%s", channel.toString(), watch.toString()));
             return result;
         } catch (Exception e) {
             throw e;

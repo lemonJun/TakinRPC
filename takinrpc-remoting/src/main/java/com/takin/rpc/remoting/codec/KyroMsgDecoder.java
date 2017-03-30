@@ -17,8 +17,8 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
     public static final int HEAD_LENGTH = 4;
 
-    private Kryo kryo = new Kryo();
-
+    private final Kryo kryo = new Kryo();
+    
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.readableBytes() < HEAD_LENGTH) { //这个HEAD_LENGTH是我们用于表示头长度的字节数。  由于Encoder中我们传的是一个int类型的值，所以这里HEAD_LENGTH的值为4.
@@ -42,13 +42,11 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
     }
 
     private RemotingProtocol convertToObject(byte[] body) {
-
         Input input = null;
         ByteArrayInputStream bais = null;
         try {
             bais = new ByteArrayInputStream(body);
             input = new Input(bais);
-
             return kryo.readObject(input, RemotingProtocol.class);
         } catch (KryoException e) {
             e.printStackTrace();

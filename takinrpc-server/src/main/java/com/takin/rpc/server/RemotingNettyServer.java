@@ -41,12 +41,12 @@ public class RemotingNettyServer {
 
     @Inject
     public RemotingNettyServer(final NettyServerConfig serverconfig) {
-        this.bossGroup = new NioEventLoopGroup();
-        this.workerGroup = new NioEventLoopGroup();
+        this.bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads());
+        this.workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads());
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }
-
+    
     public void start() throws Exception {
         bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
         bootstrap.option(ChannelOption.SO_BACKLOG, 65536);
@@ -58,8 +58,6 @@ public class RemotingNettyServer {
             public void initChannel(SocketChannel ch) throws IOException {
                 //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
                 //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
-                //                ch.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingDecoder());
-                //                ch.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingEncoder());
                 ch.pipeline().addLast(new KyroMsgDecoder());
                 ch.pipeline().addLast(new KyroMsgEncoder());
                 ch.pipeline().addLast("remoteinvode", new RemotingInvokeHandler());
