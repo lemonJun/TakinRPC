@@ -61,6 +61,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
             message.setMethod(method.getName());
             message.setArgs(args);
             message.setmParamsTypes(clsAry);
+            message.setmReturnType(method.getReturnType());
             address = balance.select(NamingFactory.getInstance().getConfigAddr(serviceName), "");
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));

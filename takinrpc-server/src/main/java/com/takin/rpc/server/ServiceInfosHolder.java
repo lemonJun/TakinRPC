@@ -1,6 +1,7 @@
 package com.takin.rpc.server;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Singleton;
 
@@ -19,8 +20,6 @@ public class ServiceInfosHolder {
     private static final Logger logger = LoggerFactory.getLogger(ServiceInfosHolder.class);
 
     private ServiceInfos serviceInfos;
-
-    private final Map<String, Object> implMap = Maps.newConcurrentMap();
 
     @Inject
     public ServiceInfosHolder() {
@@ -49,7 +48,9 @@ public class ServiceInfosHolder {
         return null;
     }
 
-    //获取实现类
+    private final ConcurrentHashMap<String, Object> implMap = new ConcurrentHashMap<String, Object>();
+
+    //
     public Object getOjbectFromClass(String clazz) {
         if (implMap.get(clazz) == null) {
             synchronized (RemotingInvokeHandler.class) {
@@ -57,6 +58,7 @@ public class ServiceInfosHolder {
                     try {
                         //此处需要无参的构造器
                         Object obj = Class.forName(clazz).newInstance();
+                        logger.info(String.format("create target object:%s", clazz));
                         implMap.put(clazz, obj);
                     } catch (Exception e) {
                         logger.error("", e);

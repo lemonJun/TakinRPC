@@ -77,6 +77,12 @@
 				<artifactId>netty-all</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>3.2.5</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.google.guava</groupId>

@@ -28,7 +28,7 @@ public final class RemotingProtocol<T> {
     private String method;//调用方法
     private Object[] args;//方法参数
     private Class<?>[] mParamsTypes;//方法的参数类型
-
+    private Class<?> mReturnType;
     private T resultJson;
 
     public String getUUID() {//此次调用的唯一标识
@@ -109,6 +109,14 @@ public final class RemotingProtocol<T> {
 
     public String getIdentity() {
         return identity;
+    }
+
+    public Class<?> getmReturnType() {
+        return mReturnType;
+    }
+    
+    public void setmReturnType(Class<?> mReturnType) {
+        this.mReturnType = mReturnType;
     }
 
 }
