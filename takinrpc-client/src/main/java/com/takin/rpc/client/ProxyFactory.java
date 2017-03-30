@@ -5,6 +5,8 @@ import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.takin.rpc.client.loadbalance.LoadBalance;
+
 /**
  * ProxyFactory
  * @author Service Platform Architecture Team (spat@58.com)
@@ -14,8 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProxyFactory {
 
     private final static ConcurrentHashMap<String, Object> cache = new ConcurrentHashMap<String, Object>(); //同步map
-
-    private static volatile ProxyFactory instance;
 
     private ProxyFactory() {
     }
@@ -28,14 +28,29 @@ public class ProxyFactory {
      * @throws MalformedURLException
      */
     //url = "tcp://demo/NewsService";
-    public static <T> T create(Class<?> type, String strUrl) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
-        String key = strUrl.toLowerCase();
+    public static <T> T create(Class<?> interfaceclass, String serviceName) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
+        String key = String.format("%s_%s", interfaceclass.getName(), serviceName);
         Object proxy = null;
         if (cache.containsKey(key)) {
             proxy = cache.get(key);
         }
         if (proxy == null) {
-            proxy = createStandardProxy(strUrl, type);
+            proxy = createStandardProxy(interfaceclass, serviceName, "", null);
+            if (proxy != null) {
+                cache.put(key, proxy);
+            }
+        }
+        return (T) proxy;
+    }
+
+    public static <T> T create(Class<?> interfaceclass, String serviceName, String implMethod, LoadBalance balance) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
+        String key = String.format("%s_%s", interfaceclass.getName(), serviceName);
+        Object proxy = null;
+        if (cache.containsKey(key)) {
+            proxy = cache.get(key);
+        }
+        if (proxy == null) {
+            proxy = createStandardProxy(interfaceclass, serviceName, implMethod, balance);
             if (proxy != null) {
                 cache.put(key, proxy);
             }
@@ -49,18 +64,9 @@ public class ProxyFactory {
      * @param interfaceClass  接口类
      * @return
      */
-    //url = "tcp://demo/NewService";
-    private static Object createStandardProxy(String strUrl, Class<?> interfaceClass) {
-        String serviceName = "";
-        String lookup = "";//接口实现类
-        strUrl = strUrl.replace("tcp://", "");
-        String[] splits = strUrl.split("/");
-        if (splits.length == 2) {
-            serviceName = splits[0]; //=demo
-            lookup = splits[1]; //=NewService
-        }
-        InvocationHandler handler = new ProxyStandard(interfaceClass, serviceName, lookup);
-        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceClass }, handler);
+    private static Object createStandardProxy(Class<?> interfaceclass, String serviceName, String implMethod, LoadBalance balance) {
+        InvocationHandler handler = new ProxyStandard(interfaceclass, serviceName, implMethod, balance);
+        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceclass }, handler);
     }
 
 }

@@ -9,8 +9,6 @@ import org.w3c.dom.Node;
  * @author Service Platform Architecture Team (spat@58.com)
  */
 public class ServerProfile {
-
-    private String name;
     private String host;
     private int port;
     private int deadTimeout;
@@ -18,7 +16,6 @@ public class ServerProfile {
 
     public ServerProfile(Node node) {
         NamedNodeMap attributes = node.getAttributes();
-        this.name = attributes.getNamedItem("name").getNodeValue();
         this.host = attributes.getNamedItem("host").getNodeValue();
         this.port = Integer.parseInt(attributes.getNamedItem("port").getNodeValue());
         Node atribute = attributes.getNamedItem("weithtRate");
@@ -41,10 +38,6 @@ public class ServerProfile {
 
     public String getHost() {
         return host;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getPort() {

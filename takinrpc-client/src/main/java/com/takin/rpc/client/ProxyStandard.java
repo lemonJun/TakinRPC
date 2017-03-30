@@ -3,13 +3,13 @@ package com.takin.rpc.client;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
+import com.takin.rpc.client.loadbalance.LoadBalance;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 /**
@@ -19,19 +19,27 @@ import com.takin.rpc.remoting.netty5.RemotingProtocol;
  */
 public class ProxyStandard implements InvocationHandler {
 
-    private Class<?> interfaceClass;
-    private String lookup;
     private static final Logger logger = LoggerFactory.getLogger(ProxyStandard.class);
 
-    /**
+    private Class<?> interfaceClass;
+    private String lookup = "";
+    private String serviceName = "";
+    private LoadBalance balance = new ConsistentHashLoadBalance();
+
+    /** 
      * 
      * @param interfaceClass 接口类 
      * @param serviceName 服务名
      * @param lookup 接口实现类
+     * @param balance 使用哪一个负载均衡算法
      */
-    public ProxyStandard(Class<?> interfaceClass, String serviceName, String lookup) {
-        this.lookup = lookup;
+    public ProxyStandard(Class<?> interfaceClass, String serviceName, String lookup, LoadBalance balance) {
         this.interfaceClass = interfaceClass;
+        this.serviceName = serviceName;
+        this.lookup = lookup;
+        if (balance != null) {
+            this.balance = balance;
+        }
     }
 
     /**
@@ -49,19 +57,18 @@ public class ProxyStandard implements InvocationHandler {
         if (args.length != typeAry.length) {
             throw new Exception("argument count error!");
         }
-
         boolean syn = true;
-        
-        RemotingProtocol message = new RemotingProtocol();
+        RemotingProtocol<?> message = new RemotingProtocol<>();
         message.setClazz(interfaceClass);
         message.setMethod(method.getName());
         message.setArgs(args);
         message.setmParamsTypes(clsAry);
-        String address = "127.0.0.1:6871";//应该从某个地方获取到
+        String address = balance.select(NamingFactory.getInstance().getConfigAddr(serviceName), "");
+
         logger.info(String.format("request: %s", JSONObject.toJSONString(message)));
-        RemotingProtocol resultMessage = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+        message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
         //                logger.info(String.format("response: %s", JSONObject.toJSONString(message)));
-        System.out.println("return:" + resultMessage.getResultJson());
-        return resultMessage.getResultJson();
+        System.out.println("return:" + message.getResultJson());
+        return message.getResultJson();
     }
 }
