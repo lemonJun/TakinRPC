@@ -49,7 +49,7 @@ public class RPCServer {
 
     //初始化接口服务类
     private void initService() throws Exception {
-        GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath());
+        GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath(), context.getLibPath());
         ServiceInfos infos = GuiceDI.getInstance(ScanClass.class).getContractInfo(context.getServicePath(), GuiceDI.getInstance(DynamicClassLoader.class));
         GuiceDI.getInstance(ServiceInfosHolder.class).setServiceInfos(infos);
     }
@@ -60,6 +60,7 @@ public class RPCServer {
         String serviceFolder = appFolder + File.separator + "target";
         context.setConfigPath(appConfigFolder);
         context.setServicePath(serviceFolder);
+        context.setLibPath(serviceFolder + File.separator + "lib");
     }
 
     private void runOnline(String rpcName, String rootPath) throws Exception {
@@ -68,6 +69,7 @@ public class RPCServer {
         context.setConfigPath(appConfigFolder);
         context.setServicePath(appFolder);
         context.setRpcName(rpcName);
+        context.setLibPath(appFolder + File.separator + "lib");
     }
 
     private void initConf() {

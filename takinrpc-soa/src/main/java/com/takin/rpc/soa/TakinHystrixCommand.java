@@ -1,6 +1,7 @@
 package com.takin.rpc.soa;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -10,9 +11,10 @@ import com.netflix.hystrix.HystrixThreadPoolProperties;
 import com.takin.rpc.remoting.netty5.RemotingContext;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
+@SuppressWarnings("rawtypes")
 public class TakinHystrixCommand extends HystrixCommand {
 
-    private static Logger logger = Logger.getLogger(TakinHystrixCommand.class);
+    private static Logger logger = LoggerFactory.getLogger(TakinHystrixCommand.class);
     private static final int DEFAULT_THREADPOOL_CORE_SIZE = 30;
     private RemotingContext context;
     private RemotingProtocol protocol;
@@ -22,15 +24,13 @@ public class TakinHystrixCommand extends HystrixCommand {
                         .withCircuitBreakerSleepWindowInMilliseconds(30000)//熔断器中断请求30秒后会进入半打开状态,放部分流量过去重试
                         .withCircuitBreakerErrorThresholdPercentage(50)//错误率达到50开启熔断保护
                         .withExecutionTimeoutEnabled(false))//使用dubbo的超时，禁用这里的超时
-                        .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter().withCoreSize(getThreadPoolCoreSize())));//线程池为30
+                        .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter().withCoreSize(DEFAULT_THREADPOOL_CORE_SIZE)));//线程池为30
         this.context = context;
         this.protocol = protocol;
+        logger.info("use TakinHystrixCommand");
     }
 
-    private static int getThreadPoolCoreSize() {
-        return DEFAULT_THREADPOOL_CORE_SIZE;
-    }
-
+    //这里要填什么？？
     @Override
     protected Object run() throws Exception {
         return null;
