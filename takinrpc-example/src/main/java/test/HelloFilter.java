@@ -1,12 +1,15 @@
 package test;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.takin.rpc.remoting.netty5.RemotingContext;
 import com.takin.rpc.server.IFilter;
-import com.takin.rpc.server.anno.FilterAnno;
 
-@FilterAnno
-public class TestFilter implements IFilter {
+public class HelloFilter implements IFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(HelloFilter.class);
 
     @Override
     public int getPriority() {
@@ -15,7 +18,7 @@ public class TestFilter implements IFilter {
 
     @Override
     public Object filter(RemotingContext context) throws Exception {
-        System.out.println(JSON.toJSON(context));
+        logger.info(JSON.toJSONString(context));
         return null;
     }
 
