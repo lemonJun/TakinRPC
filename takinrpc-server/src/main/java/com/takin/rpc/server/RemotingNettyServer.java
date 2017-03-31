@@ -67,7 +67,7 @@ public class RemotingNettyServer {
                 ch.pipeline().addLast("remoteinvode", new RemotingInvokeHandler());
             }
         });
-
+        
         ChannelFuture channelFuture = this.bootstrap.bind().sync();
         //        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());

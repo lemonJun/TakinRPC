@@ -128,8 +128,4 @@ public class NettyServerConfig {
         this.useEpollNativeSelector = useEpollNativeSelector;
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return (NettyServerConfig) super.clone();
-    }
 }

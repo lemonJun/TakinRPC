@@ -53,10 +53,10 @@ public class Scaner {
         if (once.compareAndSet(false, true)) {
             scan(classLoader);
             for (Class<?> cls : filterList) {
-                logger.info(String.format("add filter:", cls.getSimpleName()));
+                logger.info(String.format("add filter:%s", cls.getSimpleName()));
             }
             for (Class<?> cls : initList) {
-                logger.info(String.format("add initer:", cls.getSimpleName()));
+                logger.info(String.format("add initer:%s", cls.getSimpleName()));
             }
         }
     }

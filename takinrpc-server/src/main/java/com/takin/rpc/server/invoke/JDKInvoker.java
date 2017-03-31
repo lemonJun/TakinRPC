@@ -43,7 +43,7 @@ public class JDKInvoker implements Invoker {
         if (method == null) {
             method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
             logger.info(String.format("search method:%s", methodName));
-            methodCache.put(mkey, method);
+            methodCache.putIfAbsent(mkey, method);
         }
 
         if (method == null) {

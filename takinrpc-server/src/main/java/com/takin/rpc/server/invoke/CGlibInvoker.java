@@ -22,8 +22,8 @@ public class CGlibInvoker implements Invoker {
 
     @Inject
     public CGlibInvoker() {
-    } 
-    
+    }
+
     @Override
     public Object invoke(RemotingProtocol msg) throws Exception {
         Stopwatch watch = Stopwatch.createStarted();

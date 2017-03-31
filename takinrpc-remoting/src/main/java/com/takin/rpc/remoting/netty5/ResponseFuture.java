@@ -19,13 +19,13 @@ public class ResponseFuture {
     // 保证回调的callback方法至多至少只被执行一次
     private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
     private volatile boolean sendRequestOK = true;
-    private volatile RemotingProtocol message;
+    private volatile RemotingProtocol<?> message;
     private volatile Throwable cause;
 
     private InvokeCallback invokeCallback;
 
     private SemaphoreOnce once;
-    
+
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
@@ -57,8 +57,8 @@ public class ResponseFuture {
         return diff > this.timeoutMillis;
     }
 
-    public RemotingProtocol waitResponse() throws InterruptedException {
-        this.countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
+    public RemotingProtocol<?> waitResponse() throws InterruptedException {
+        boolean retval = countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
         return this.message;
     }
 

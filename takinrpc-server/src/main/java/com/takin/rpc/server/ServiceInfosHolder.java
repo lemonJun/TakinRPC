@@ -52,7 +52,7 @@ public class ServiceInfosHolder {
                         //此处需要无参的构造器
                         Object obj = Class.forName(clazz).newInstance();
                         logger.info(String.format("create target object:%s", clazz));
-                        implMap.put(clazz, obj);
+                        implMap.putIfAbsent(clazz, obj);
                     } catch (Exception e) {
                         logger.error("", e);
                     }

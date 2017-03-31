@@ -24,7 +24,7 @@ public class JavassistInvoker implements Invoker {
 
     @Inject
     public JavassistInvoker() {
-        
+
     }
 
     public Object invoke(RemotingProtocol msg) throws Exception {
@@ -42,9 +42,9 @@ public class JavassistInvoker implements Invoker {
         if (method == null) {
             method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
             logger.info(String.format("search method:%s", methodName));
-            methodCache.put(mkey, method);
+            method = methodCache.putIfAbsent(mkey, method);
         }
-
+        
         Object invoker = Javassis.newInvoker(msg.getDefineClass(), implClass, methodName, msg.getmParamsTypes(), msg.getmReturnType());
 
         if (method == null) {
