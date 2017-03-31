@@ -12,12 +12,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-
+	
 	<dependencies>
-
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.takinrpc</groupId>
+			<artifactId>takinrpc-remoting</artifactId>
 		</dependency>
 
 		<dependency>

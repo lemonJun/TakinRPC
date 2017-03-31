@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
+import com.takin.rpc.remoting.GlobalContext;
+import com.takin.rpc.remoting.netty5.RemotingContext;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.server.invoke.Invoker;
 
@@ -20,7 +22,7 @@ import io.netty.channel.ChannelPromise;
  * @author lemon
  * @version 1.0
  * @date  2015年10月14日 下午4:09:22
- * @see 
+ * @see   
  * @since
  */
 public class RemotingInvokeHandler extends ChannelHandlerAdapter {
@@ -35,12 +37,13 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             //            if (logger.isDebugEnabled()) {
             //                logger.debug("REQUEST: " + JSON.toJSONString(msg));
             //            }
-            //            RemotingContext context = new RemotingContext(ctx);
-            //            GlobalContext.getSingleton().setThreadLocal(context);
+
+            RemotingContext context = new RemotingContext(ctx);
+            GlobalContext.getSingleton().setThreadLocal(context);
 
             Object result = GuiceDI.getInstance(Invoker.class).invoke(msg);
             msg.setResultJson(result);
-
+            
             //            if (logger.isDebugEnabled()) {
             //                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
             //            }
@@ -49,7 +52,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             logger.error("netty server invoke error", e);
             throw e;
         } finally {
-            //            GlobalContext.getSingleton().removeThreadLocal();
+            GlobalContext.getSingleton().removeThreadLocal();
             ctx.writeAndFlush(msg);
         }
     }

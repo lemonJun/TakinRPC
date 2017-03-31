@@ -1,7 +1,7 @@
 package com.takin.rpc.remoting.netty5;
 
 import com.takin.rpc.remoting.GlobalContext;
-import com.takin.rpc.remoting.StopWatch;
+import com.takin.rpc.remoting.MyStopWatch;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -17,8 +17,8 @@ public class RemotingContext {
     private ChannelHandlerContext context;
 
     private boolean monitor;
-    
-    private StopWatch stopWatch = new StopWatch();
+
+    private MyStopWatch stopWatch = new MyStopWatch();
 
     private Throwable error;
 
@@ -44,7 +44,7 @@ public class RemotingContext {
         this.monitor = monitor;
     }
 
-    public StopWatch getStopWatch() {
+    public MyStopWatch getStopWatch() {
         return stopWatch;
     }
 
@@ -72,7 +72,7 @@ public class RemotingContext {
         this.context = context;
     }
 
-    public void setStopWatch(StopWatch stopWatch) {
+    public void setStopWatch(MyStopWatch stopWatch) {
         this.stopWatch = stopWatch;
     }
 

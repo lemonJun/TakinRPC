@@ -20,6 +20,7 @@ import com.takin.rpc.remoting.codec.KyroMsgEncoder;
 import com.takin.rpc.remoting.netty5.ResponseFuture;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -49,9 +50,12 @@ public class RemotingNettyServer {
 
     public void start() throws Exception {
         bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
-        bootstrap.option(ChannelOption.SO_BACKLOG, 65536);
+        bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
         bootstrap.option(ChannelOption.SO_REUSEADDR, true);
         bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+        bootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
+        bootstrap.option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 64 * 1024);
+        bootstrap.option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 32 * 1024);
         bootstrap.localAddress(serverconfig.getListenPort());
         bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
@@ -64,7 +68,8 @@ public class RemotingNettyServer {
             }
         });
 
-        this.bootstrap.bind().sync();
+        ChannelFuture channelFuture = this.bootstrap.bind().sync();
+        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());
         respScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
