@@ -21,8 +21,8 @@ package com.takin.rpc.client;
  *
  */
 public class NettyClientConfig {
-    private int workerThreads = Runtime.getRuntime().availableProcessors() * 4;
-    private int callbackExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
+    private int workerThreads = 8;
+    private int callbackExecutorThreads = 2;
     private int onewaySemaphoreValue = 64;
     private int asyncSemaphoreValue = 64;
     private int connectTimeoutMillis = 3000;

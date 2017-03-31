@@ -33,7 +33,7 @@ public class RemotingNettyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RemotingNettyServer.class);
 
-    private final ServerBootstrap bootstrap = new ServerBootstrap();
+    private final ServerBootstrap bootstrap;
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
     private final ScheduledExecutorService respScheduler;
@@ -42,8 +42,9 @@ public class RemotingNettyServer {
 
     @Inject
     public RemotingNettyServer(final NettyServerConfig serverconfig) {
-        this.bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads());
-        this.workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads());
+        bootstrap = new ServerBootstrap();
+        bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads());
+        workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads());
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }

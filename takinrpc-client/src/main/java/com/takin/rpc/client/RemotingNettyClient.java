@@ -76,7 +76,6 @@ public class RemotingNettyClient extends RemotingAbstract {
         if (publicThreadNums <= 0) {
             publicThreadNums = 4;
         }
-
         this.publicExecutor = Executors.newFixedThreadPool(publicThreadNums, new ThreadFactory() {
             private AtomicInteger threadIndex = new AtomicInteger(0);
 
@@ -90,13 +89,12 @@ public class RemotingNettyClient extends RemotingAbstract {
     }
 
     public void start() {
-        bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.group(group).channel(NioSocketChannel.class);
+        bootstrap.option(ChannelOption.TCP_NODELAY, true);
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 //                ch.pipeline().addLast(new IdleStateHandler(1, 1, 5));
-                //                ch.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingDecoder());
-                //                ch.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingEncoder());
                 ch.pipeline().addLast(new KyroMsgDecoder());
                 ch.pipeline().addLast(new KyroMsgEncoder());
                 ch.pipeline().addLast(new ResponseHandler());
@@ -141,14 +139,14 @@ public class RemotingNettyClient extends RemotingAbstract {
                         this.channelTables.remove(address);
                         createNewConnection = true;
                     }
-                }
-                // ChannelWrapper不存在
-                else {
+                } else { // ChannelWrapper不存在
                     createNewConnection = true;
                 }
 
                 if (createNewConnection) {
-                    ChannelFuture channelFuture = this.bootstrap.connect(new InetSocketAddress(address.split(":")[0], Integer.parseInt(address.split(":")[1])));
+                    String host = address.split(":")[0];
+                    int port = Integer.parseInt(address.split(":")[1]);
+                    ChannelFuture channelFuture = this.bootstrap.connect(host, port).sync();
                     cw = new ChannelWrapper(channelFuture);
                     this.channelTables.put(address, cw);
                 }

@@ -27,8 +27,8 @@ import javax.inject.Singleton;
 @Singleton
 public class NettyServerConfig {
     private int listenPort = 6871;
-    private int workerThreads = 16;
-    private int callbackExecutorThreads = 0;
+    private int workerThreads = 32;
+    private int callbackExecutorThreads = 1;
     private int selectorThreads = 4;
     private int onewaySemaphoreValue = 256;
     private int asyncSemaphoreValue = 64;

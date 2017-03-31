@@ -5,7 +5,6 @@ import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 @ImplementedBy(value = CGlibInvoker.class)
 public interface Invoker {
-
     public abstract Object invoke(RemotingProtocol msg) throws Exception;
 
 }

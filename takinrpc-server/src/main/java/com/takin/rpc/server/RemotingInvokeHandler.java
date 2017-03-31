@@ -43,7 +43,7 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
 
             Object result = GuiceDI.getInstance(Invoker.class).invoke(msg);
             msg.setResultJson(result);
-            
+
             //            if (logger.isDebugEnabled()) {
             //                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
             //            }
