@@ -30,7 +30,7 @@ public class ServiceInfosHolder {
         if (implClass != null) {
             return implClass;
         }
-        ServiceInfos serviceInfos = GuiceDI.getInstance(ScanClass.class).getContractInfo();
+        ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
         if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
             for (SessionBean bean : serviceInfos.getSessionBeanList()) {
                 if (bean.getDefineClass().getCls().getName().equals(defineClass.getName())) {

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Singleton;
 
@@ -15,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
-import com.takin.emmet.file.FileHelper;
+import com.google.inject.Inject;
 import com.takin.rpc.server.ServiceInfos.SessionBean;
 import com.takin.rpc.server.anno.FilterAnno;
 import com.takin.rpc.server.anno.InitAnno;
@@ -25,13 +26,20 @@ import com.takin.rpc.server.anno.ServiceMethod;
 
 @Singleton
 @SuppressWarnings("rawtypes")
-public class ScanClass {
-    private static final Logger logger = LoggerFactory.getLogger(ScanClass.class);
+public class Scaner {
+    private static final Logger logger = LoggerFactory.getLogger(Scaner.class);
     private ServiceInfos contractInfo = null;
     private final List<ClassInfo> contractClassInfos = Lists.newArrayList();;
     private final List<ClassInfo> behaviorClassInfos = Lists.newArrayList();
     private final List<Class<?>> filterList = Lists.newArrayList();
     private final List<Class<?>> initList = Lists.newArrayList();
+
+    private final AtomicBoolean once = new AtomicBoolean(false);
+
+    @Inject
+    private Scaner() {
+
+    }
 
     /**
      * 从jar中扫描出服务类
@@ -40,12 +48,15 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    public void scanInfo(String path, DynamicClassLoader classLoader) throws Exception {
-        if (contractInfo == null) {
-            synchronized (ScanClass.class) {
-                if (contractInfo == null) {
-                    scan(path, classLoader);
-                }
+
+    public void scanInfo(DynamicClassLoader classLoader) throws Exception {
+        if (once.compareAndSet(false, true)) {
+            scan(classLoader);
+            for (Class<?> cls : filterList) {
+                logger.info(String.format("add filter:", cls.getSimpleName()));
+            }
+            for (Class<?> cls : initList) {
+                logger.info(String.format("add initer:", cls.getSimpleName()));
             }
         }
     }
@@ -57,14 +68,11 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    private void scan(String path, DynamicClassLoader classLoader) throws Exception {
-        logger.info("begin scan jar from path:" + path);
-        List<String> jarPathList = FileHelper.getUniqueLibPath(path);
-        if (jarPathList == null) {
-            throw new Exception("no jar fonded from path: " + path);
-        }
+    private void scan(DynamicClassLoader classLoader) throws Exception {
+        List<String> jarPathList = classLoader.getJarList();
 
         for (String jpath : jarPathList) {
+            logger.info("scan jar at:" + jpath);
             Set<Class<?>> clsSet = null;
             try {
                 clsSet = ClassHelper.getClassFromJar(jpath, classLoader);
@@ -76,7 +84,6 @@ public class ScanClass {
             }
             for (Class<?> cls : clsSet) {
                 try {
-
                     FilterAnno filter = cls.getAnnotation(FilterAnno.class);
                     if (filter != null) {
                         filterList.add(cls);
@@ -107,7 +114,6 @@ public class ScanClass {
                 }
             }
         }
-
         contractInfo = createContractInfo(contractClassInfos, behaviorClassInfos);
         logger.info("finish scan jar");
     }
@@ -306,5 +312,5 @@ public class ScanClass {
     public List<Class<?>> getInitList() {
         return initList;
     }
-    
+
 }

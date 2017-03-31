@@ -55,8 +55,13 @@ public class RPCServer {
     * @throws Exception
     */
     private void initService() throws Exception {
-        GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath(), context.getLibPath());
-        GuiceDI.getInstance(ScanClass.class).scanInfo(context.getServicePath(), GuiceDI.getInstance(DynamicClassLoader.class));
+        try {
+            DynamicClassLoader classloader = GuiceDI.getInstance(DynamicClassLoader.class);
+            classloader.addFolder(context.getServicePath(), context.getLibPath());
+            GuiceDI.getInstance(Scaner.class).scanInfo(classloader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void runEclipse(String rootPath) throws Exception {

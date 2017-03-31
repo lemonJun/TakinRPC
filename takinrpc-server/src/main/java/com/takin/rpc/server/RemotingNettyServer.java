@@ -69,7 +69,7 @@ public class RemotingNettyServer {
         });
 
         ChannelFuture channelFuture = this.bootstrap.bind().sync();
-        channelFuture.channel().closeFuture().sync();
+        //        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());
         respScheduler.scheduleAtFixedRate(new Runnable() {
             @Override

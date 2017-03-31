@@ -35,9 +35,9 @@ import com.takin.emmet.file.FileHelper;
 @Singleton
 public class DynamicClassLoader extends SecureClassLoader {
 
-    private static Logger logger = LoggerFactory.getLogger(DynamicClassLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(DynamicClassLoader.class);
 
-    private static List<String> jarList = new ArrayList<String>();
+    private List<String> jarList = new ArrayList<String>();
 
     private final Map<String, Class<?>> classCache = new HashMap<String, Class<?>>();
 
