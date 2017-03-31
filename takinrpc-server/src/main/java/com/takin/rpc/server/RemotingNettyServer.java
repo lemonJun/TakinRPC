@@ -54,6 +54,7 @@ public class RemotingNettyServer {
         bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
         bootstrap.option(ChannelOption.SO_REUSEADDR, true);
         bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+        bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         bootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
         bootstrap.option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 64 * 1024);
         bootstrap.option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 32 * 1024);

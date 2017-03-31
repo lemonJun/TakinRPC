@@ -27,8 +27,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private String serviceName = "";
     private LoadBalance balance = new ConsistentHashLoadBalance();
     private boolean asyn = false;
-    private InvokeCallback callback = null;
-
+    
     /** 
      * 
      * @param interfaceClass 接口类 

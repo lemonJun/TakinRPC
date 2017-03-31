@@ -1,6 +1,5 @@
 package com.takin.rpc.client;
 
-import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -159,11 +158,11 @@ public class RemotingNettyClient extends RemotingAbstract {
         logger.info(String.format("create new channel for:%S", address));
         if (cw != null) {
             ChannelFuture channelFuture = cw.getChannelFuture();
-            if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
+//            if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
                 if (cw.isOK()) {
                     return cw.getChannel();
                 }
-            }
+//            }
         }
         return null;
     }

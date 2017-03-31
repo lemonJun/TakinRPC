@@ -18,9 +18,16 @@ public class ClientTest {
             int size = 10;
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
+            ExecutorService executor = Executors.newFixedThreadPool(20);
+            for (int i = 0; i < size; i++) {
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
             hello.say("xiaoming");
             Thread.sleep(1000);
-            ExecutorService executor = Executors.newCachedThreadPool();
             System.out.println("start...");
             final CountDownLatch count = new CountDownLatch(size);
             Stopwatch watch = Stopwatch.createStarted();

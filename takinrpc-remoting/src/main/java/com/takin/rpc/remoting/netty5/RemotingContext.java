@@ -19,11 +19,12 @@ public class RemotingContext {
     private MyStopWatch stopWatch = new MyStopWatch();
     private Throwable error;
     private boolean isDoInvoke = true;
-
+    
     private RemotingProtocol<?> protocol;
 
-    public RemotingContext(ChannelHandlerContext ctx) {
+    public RemotingContext(ChannelHandlerContext ctx, RemotingProtocol<?> protocol) {
         this.context = ctx;
+        this.protocol = protocol;
     }
 
     /**
@@ -76,10 +77,6 @@ public class RemotingContext {
 
     public RemotingProtocol<?> getProtocol() {
         return protocol;
-    }
-
-    public void setProtocol(RemotingProtocol<?> protocol) {
-        this.protocol = protocol;
     }
 
 }

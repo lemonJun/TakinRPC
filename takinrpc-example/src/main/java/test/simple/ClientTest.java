@@ -12,7 +12,14 @@ public class ClientTest {
         try {
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
-            hello.say("xiaoming");
+            System.out.println("result: " + hello.say("xiaoming"));
+            System.out.println("result: " + hello.say("aa"));
+            System.out.println("result: " + hello.say("bb"));
+            System.out.println("result: " + hello.say("dd"));
+            System.out.println("result: " + hello.say("ee"));
+            System.out.println("result: " + hello.say("ff"));
+            System.out.println("result: " + hello.say("hh"));
+            System.out.println("result: " + hello.say("u"));
         } catch (Exception e) {
             e.printStackTrace();
         }
