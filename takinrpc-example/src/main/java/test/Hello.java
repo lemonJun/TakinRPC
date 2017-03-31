@@ -1,4 +1,4 @@
-package test.simple;
+package test;
 
 import com.takin.rpc.server.anno.ServiceDefine;
 

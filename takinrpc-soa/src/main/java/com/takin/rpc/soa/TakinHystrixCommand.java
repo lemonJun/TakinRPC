@@ -28,7 +28,7 @@ public class TakinHystrixCommand extends HystrixCommand {
         logger.info("use TakinHystrixCommand");
     }
 
-    //这里要填什么？？
+    //这里要填什么？？s
     @Override
     protected Object run() throws Exception {
         return null;

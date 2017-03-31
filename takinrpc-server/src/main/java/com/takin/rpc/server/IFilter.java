@@ -16,6 +16,6 @@ public interface IFilter {
      * @return
      * @throws Exception
      */
-    public void filter(RemotingContext context) throws Exception;
+    public Object filter(RemotingContext context) throws Exception;
 
 }

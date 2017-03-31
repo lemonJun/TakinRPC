@@ -41,9 +41,12 @@ public class RemotingInvokeHandler extends ChannelHandlerAdapter {
             RemotingContext context = new RemotingContext(ctx);
             GlobalContext.getSingleton().setThreadLocal(context);
 
-            Object result = GuiceDI.getInstance(Invoker.class).invoke(msg);
+            Object result = GuiceDI.getInstance(FilterChain.class).dofilter(context);
+            if (result != null) {
+            } else {
+                result = GuiceDI.getInstance(Invoker.class).invoke(msg);
+            }
             msg.setResultJson(result);
-
             //            if (logger.isDebugEnabled()) {
             //                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
             //            }

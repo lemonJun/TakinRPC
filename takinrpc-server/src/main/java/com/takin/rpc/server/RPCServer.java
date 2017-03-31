@@ -41,6 +41,8 @@ public class RPCServer {
             initDI();
             initService();
             GuiceDI.getInstance(RemotingNettyServer.class).start();
+            GuiceDI.getInstance(FilterChain.class).init();
+            
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {
             logger.info("takin rpc server start up fail", e);
