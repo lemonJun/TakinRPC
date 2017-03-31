@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.takin.emmet.util.SystemClock;
+import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
 import com.takin.rpc.remoting.codec.KyroMsgEncoder;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
@@ -185,6 +186,21 @@ public class RemotingNettyClient extends RemotingAbstract {
         if (channel != null && channel.isActive()) {
             try {
                 return invokeSyncImpl(channel, message, timeout);
+            } catch (Exception e) {
+                logger.error("", e);
+                throw e;
+            }
+        } else {
+            closeChannel(channel, address);
+            throw new RemotingConnectException(address);
+        }
+    }
+
+    public void invokeASync(String address, final RemotingProtocol message, int timeout, InvokeCallback callback) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
+        final Channel channel = this.createChannel(address);
+        if (channel != null && channel.isActive()) {
+            try {
+                invokeAsyncImpl(channel, message, timeout, callback);
             } catch (Exception e) {
                 logger.error("", e);
                 throw e;

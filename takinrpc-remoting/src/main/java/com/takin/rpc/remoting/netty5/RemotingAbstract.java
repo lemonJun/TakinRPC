@@ -175,7 +175,6 @@ public abstract class RemotingAbstract {
         } else {
             runInThisThread = true;
         }
-
         if (runInThisThread) {
             try {
                 responseFuture.executeInvokeCallback();

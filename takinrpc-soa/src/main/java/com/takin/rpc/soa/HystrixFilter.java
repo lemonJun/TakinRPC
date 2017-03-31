@@ -6,10 +6,10 @@ import com.takin.rpc.server.anno.FilterAnno;
 
 @FilterAnno
 public class HystrixFilter implements IFilter {
-    
+
     @Override
     public int getPriority() {
-        return 0;
+        return 2;
     }
     
     @Override

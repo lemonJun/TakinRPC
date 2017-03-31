@@ -64,10 +64,10 @@ public class RemotingNettyServer {
                 //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
                 ch.pipeline().addLast(new KyroMsgDecoder());
                 ch.pipeline().addLast(new KyroMsgEncoder());
-                ch.pipeline().addLast("remoteinvode", new RemotingInvokeHandler());
+                ch.pipeline().addLast("invoker", new RemotingInvokeHandler());
             }
         });
-        
+
         ChannelFuture channelFuture = this.bootstrap.bind().sync();
         //        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());

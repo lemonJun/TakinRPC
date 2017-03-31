@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
 import com.takin.rpc.client.loadbalance.LoadBalance;
+import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 /**
@@ -25,6 +26,8 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private Class<?> implClass = null;
     private String serviceName = "";
     private LoadBalance balance = new ConsistentHashLoadBalance();
+    private boolean asyn = false;
+    private InvokeCallback callback = null;
 
     /** 
      * 
@@ -40,6 +43,17 @@ public class ProxyStandard extends AbstractInvocationHandler {
         if (balance != null) {
             this.balance = balance;
         }
+    }
+
+    public ProxyStandard(Class<?> defineClass, String serviceName, Class<?> implClass, LoadBalance balance, boolean asyn) {
+        this.defineClass = defineClass;
+        this.serviceName = serviceName;
+        this.implClass = implClass;
+        if (balance != null) {
+            this.balance = balance;
+        }
+        this.asyn = asyn;
+
     }
 
     @Override

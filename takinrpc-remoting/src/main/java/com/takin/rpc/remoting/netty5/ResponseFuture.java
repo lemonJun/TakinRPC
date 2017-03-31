@@ -23,7 +23,7 @@ public class ResponseFuture {
     private volatile Throwable cause;
 
     private InvokeCallback invokeCallback;
-
+    
     private SemaphoreOnce once;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
