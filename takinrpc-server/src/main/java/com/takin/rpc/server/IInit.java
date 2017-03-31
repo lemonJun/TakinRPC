@@ -1,4 +1,4 @@
-package com.takin.rpc.remoting;
+package com.takin.rpc.server;
 
 /**
  * a interface for description initialization class

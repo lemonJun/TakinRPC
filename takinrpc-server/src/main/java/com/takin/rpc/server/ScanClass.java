@@ -14,8 +14,11 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.takin.emmet.file.FileHelper;
 import com.takin.rpc.server.ServiceInfos.SessionBean;
+import com.takin.rpc.server.anno.FilterAnno;
+import com.takin.rpc.server.anno.InitAnno;
 import com.takin.rpc.server.anno.ServiceDefine;
 import com.takin.rpc.server.anno.ServiceImpl;
 import com.takin.rpc.server.anno.ServiceMethod;
@@ -25,9 +28,10 @@ import com.takin.rpc.server.anno.ServiceMethod;
 public class ScanClass {
     private static final Logger logger = LoggerFactory.getLogger(ScanClass.class);
     private ServiceInfos contractInfo = null;
-
-    private List<ClassInfo> contractClassInfos = null;
-    private List<ClassInfo> behaviorClassInfos = null;
+    private final List<ClassInfo> contractClassInfos = Lists.newArrayList();;
+    private final List<ClassInfo> behaviorClassInfos = Lists.newArrayList();
+    private final List<Class<?>> filterList = Lists.newArrayList();
+    private final List<Class<?>> initList = Lists.newArrayList();
 
     /**
      * 从jar中扫描出服务类
@@ -36,7 +40,7 @@ public class ScanClass {
      * @return
      * @throws Exception
      */
-    public ServiceInfos getContractInfo(String path, DynamicClassLoader classLoader) throws Exception {
+    public void scanInfo(String path, DynamicClassLoader classLoader) throws Exception {
         if (contractInfo == null) {
             synchronized (ScanClass.class) {
                 if (contractInfo == null) {
@@ -44,7 +48,6 @@ public class ScanClass {
                 }
             }
         }
-        return contractInfo;
     }
 
     /**
@@ -56,15 +59,10 @@ public class ScanClass {
      */
     private void scan(String path, DynamicClassLoader classLoader) throws Exception {
         logger.info("begin scan jar from path:" + path);
-
         List<String> jarPathList = FileHelper.getUniqueLibPath(path);
-
         if (jarPathList == null) {
             throw new Exception("no jar fonded from path: " + path);
         }
-
-        contractClassInfos = new ArrayList<ClassInfo>();
-        behaviorClassInfos = new ArrayList<ClassInfo>();
 
         for (String jpath : jarPathList) {
             Set<Class<?>> clsSet = null;
@@ -76,15 +74,23 @@ public class ScanClass {
             if (clsSet == null) {
                 continue;
             }
-
             for (Class<?> cls : clsSet) {
                 try {
+
+                    FilterAnno filter = cls.getAnnotation(FilterAnno.class);
+                    if (filter != null) {
+                        filterList.add(cls);
+                    }
+                    InitAnno initer = cls.getAnnotation(InitAnno.class);
+                    if (initer != null) {
+                        initList.add(cls);
+                    }
+
                     ServiceImpl behavior = cls.getAnnotation(ServiceImpl.class);
                     ServiceDefine contract = cls.getAnnotation(ServiceDefine.class);
                     if (behavior == null && contract == null) {
                         continue;
                     }
-
                     if (contract != null) {
                         ClassInfo ci = contract(cls);
                         if (ci != null) {
@@ -114,7 +120,7 @@ public class ScanClass {
      */
     protected ClassInfo contract(Class<?> cls, boolean ignoreAnnotation) {
         if (ignoreAnnotation) {
-            ClassInfo ci = new ClassInfo();
+            ClassInfo<?> ci = new ClassInfo();
             ci.setCls(cls);
             ci.setClassType(ClassInfo.ClassType.INTERFACE);
 
@@ -144,7 +150,7 @@ public class ScanClass {
     protected ClassInfo contract(Class<?> cls) {
         ServiceDefine contractAnn = cls.getAnnotation(ServiceDefine.class);
 
-        ClassInfo ci = new ClassInfo();
+        ClassInfo<?> ci = new ClassInfo();
         ci.setCls(cls);
         ci.setClassType(ClassInfo.ClassType.INTERFACE);
 
@@ -288,4 +294,17 @@ public class ScanClass {
             }
         }
     }
+
+    public ServiceInfos getContractInfo() {
+        return contractInfo;
+    }
+
+    public List<Class<?>> getFilterList() {
+        return filterList;
+    }
+
+    public List<Class<?>> getInitList() {
+        return initList;
+    }
+    
 }

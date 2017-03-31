@@ -47,11 +47,16 @@ public class RPCServer {
         }
     }
 
-    //初始化接口服务类
+    /**
+    * 扫描:
+    * 接口服务类
+    * 初始化类
+    * 过滤器类
+    * @throws Exception
+    */
     private void initService() throws Exception {
         GuiceDI.getInstance(DynamicClassLoader.class).addFolder(context.getServicePath(), context.getLibPath());
-        ServiceInfos infos = GuiceDI.getInstance(ScanClass.class).getContractInfo(context.getServicePath(), GuiceDI.getInstance(DynamicClassLoader.class));
-        GuiceDI.getInstance(ServiceInfosHolder.class).setServiceInfos(infos);
+        GuiceDI.getInstance(ScanClass.class).scanInfo(context.getServicePath(), GuiceDI.getInstance(DynamicClassLoader.class));
     }
 
     private void runEclipse(String rootPath) throws Exception {

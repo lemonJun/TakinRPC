@@ -1,8 +1,7 @@
 package com.takin.rpc.soa;
 
-import com.takin.rpc.remoting.IFilter;
 import com.takin.rpc.remoting.netty5.RemotingContext;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.server.IFilter;
 
 @SuppressWarnings("rawtypes")
 public class HystrixFilter implements IFilter {
@@ -13,8 +12,8 @@ public class HystrixFilter implements IFilter {
     }
 
     @Override
-    public void filter(RemotingContext context, RemotingProtocol protocol) throws Exception {
-        TakinHystrixCommand command = new TakinHystrixCommand(context, protocol);
+    public void filter(RemotingContext context) throws Exception {
+        TakinHystrixCommand command = new TakinHystrixCommand(context);
         command.execute();
     }
 

@@ -1,7 +1,6 @@
-package com.takin.rpc.remoting;
+package com.takin.rpc.server;
 
 import com.takin.rpc.remoting.netty5.RemotingContext;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 public interface IFilter {
 
@@ -17,6 +16,6 @@ public interface IFilter {
      * @return
      * @throws Exception
      */
-    public void filter(RemotingContext context, RemotingProtocol protocol) throws Exception;
+    public void filter(RemotingContext context) throws Exception;
 
 }

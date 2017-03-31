@@ -15,14 +15,12 @@ import io.netty.channel.ChannelHandlerContext;
 public class RemotingContext {
 
     private ChannelHandlerContext context;
-
     private boolean monitor;
-
     private MyStopWatch stopWatch = new MyStopWatch();
-
     private Throwable error;
-
     private boolean isDoInvoke = true;
+
+    private RemotingProtocol<?> protocol;
 
     public RemotingContext(ChannelHandlerContext ctx) {
         this.context = ctx;
@@ -74,6 +72,14 @@ public class RemotingContext {
 
     public void setStopWatch(MyStopWatch stopWatch) {
         this.stopWatch = stopWatch;
+    }
+
+    public RemotingProtocol<?> getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(RemotingProtocol<?> protocol) {
+        this.protocol = protocol;
     }
 
 }

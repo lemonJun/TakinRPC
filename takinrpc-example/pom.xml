@@ -20,6 +20,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.takinrpc</groupId>
+			<artifactId>takinrpc-soa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.takinrpc</groupId>
 			<artifactId>takinrpc-client</artifactId>
 		</dependency>
 		<dependency>
