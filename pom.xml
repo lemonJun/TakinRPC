@@ -21,6 +21,7 @@
 		<module>takinrpc-example</module>
 		<module>takinrpc-remoting</module>
 		<module>takinrpc-registry</module>
+		<module>takinrpc-raft</module>
 	</modules>
 
 	<properties>
