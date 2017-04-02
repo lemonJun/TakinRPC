@@ -4,6 +4,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 
@@ -11,6 +15,8 @@ import com.takin.rpc.remoting.InvokeCallback;
  * 异步请求应答封装
  */
 public class ResponseFuture {
+
+    private static final Logger logger = LoggerFactory.getLogger(ResponseFuture.class);
     private final long opaque;
     private final long timeoutMillis;
     private final long beginTimestamp = System.currentTimeMillis();
@@ -23,7 +29,7 @@ public class ResponseFuture {
     private volatile Throwable cause;
 
     private InvokeCallback invokeCallback;
-    
+
     private SemaphoreOnce once;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
@@ -57,8 +63,13 @@ public class ResponseFuture {
         return diff > this.timeoutMillis;
     }
 
+    //为什么这一步操作这么耗时???
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
+        Stopwatch watch = Stopwatch.createStarted();
+        logger.debug(String.format("start wait use:%s", watch.toString()));
         boolean retval = countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
+        logger.debug(String.format("finsh wait use:%s", watch.toString()));
+        
         return this.message;
     }
 
