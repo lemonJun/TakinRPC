@@ -19,6 +19,7 @@ public class ResponseFuture {
     private static final Logger logger = LoggerFactory.getLogger(ResponseFuture.class);
     private final long opaque;
     private final long timeoutMillis;
+    private final long timeoutNanos;
     private final long beginTimestamp = System.currentTimeMillis();
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     // 保证信号量至多至少只被释放一次
@@ -27,14 +28,13 @@ public class ResponseFuture {
     private volatile boolean sendRequestOK = true;
     private volatile RemotingProtocol<?> message;
     private volatile Throwable cause;
-
     private InvokeCallback invokeCallback;
-
     private SemaphoreOnce once;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
+        this.timeoutNanos = timeoutMillis * 1000 * 1000;
     }
 
     public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, SemaphoreOnce once) {
@@ -42,6 +42,7 @@ public class ResponseFuture {
         this.timeoutMillis = timeoutMillis;
         this.invokeCallback = invokeCallback;
         this.once = once;
+        this.timeoutNanos = timeoutMillis * 1000 * 1000;
     }
 
     public void executeInvokeCallback() {
@@ -67,9 +68,9 @@ public class ResponseFuture {
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
         Stopwatch watch = Stopwatch.createStarted();
         logger.debug(String.format("start wait use:%s", watch.toString()));
-        boolean retval = countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
+        boolean retval = countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
         logger.debug(String.format("finsh wait use:%s", watch.toString()));
-        
+
         return this.message;
     }
 
