@@ -16,10 +16,10 @@ public class RemotingContext {
 
     private ChannelHandlerContext context;
     private boolean monitor;
-    private MyStopWatch stopWatch = new MyStopWatch();
+    private final MyStopWatch stopWatch = new MyStopWatch();
     private Throwable error;
     private boolean isDoInvoke = true;
-    
+
     private RemotingProtocol<?> protocol;
 
     public RemotingContext(ChannelHandlerContext ctx, RemotingProtocol<?> protocol) {
@@ -28,8 +28,7 @@ public class RemotingContext {
     }
 
     /**
-     * 从ThreadLocal里获取SCFContext
-     * @return
+     * 
      */
     public static RemotingContext getFromThreadLocal() {
         return GlobalContext.getSingleton().getThreadLocal().get();
@@ -69,10 +68,6 @@ public class RemotingContext {
 
     public void setContext(ChannelHandlerContext context) {
         this.context = context;
-    }
-
-    public void setStopWatch(MyStopWatch stopWatch) {
-        this.stopWatch = stopWatch;
     }
 
     public RemotingProtocol<?> getProtocol() {

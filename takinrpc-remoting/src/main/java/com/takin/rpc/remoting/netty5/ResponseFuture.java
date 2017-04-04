@@ -1,6 +1,6 @@
 package com.takin.rpc.remoting.netty5;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,7 +21,8 @@ public class ResponseFuture {
     private final long timeoutMillis;
     private final long timeoutNanos;
     private final long beginTimestamp = System.currentTimeMillis();
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    //    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final Semaphore countDownLatch = new Semaphore(1);
     // 保证信号量至多至少只被释放一次
     // 保证回调的callback方法至多至少只被执行一次
     private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
@@ -68,7 +69,8 @@ public class ResponseFuture {
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
         Stopwatch watch = Stopwatch.createStarted();
         logger.debug(String.format("start wait use:%s", watch.toString()));
-        boolean retval = countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
+        //        boolean retval = countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
+        boolean retval = countDownLatch.tryAcquire(timeoutNanos, TimeUnit.NANOSECONDS);
         logger.debug(String.format("finsh wait use:%s", watch.toString()));
 
         return this.message;
@@ -76,7 +78,8 @@ public class ResponseFuture {
 
     public void putResponse(final RemotingProtocol message) {
         this.message = message;
-        this.countDownLatch.countDown();
+        //        this.countDownLatch.countDown();
+        this.countDownLatch.release();
     }
 
     public long getBeginTimestamp() {
