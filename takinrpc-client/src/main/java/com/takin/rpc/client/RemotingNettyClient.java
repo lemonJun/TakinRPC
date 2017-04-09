@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -56,6 +57,7 @@ public class RemotingNettyClient extends RemotingAbstract {
     private ConcurrentHashMap<String, ChannelWrapper> channelTables = new ConcurrentHashMap<String, ChannelWrapper>();
 
     public static volatile RemotingNettyClient instance;
+    private static final AtomicBoolean once = new AtomicBoolean(false);
 
     public static RemotingNettyClient getInstance() {
         if (instance == null) {
@@ -68,7 +70,7 @@ public class RemotingNettyClient extends RemotingAbstract {
         }
         return instance;
     }
-
+    
     private RemotingNettyClient(final NettyClientConfig nettyClientConfig) {
         super(nettyClientConfig.getOnewaySemaphoreValue(), nettyClientConfig.getAsyncSemaphoreValue());
         int publicThreadNums = nettyClientConfig.getCallbackExecutorThreads();
@@ -158,11 +160,11 @@ public class RemotingNettyClient extends RemotingAbstract {
         logger.info(String.format("create new channel for:%S", address));
         if (cw != null) {
             ChannelFuture channelFuture = cw.getChannelFuture();
-//            if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
-                if (cw.isOK()) {
-                    return cw.getChannel();
-                }
-//            }
+            //            if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
+            if (cw.isOK()) {
+                return cw.getChannel();
+            }
+            //            }
         }
         return null;
     }
