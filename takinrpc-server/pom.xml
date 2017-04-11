@@ -33,6 +33,11 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.takin</groupId>
+			<artifactId>emmet</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

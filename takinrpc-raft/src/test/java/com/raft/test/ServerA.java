@@ -3,8 +3,6 @@ package com.raft.test;
 import com.raft.bootstrap.ServerStartup;
 import com.raft.domain.Server;
 
-import java.util.Random;
-
 /**
  * Created by Administrator on 2016/10/28.
  */

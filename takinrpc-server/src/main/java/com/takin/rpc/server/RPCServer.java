@@ -6,6 +6,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.takin.emmet.file.PropertiesHelper;
+
 public class RPCServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
@@ -42,7 +44,7 @@ public class RPCServer {
             initService();
             GuiceDI.getInstance(RemotingNettyServer.class).start();
             GuiceDI.getInstance(FilterChain.class).init();
-            
+
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {
             logger.info("takin rpc server start up fail", e);
@@ -62,7 +64,7 @@ public class RPCServer {
             classloader.addFolder(context.getServicePath(), context.getLibPath());
             GuiceDI.getInstance(Scaner.class).scanInfo(classloader);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
 
@@ -89,8 +91,15 @@ public class RPCServer {
             String logpath = context.getConfigPath() + File.separator + "log4j.properties";
             PropertyConfigurator.configure(logpath);
             logger.info(String.format("log4j path:%s", logpath));
+
+            String serverpath = context.getConfigPath() + File.separator + "server.properties";
+            NettyServerConfig config = GuiceDI.getInstance(NettyServerConfig.class);
+            PropertiesHelper pro = new PropertiesHelper(serverpath);
+            config.setSelectorThreads(pro.getInt("selectorThreads"));
+            config.setWorkerThreads(pro.getInt("workerThreads"));
+            config.setListenPort(pro.getInt("listenPort"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
 
@@ -98,7 +107,7 @@ public class RPCServer {
         try {
             GuiceDI.init();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
 

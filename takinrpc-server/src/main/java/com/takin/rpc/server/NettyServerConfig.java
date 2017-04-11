@@ -40,6 +40,9 @@ public class NettyServerConfig {
 
     private boolean useEpollNativeSelector = true;
 
+    private NettyServerConfig() {
+    }
+
     public int getListenPort() {
         return listenPort;
     }
