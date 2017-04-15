@@ -8,7 +8,6 @@
 	</parent>
 	<artifactId>takinrpc-registry</artifactId>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -19,12 +18,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.takinrpc</groupId>
-			<artifactId>takinrpc-server</artifactId>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>com.takin</groupId>
 			<artifactId>emmet</artifactId>
@@ -40,7 +34,7 @@
 			<artifactId>fastjson</artifactId>
 		</dependency>
 
-		
+
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
