@@ -26,7 +26,14 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class NettyServerConfig {
+
+    //
+    private String servername = "test";
     private int listenPort = 6871;
+
+    private boolean usezk = false;
+    private String zkhosts = "";
+
     private int workerThreads = 32;
     private int callbackExecutorThreads = 1;
     private int selectorThreads = 4;
@@ -39,6 +46,34 @@ public class NettyServerConfig {
     private boolean pooledByteBufAllocatorEnable = true;
 
     private boolean useEpollNativeSelector = true;
+
+    public String getUUID() {
+        return String.format("%s_%d", servername, listenPort);
+    }
+
+    public String getServername() {
+        return servername;
+    }
+
+    public void setServername(String servername) {
+        this.servername = servername;
+    }
+
+    public boolean isUsezk() {
+        return usezk;
+    }
+
+    public void setUsezk(boolean usezk) {
+        this.usezk = usezk;
+    }
+
+    public String getZkhosts() {
+        return zkhosts;
+    }
+
+    public void setZkhosts(String zkhosts) {
+        this.zkhosts = zkhosts;
+    }
 
     private NettyServerConfig() {
     }

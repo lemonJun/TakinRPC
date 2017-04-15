@@ -97,7 +97,10 @@ public class RPCServer {
             PropertiesHelper pro = new PropertiesHelper(serverpath);
             config.setSelectorThreads(pro.getInt("selectorThreads"));
             config.setWorkerThreads(pro.getInt("workerThreads"));
-            config.setListenPort(pro.getInt("listenPort"));
+            config.setListenPort(pro.getInt("server.Port"));
+
+            
+            
         } catch (Exception e) {
             logger.error("", e);
         }

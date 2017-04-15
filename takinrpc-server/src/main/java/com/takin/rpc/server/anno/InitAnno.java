@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface InitAnno {
-    int order() default 1;
+    int order() default 10;
 }
