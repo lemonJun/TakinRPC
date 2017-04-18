@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.github.zkclient.exception.ZkInterruptedException;
 
 /**
+ * 
  * All listeners registered at the {@link ZkClient} will be notified from this event thread.
  * This is to prevent dead-lock situations. The {@link ZkClient} pulls some information out of
  * the {@link org.apache.zookeeper.ZooKeeper} events to signal {@link ZkLock} conditions. Re-using the

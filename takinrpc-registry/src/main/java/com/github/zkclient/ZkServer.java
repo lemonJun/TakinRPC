@@ -28,6 +28,13 @@ import org.slf4j.LoggerFactory;
 import com.github.zkclient.exception.ZkException;
 import com.github.zkclient.exception.ZkInterruptedException;
 
+/**
+ * 内嵌方式起动一个zk
+ *
+ * @author WangYazhou
+ * @date  2017年4月18日 下午6:06:14
+ * @see
+ */
 public class ZkServer {
 
     private final static Logger LOG = LoggerFactory.getLogger(ZkServer.class);;

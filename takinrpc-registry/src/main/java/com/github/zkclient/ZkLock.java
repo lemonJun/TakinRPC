@@ -18,6 +18,13 @@ package com.github.zkclient;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 
+ *
+ * @author WangYazhou
+ * @date  2017年4月18日 下午6:06:50
+ * @see
+ */
 public class ZkLock extends ReentrantLock {
 
     private static final long serialVersionUID = 1L;

@@ -18,7 +18,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.takin</groupId>
 			<artifactId>emmet</artifactId>
@@ -49,6 +49,11 @@
 					<groupId>io.netty</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 
 

@@ -48,6 +48,7 @@ import com.github.zkclient.exception.ZkNodeExistsException;
 import com.github.zkclient.exception.ZkTimeoutException;
 
 /**
+ * 
  * Zookeeper client
  * <p>
  * The client is thread-safety
