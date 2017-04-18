@@ -738,7 +738,7 @@ public class ZkClient implements Watcher, IZkClient {
             getEventLock().lockInterruptibly();
             setShutdownTrigger(false);
             _eventThread = new ZkEventThread(_connection.getServers());
-            _eventThread.start();
+            _eventThread.start();//这样的放在 线程很可能会直接退回
             _connection.connect(watcher);
 
             LOG.debug("Awaiting connection to Zookeeper server: " + maxMsToWaitUntilConnected);
