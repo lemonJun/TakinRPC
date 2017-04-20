@@ -21,7 +21,7 @@ public class RPCServer {
             e.printStackTrace();
             System.exit(-1);
         } finally {
-            
+
         }
     }
 
@@ -47,8 +47,8 @@ public class RPCServer {
                 String userDir = System.getProperty("app.dir");
                 runOnline(appName, userDir);
             }
-            initConf();
             initDI();
+            initConf();
             initService();
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {

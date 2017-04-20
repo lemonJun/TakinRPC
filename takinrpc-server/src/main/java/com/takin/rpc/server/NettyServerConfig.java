@@ -18,6 +18,8 @@ package com.takin.rpc.server;
 
 import javax.inject.Singleton;
 
+import com.google.inject.Inject;
+
 /**
 
  *
@@ -47,6 +49,10 @@ public class NettyServerConfig {
 
     private boolean useEpollNativeSelector = true;
 
+    @Inject
+    private NettyServerConfig() {
+    }
+
     public String getUUID() {
         return String.format("%s_%d", servername, listenPort);
     }
@@ -73,9 +79,6 @@ public class NettyServerConfig {
 
     public void setZkhosts(String zkhosts) {
         this.zkhosts = zkhosts;
-    }
-
-    private NettyServerConfig() {
     }
 
     public int getListenPort() {
