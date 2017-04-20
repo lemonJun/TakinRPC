@@ -17,7 +17,7 @@ public class RPCContext {
     public void setRpcName(String rpcName) {
         this.rpcName = rpcName;
     }
-    
+
     public Set<Class<?>> getClassSets() {
         return classSets;
     }
@@ -37,7 +37,7 @@ public class RPCContext {
     public String getServicePath() {
         return servicePath;
     }
-    
+
     public void setServicePath(String servicePath) {
         this.servicePath = servicePath;
     }

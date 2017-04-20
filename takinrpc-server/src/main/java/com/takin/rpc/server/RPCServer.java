@@ -13,13 +13,21 @@ public class RPCServer {
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
 
     public static void main(String[] args) {
-        RPCServer rpc = new RPCServer();
-        rpc.init(args, true);
+        try {
+            RPCServer rpc = new RPCServer();
+            rpc.init(args, true);
+            rpc.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        } finally {
+            
+        }
     }
 
     private final RPCContext context = new RPCContext();
 
-    public void init(String[] args, boolean online) {
+    public void init(String[] args, boolean online) throws Exception {
         try {
             if (!online) {
                 String userDir = System.getProperty("user.dir");
@@ -42,13 +50,19 @@ public class RPCServer {
             initConf();
             initDI();
             initService();
-            GuiceDI.getInstance(RemotingNettyServer.class).start();
-            GuiceDI.getInstance(FilterChain.class).init();
-
             logger.info("takin rpc server start up succ");
         } catch (Exception e) {
             logger.info("takin rpc server start up fail", e);
         }
+    }
+
+    public void start() throws Exception {
+        GuiceDI.getInstance(RemotingNettyServer.class).start();
+        GuiceDI.getInstance(FilterChain.class).init();
+    }
+
+    public void shutdown() {
+
     }
 
     /**
@@ -99,11 +113,13 @@ public class RPCServer {
             config.setWorkerThreads(pro.getInt("workerThreads"));
             config.setListenPort(pro.getInt("server.Port"));
 
-            
-            
         } catch (Exception e) {
             logger.error("", e);
         }
+    }
+
+    public RPCContext getContext() {
+        return context;
     }
 
     private void initDI() {
