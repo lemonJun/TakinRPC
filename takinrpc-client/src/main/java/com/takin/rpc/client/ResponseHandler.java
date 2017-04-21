@@ -22,11 +22,11 @@ public class ResponseHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        long start = System.currentTimeMillis();
+        //        long start = System.currentTimeMillis();
 
         RemotingProtocol message = (RemotingProtocol) msg;
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
-        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString()), System.currentTimeMillis() - start);
+        //        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString()), System.currentTimeMillis() - start);
 
         if (responseFuture != null) {
             responseFuture.putResponse(message);

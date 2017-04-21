@@ -5,7 +5,6 @@ import java.util.List;
 import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xerial.snappy.Snappy;
 
 import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
