@@ -20,13 +20,10 @@ package com.takin.rpc.registry;
 public class ZkGroupDirs {
 
     public final String group;
-    
-    public final String consumerDir;
 
     public ZkGroupDirs(String group) {
         super();
         this.group = group;
-        this.consumerDir = ZkUtils.ConsumersPath;
     }
 
 }

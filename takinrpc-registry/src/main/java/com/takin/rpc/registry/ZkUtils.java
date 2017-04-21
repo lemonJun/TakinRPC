@@ -30,12 +30,6 @@ import com.takin.emmet.io.NIOUtils;
  */
 public class ZkUtils {
 
-    public static final String ConsumersPath = "/consumers";
-
-    public static final String BrokerIdsPath = "/brokers/ids";
-
-    public static final String BrokerTopicsPath = "/brokers/topics";
-
     public static void makeSurePersistentPathExists(ZkClient zkClient, String path) {
         if (!zkClient.exists(path)) {
             zkClient.createPersistent(path, true);
@@ -44,7 +38,7 @@ public class ZkUtils {
 
     /**
      * get children nodes name
-     *
+     * 
      * @param zkClient zkClient
      * @param path     full path
      * @return children nodes name or null while path not exist
@@ -78,6 +72,7 @@ public class ZkUtils {
         }
     }
 
+    //创建父节点  此步是否应该是递归的
     private static void createParentPath(ZkClient zkClient, String path) {
         String parentDir = path.substring(0, path.lastIndexOf('/'));
         if (parentDir.length() != 0) {
