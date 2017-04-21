@@ -3,6 +3,7 @@ package com.takin.rpc.remoting.netty5;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.LockSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,16 @@ public class ResponseFuture {
     private volatile Throwable cause;
     private InvokeCallback invokeCallback;
     private SemaphoreOnce once;
+    private Stopwatch watch;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
         this.timeoutNanos = timeoutMillis * 1000 * 1000;
+    }
+
+    public void setWatch(Stopwatch watch) {
+        this.watch = watch;
     }
 
     public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, SemaphoreOnce once) {
@@ -66,17 +72,25 @@ public class ResponseFuture {
 
     //为什么这一步操作这么耗时???
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
-        Stopwatch watch = Stopwatch.createStarted();
         logger.debug(String.format("start wait use:%s", watch.toString()));
         countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
+        //        LockSupport.parkUntil(timeoutMillis);
         logger.debug(String.format("finsh wait use:%s", watch.toString()));
 
         return this.message;
     }
 
+    public Stopwatch getWatch() {
+        return watch;
+    }
+
     public void putResponse(final RemotingProtocol message) {
+        logger.info("currentthread:" + Thread.currentThread().getName());
+        logger.info(String.format("put response:%s", watch.toString()));
         this.message = message;
         this.countDownLatch.countDown();
+        //        LockSupport.unpark();
+        logger.info(String.format("put response down:%s", watch.toString()));
     }
 
     public long getBeginTimestamp() {

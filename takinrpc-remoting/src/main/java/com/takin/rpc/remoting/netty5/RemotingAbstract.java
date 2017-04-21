@@ -55,30 +55,34 @@ public abstract class RemotingAbstract {
      * @throws Exception
      */
     protected RemotingProtocol invokeSyncImpl(final Channel channel, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        Stopwatch watch = Stopwatch.createStarted();
+        final Stopwatch watch = Stopwatch.createStarted();
         try {
             final ResponseFuture responseFuture = new ResponseFuture(message.getOpaque(), timeout);
+            responseFuture.setWatch(watch);
+            logger.info("currentthread:" + Thread.currentThread().getName());
             logger.debug(String.format("create respnse future use:%s", watch.toString()));
             responseTable.put(message.getOpaque(), responseFuture);
             logger.debug(String.format("put future use:%s", watch.toString()));
-            channel.writeAndFlush(message).addListener(new ChannelFutureListener() {
-                //什么时候会触发这一个接口呢
-                @Override
-                public void operationComplete(ChannelFuture f) throws Exception {
-                    if (f.isSuccess()) {
-                        responseFuture.setSendRequestOK(true);
-                        logger.debug(String.format("operationcomplete use:%s", watch.toString()));
-                        return;
-                    } else {
-                        responseFuture.setSendRequestOK(false);
-                    }
-                    //无结果 返回原因
-                    responseTable.remove(message.getOpaque());
-                    responseFuture.setCause(f.cause());
-                    responseFuture.putResponse(null);
-                    logger.debug(String.format("operationcomplete use:%s", watch.toString()));
-                }
-            });
+            channel.writeAndFlush(message);//.addListener(new ChannelFutureListener() {
+            //                //什么时候会触发这一个接口呢
+            //                @Override
+            //                public void operationComplete(ChannelFuture f) throws Exception {
+            //                    if (f.isSuccess()) {
+            //                        responseFuture.setSendRequestOK(true);
+            //                        logger.debug(String.format("operationcomplete use:%s", watch.toString()));
+            //                        return;
+            //                    } else {
+            //                        responseFuture.setSendRequestOK(false);
+            //                    }
+            //                    //无结果 返回原因
+            //                    responseTable.remove(message.getOpaque());
+            //                    responseFuture.setCause(f.cause());
+            //                    responseFuture.putResponse(null);
+            //                    logger.debug(String.format("operation no use:%s", watch.toString()));
+            //                }
+            //            });
+            logger.info("currentthread:" + Thread.currentThread().getName());
+
             logger.debug(String.format("finish listener use:%s", watch.toString()));
             RemotingProtocol result = responseFuture.waitResponse();
             logger.info(String.format("wait response use:%s", watch.toString()));

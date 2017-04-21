@@ -4,9 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
+import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
@@ -15,9 +19,13 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 public class KyroMsgDecoder extends ByteToMessageDecoder {
 
+    private static final Logger logger = LoggerFactory.getLogger(KyroMsgDecoder.class);
+
     public static final int HEAD_LENGTH = 4;
 
     private final Kryo kryo = new Kryo();
+
+    private Stopwatch watch = Stopwatch.createStarted();
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -37,8 +45,11 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
         byte[] body = new byte[dataLength]; //传输正常
         in.readBytes(body);
+        logger.info("decoder use:" + watch.toString());
+
         RemotingProtocol o = convertToObject(body); //将byte数据转化为我们需要的对象
         out.add(o);
+        logger.info("decoder convert use:" + watch.toString());
     }
 
     private RemotingProtocol convertToObject(byte[] body) {
@@ -47,6 +58,7 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
         try {
             bais = new ByteArrayInputStream(body);
             input = new Input(bais);
+            logger.info("decoder input use:" + watch.toString());
             return kryo.readObject(input, RemotingProtocol.class);
         } catch (KryoException e) {
             e.printStackTrace();

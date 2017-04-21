@@ -70,7 +70,7 @@ public class RemotingNettyClient extends RemotingAbstract {
         }
         return instance;
     }
-    
+
     private RemotingNettyClient(final NettyClientConfig nettyClientConfig) {
         super(nettyClientConfig.getOnewaySemaphoreValue(), nettyClientConfig.getAsyncSemaphoreValue());
         int publicThreadNums = nettyClientConfig.getCallbackExecutorThreads();
@@ -86,7 +86,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             }
         });
 
-        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads());
+        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(8));
     }
 
     public void start() {

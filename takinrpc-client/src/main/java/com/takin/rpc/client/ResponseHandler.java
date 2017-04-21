@@ -23,15 +23,14 @@ public class ResponseHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Stopwatch watch = Stopwatch.createStarted();
         RemotingProtocol message = (RemotingProtocol) msg;
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
         if (responseFuture != null) {
             responseFuture.putResponse(message);
-            logger.debug(String.format("put resopnse  use:%s", watch.toString()));
+            logger.info(String.format("put resopnse  use:%s", responseFuture.getWatch().toString()));
         }
         RemotingNettyClient.responseTable.remove(message.getOpaque());
-        logger.debug(String.format("client channel read use:%s", watch.toString()));
+        logger.info(String.format("client channel read use:%s", responseFuture.getWatch().toString()));
     }
 
     @Override
