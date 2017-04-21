@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.InvokeCallback;
-import com.takin.rpc.remoting.codec.KyroMsgDecoder;
-import com.takin.rpc.remoting.codec.KyroMsgEncoder;
+import com.takin.rpc.remoting.codec.FstDecoder;
+import com.takin.rpc.remoting.codec.FstEncoder;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
 import com.takin.rpc.remoting.exception.RemotingSendRequestException;
 import com.takin.rpc.remoting.exception.RemotingTimeoutException;
@@ -96,8 +96,10 @@ public class RemotingNettyClient extends RemotingAbstract {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 //                ch.pipeline().addLast(new IdleStateHandler(1, 1, 5));
-                ch.pipeline().addLast(new KyroMsgDecoder());
-                ch.pipeline().addLast(new KyroMsgEncoder());
+                //                ch.pipeline().addLast(new KyroMsgDecoder());
+                //                ch.pipeline().addLast(new KyroMsgEncoder());
+                ch.pipeline().addLast(new FstDecoder());
+                ch.pipeline().addLast(new FstEncoder());
                 ch.pipeline().addLast(new ResponseHandler());
             }
         });

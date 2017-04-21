@@ -15,8 +15,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.takin.emmet.reflect.GenericsUtils;
 import com.takin.emmet.util.SystemClock;
-import com.takin.rpc.remoting.codec.KyroMsgDecoder;
-import com.takin.rpc.remoting.codec.KyroMsgEncoder;
+import com.takin.rpc.remoting.codec.FstDecoder;
+import com.takin.rpc.remoting.codec.FstEncoder;
 import com.takin.rpc.remoting.netty5.ResponseFuture;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -64,8 +64,10 @@ public class RemotingNettyServer {
             public void initChannel(SocketChannel ch) throws IOException {
                 //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
                 //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
-                ch.pipeline().addLast(new KyroMsgDecoder());
-                ch.pipeline().addLast(new KyroMsgEncoder());
+                //                ch.pipeline().addLast(new KyroMsgDecoder());
+                //                ch.pipeline().addLast(new KyroMsgEncoder());
+                ch.pipeline().addLast(new FstDecoder());
+                ch.pipeline().addLast(new FstEncoder());
                 ch.pipeline().addLast("invoker", new RemotingInvokeHandler());
             }
         });

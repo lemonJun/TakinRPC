@@ -24,7 +24,7 @@ public class KyroMsgEncoder extends MessageToByteEncoder<RemotingProtocol<?>> {
     @Override
     protected void encode(ChannelHandlerContext ctx, RemotingProtocol<?> msg, ByteBuf out) throws Exception {
         Stopwatch watch = Stopwatch.createStarted();
-        
+
         byte[] body = convertToBytes(msg); //将对象转换为byte
         int dataLength = body.length; //读取消息的长度
         out.writeInt(dataLength); //先将消息长度写入，也就是消息头

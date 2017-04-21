@@ -1,5 +1,6 @@
 package com.takin.rpc.remoting.netty5;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.takin.emmet.util.AddressUtil;
@@ -14,8 +15,10 @@ import com.takin.emmet.util.AddressUtil;
  * @see 
  * @since
  */
-public final class RemotingProtocol<T> {
+public final class RemotingProtocol<T> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private static final AtomicLong RequestId = new AtomicLong(1);
     private final String identity = AddressUtil.getLocalAddress();//这个是节点组的唯一标识符 可能是task也可能是job
     private long start = System.currentTimeMillis();
@@ -114,7 +117,7 @@ public final class RemotingProtocol<T> {
     public Class<?> getmReturnType() {
         return mReturnType;
     }
-    
+
     public void setmReturnType(Class<?> mReturnType) {
         this.mReturnType = mReturnType;
     }
