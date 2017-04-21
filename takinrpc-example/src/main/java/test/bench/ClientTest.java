@@ -15,7 +15,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
         try {
-            int size = 10;
+            int size = 20;
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
             ExecutorService executor = Executors.newFixedThreadPool(50);
@@ -30,9 +30,9 @@ public class ClientTest {
             Thread.sleep(1000);
             System.out.println("start...");
             final CountDownLatch count = new CountDownLatch(size);
+
             Stopwatch watch = Stopwatch.createStarted();
             for (int i = 0; i < size; i++) {
-                Thread.sleep(100);
                 executor.submit(new Runnable() {
                     @Override
                     public void run() {

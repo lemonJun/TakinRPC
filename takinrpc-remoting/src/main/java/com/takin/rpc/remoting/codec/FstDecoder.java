@@ -5,6 +5,7 @@ import java.util.List;
 import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xerial.snappy.Snappy;
 
 import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
@@ -17,7 +18,7 @@ public class FstDecoder extends ByteToMessageDecoder {
 
     private static final Logger logger = LoggerFactory.getLogger(FstDecoder.class);
 
-    final FSTConfiguration config = FSTConfiguration.createDefaultConfiguration();
+    private final FSTConfiguration config = FSTConfiguration.createDefaultConfiguration();
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -27,6 +28,7 @@ public class FstDecoder extends ByteToMessageDecoder {
         int dataLength = in.readInt();
         byte[] body = new byte[dataLength]; //传输正常
         in.readBytes(body);
+        //        byte[] rawbyte = Snappy.uncompress(body);
 
         RemotingProtocol object2 = (RemotingProtocol) config.asObject(body);
         out.add(object2);

@@ -2,6 +2,10 @@ package com.takin.rpc.client;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +14,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
 import com.takin.rpc.client.loadbalance.LoadBalance;
-import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 
 /**
@@ -27,7 +30,9 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private String serviceName = "";
     private LoadBalance balance = new ConsistentHashLoadBalance();
     private boolean asyn = false;
-    
+
+    private final ExecutorService executor;
+
     /** 
      * 
      * @param interfaceClass 接口类 
@@ -42,6 +47,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
         if (balance != null) {
             this.balance = balance;
         }
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     public ProxyStandard(Class<?> defineClass, String serviceName, Class<?> implClass, LoadBalance balance, boolean asyn) {
@@ -52,7 +58,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
             this.balance = balance;
         }
         this.asyn = asyn;
-
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     @Override
@@ -79,14 +85,35 @@ public class ProxyStandard extends AbstractInvocationHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));
             }
-            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+
+            //            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
+            RemotingProtocol result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
-            return message.getResultJson();
+            return result.getResultJson();
         } catch (Exception e) {
             logger.error("invoke error", e);
         }
         return null;
     }
+}
+
+class InvokeThread implements Callable<RemotingProtocol> {
+
+    private String address;
+    private RemotingProtocol message;
+
+    public InvokeThread(final String address, final RemotingProtocol message) {
+        this.address = address;
+        this.message = message;
+    }
+
+    @Override
+    public RemotingProtocol call() throws Exception {
+        RemotingProtocol msg = RemotingNettyClient.getInstance().invokeSync(address, message, 3000);
+        return msg;
+    }
+
 }

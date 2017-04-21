@@ -3,7 +3,6 @@ package com.takin.rpc.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty5.RemotingProtocol;
 import com.takin.rpc.remoting.netty5.ResponseFuture;
 
@@ -23,8 +22,12 @@ public class ResponseHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        long start = System.currentTimeMillis();
+
         RemotingProtocol message = (RemotingProtocol) msg;
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
+        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString()), System.currentTimeMillis() - start);
+
         if (responseFuture != null) {
             responseFuture.putResponse(message);
             logger.info(String.format("put resopnse  use:%s", responseFuture.getWatch().toString()));
