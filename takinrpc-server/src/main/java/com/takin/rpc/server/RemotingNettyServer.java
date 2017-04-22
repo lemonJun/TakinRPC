@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +46,8 @@ public class RemotingNettyServer {
     public RemotingNettyServer(final NettyServerConfig serverconfig) {
         bootstrap = new ServerBootstrap();
         bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads());
-        workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads());
+        ExecutorService executor = Executors.newCachedThreadPool();
+        workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads(), executor);
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }
@@ -71,7 +74,7 @@ public class RemotingNettyServer {
                 ch.pipeline().addLast("invoker", new RemotingInvokeHandler());
             }
         });
-
+        
         ChannelFuture channelFuture = this.bootstrap.bind().sync();
         //        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());

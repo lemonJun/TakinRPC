@@ -20,17 +20,18 @@ public class ResponseHandler extends ChannelHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
         RemotingProtocol message = (RemotingProtocol) msg;
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
-        //        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString()), System.currentTimeMillis() - start);
+        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
 
         if (responseFuture != null) {
             responseFuture.putResponse(message);
-            logger.info(String.format("put resopnse  use:%s", responseFuture.getWatch().toString()));
+            logger.info(String.format("put resopnse use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
         }
         RemotingNettyClient.responseTable.remove(message.getOpaque());
         logger.info(String.format("client channel read use:%s", responseFuture.getWatch().toString()));

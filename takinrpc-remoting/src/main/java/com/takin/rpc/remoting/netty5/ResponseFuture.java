@@ -3,7 +3,6 @@ package com.takin.rpc.remoting.netty5;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.LockSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,12 +83,11 @@ public class ResponseFuture {
         return watch;
     }
 
+    @SuppressWarnings("rawtypes")
     public void putResponse(final RemotingProtocol message) {
         logger.info("currentthread:" + Thread.currentThread().getName());
-        logger.info(String.format("put response:%s", watch.toString()));
         this.message = message;
         this.countDownLatch.countDown();
-        //        LockSupport.unpark();
         logger.info(String.format("put response down:%s", watch.toString()));
     }
 

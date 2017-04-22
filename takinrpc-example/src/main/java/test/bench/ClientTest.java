@@ -15,7 +15,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
         try {
-            int size = 20;
+            int size = 6;
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
             ExecutorService executor = Executors.newFixedThreadPool(50);

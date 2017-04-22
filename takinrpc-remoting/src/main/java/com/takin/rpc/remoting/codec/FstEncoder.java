@@ -30,7 +30,7 @@ public class FstEncoder extends MessageToByteEncoder<RemotingProtocol> {
         out.writeInt(dataLength); //先将消息长度写入，也就是消息头
         out.writeBytes(data2); //消息体中包含我们要发送的数据
 
-        logger.info(String.format("kyro encode use:%s", watch.toString()));
+        logger.info(String.format("fst encode use:%s", watch.toString()));
     }
 
 }

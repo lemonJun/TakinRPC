@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.codec.FstDecoder;
@@ -57,7 +58,7 @@ public class RemotingNettyClient extends RemotingAbstract {
     private ConcurrentHashMap<String, ChannelWrapper> channelTables = new ConcurrentHashMap<String, ChannelWrapper>();
 
     public static volatile RemotingNettyClient instance;
-    private static final AtomicBoolean once = new AtomicBoolean(false);
+    //    private static final AtomicBoolean once = new AtomicBoolean(false);
 
     public static RemotingNettyClient getInstance() {
         if (instance == null) {
@@ -86,7 +87,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             }
         });
 
-        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(8));
+        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(4));
     }
 
     public void start() {
@@ -125,20 +126,15 @@ public class RemotingNettyClient extends RemotingAbstract {
             return cw.getChannel();
         }
         try {
-            if (this.lockChannelTables.tryLock(5000, TimeUnit.MILLISECONDS)) {
+            if (this.lockChannelTables.tryLock(1000 * 1000, TimeUnit.NANOSECONDS)) {
                 boolean createNewConnection = false;
                 cw = this.channelTables.get(address);
                 if (cw != null) {
-                    // channel正常
-                    if (cw.isOK()) {
+                    if (cw.isOK()) {// channel正常
                         return cw.getChannel();
-                    }
-                    // 正在连接，退出锁等待
-                    else if (!cw.getChannelFuture().isDone()) {
+                    } else if (!cw.getChannelFuture().isDone()) {// 正在连接，退出锁等待
                         createNewConnection = false;
-                    }
-                    // 说明连接不成功
-                    else {
+                    } else {// 说明连接不成功
                         this.channelTables.remove(address);
                         createNewConnection = true;
                     }
@@ -162,11 +158,11 @@ public class RemotingNettyClient extends RemotingAbstract {
         logger.info(String.format("create new channel for:%S", address));
         if (cw != null) {
             ChannelFuture channelFuture = cw.getChannelFuture();
-            //            if (channelFuture.awaitUninterruptibly(10 * 1000l)) {
-            if (cw.isOK()) {
-                return cw.getChannel();
+            if (channelFuture.awaitUninterruptibly(10)) {
+                if (cw.isOK()) {
+                    return cw.getChannel();
+                }
             }
-            //            }
         }
         return null;
     }
@@ -182,11 +178,17 @@ public class RemotingNettyClient extends RemotingAbstract {
      * @return 
      * @throws Exception
      */
+    @SuppressWarnings("rawtypes")
     public RemotingProtocol invokeSync(String address, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
+        Stopwatch watch = Stopwatch.createStarted();
+
         final Channel channel = this.createChannel(address);
+        logger.info(String.format("create channel use:%s", watch.toString()));
         if (channel != null && channel.isActive()) {
             try {
-                return invokeSyncImpl(channel, message, timeout);
+                RemotingProtocol proto = invokeSyncImpl(channel, message, timeout);
+                logger.info(String.format("invokesync  use:%s", watch.toString()));
+                return proto;
             } catch (Exception e) {
                 logger.error("", e);
                 throw e;
@@ -197,6 +199,7 @@ public class RemotingNettyClient extends RemotingAbstract {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public void invokeASync(String address, final RemotingProtocol message, int timeout, InvokeCallback callback) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
         final Channel channel = this.createChannel(address);
         if (channel != null && channel.isActive()) {

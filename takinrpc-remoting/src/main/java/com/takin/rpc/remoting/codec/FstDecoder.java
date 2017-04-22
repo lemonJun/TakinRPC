@@ -31,7 +31,7 @@ public class FstDecoder extends ByteToMessageDecoder {
 
         RemotingProtocol object2 = (RemotingProtocol) config.asObject(body);
         out.add(object2);
-        logger.info("decoder convert use:" + watch.toString());
+        logger.info("fst decoder convert use:" + watch.toString());
     }
 
 }
