@@ -1,6 +1,5 @@
 package com.takin.rpc.remoting.codec;
 
-import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,17 +14,11 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class FstEncoder extends MessageToByteEncoder<RemotingProtocol> {
     private static final Logger logger = LoggerFactory.getLogger(FstEncoder.class);
 
-    public static ThreadLocal<FSTConfiguration> conf = new ThreadLocal<FSTConfiguration>() {
-        public FSTConfiguration initialValue() {
-            return FSTConfiguration.createDefaultConfiguration();
-        }
-    };
-
     @Override
     protected void encode(ChannelHandlerContext ctx, RemotingProtocol msg, ByteBuf out) throws Exception {
         final Stopwatch watch = Stopwatch.createStarted();
 
-        byte[] data2 = conf.get().asByteArray(msg);
+        byte[] data2 = FstDecoder.conf.get().asByteArray(msg);
         //        byte[] compdata = Snappy.compress(data2);
         int dataLength = data2.length; //读取消息的长度
         //        ByteBuffer buf = ByteBuffer.allocate(dataLength);

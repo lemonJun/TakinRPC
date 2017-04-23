@@ -25,10 +25,10 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
     private final Kryo kryo = new Kryo();
 
-    private Stopwatch watch = Stopwatch.createStarted();
-
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        Stopwatch watch = Stopwatch.createStarted();
+
         if (in.readableBytes() < HEAD_LENGTH) { //这个HEAD_LENGTH是我们用于表示头长度的字节数。  由于Encoder中我们传的是一个int类型的值，所以这里HEAD_LENGTH的值为4.
             return;
         }
@@ -45,11 +45,10 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
         byte[] body = new byte[dataLength]; //传输正常
         in.readBytes(body);
-        logger.info("decoder use:" + watch.toString());
 
         RemotingProtocol o = convertToObject(body); //将byte数据转化为我们需要的对象
         out.add(o);
-        logger.info("decoder convert use:" + watch.toString());
+        logger.info("kyro decoder use:" + watch.toString());
     }
 
     private RemotingProtocol convertToObject(byte[] body) {
@@ -58,7 +57,6 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
         try {
             bais = new ByteArrayInputStream(body);
             input = new Input(bais);
-            logger.info("decoder input use:" + watch.toString());
             return kryo.readObject(input, RemotingProtocol.class);
         } catch (KryoException e) {
             e.printStackTrace();

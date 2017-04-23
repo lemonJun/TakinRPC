@@ -22,12 +22,12 @@ public class FstDecoder extends ByteToMessageDecoder {
             return FSTConfiguration.createDefaultConfiguration();
         }
     };
-
+    
     @SuppressWarnings("rawtypes")
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         final Stopwatch watch = Stopwatch.createStarted();
-
+        
         in.markReaderIndex(); //我们标记一下当前的readIndex的位置
         int dataLength = in.readInt();
         byte[] body = new byte[dataLength]; //传输正常
