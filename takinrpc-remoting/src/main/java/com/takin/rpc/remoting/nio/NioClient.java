@@ -8,9 +8,6 @@ import com.takin.rpc.remoting.nio.handler.Futures;
 import com.takin.rpc.remoting.nio.handler.NioHandler;
 import com.takin.rpc.remoting.nio.processor.NioClientProcessor;
 
-/**
- * @author Robert HG (254963746@qq.com) on 1/30/16.
- */
 public class NioClient {
 
     private NioClientProcessor processor;
@@ -27,6 +24,5 @@ public class NioClient {
     }
 
     public void shutdownGracefully() {
-        // TODO
     }
 }

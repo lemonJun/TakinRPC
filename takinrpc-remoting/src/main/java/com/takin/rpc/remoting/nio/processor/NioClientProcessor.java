@@ -14,9 +14,6 @@ import com.takin.rpc.remoting.nio.handler.Futures;
 import com.takin.rpc.remoting.nio.handler.NioHandler;
 import com.takin.rpc.remoting.nio.loop.NioSelectorLoop;
 
-/**
- * @author Robert HG (254963746@qq.com) on 2/2/16.
- */
 public class NioClientProcessor extends AbstractNioProcessor {
 
     private NioClientConfig clientConfig;

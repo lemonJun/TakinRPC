@@ -25,9 +25,6 @@ import com.takin.rpc.remoting.nio.handler.NioHandler;
 import com.takin.rpc.remoting.nio.idle.IdleDetector;
 import com.takin.rpc.remoting.nio.loop.NioSelectorLoop;
 
-/**
- * @author Robert HG (254963746@qq.com) on 1/24/16.
- */
 public abstract class AbstractNioProcessor implements NioProcessor {
     protected static final Logger LOGGER = LoggerFactory.getLogger(NioProcessor.class);
     private NioHandler eventHandler;
