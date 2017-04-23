@@ -8,7 +8,7 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
-import com.takin.rpc.remoting.netty5.RemotingContext;
+import com.takin.rpc.remoting.netty4.RemotingContext;
 
 @SuppressWarnings("rawtypes")
 public class TakinHystrixCommand extends HystrixCommand {

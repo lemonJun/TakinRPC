@@ -12,7 +12,7 @@ public class GuiceDI {
     public static void init() {
         injector = Guice.createInjector(new BindingModel());
     }
-    
+
     public static <T> T getInstance(Class<T> type) {
         return injector.getInstance(type);
     }

@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.takin.rpc.remoting.netty5.RemotingContext;
+import com.takin.rpc.remoting.netty4.RemotingContext;
 
 @Singleton
 public class FilterChain {
@@ -19,7 +19,7 @@ public class FilterChain {
 
     @Inject
     private FilterChain() {
-        
+
     }
 
     public void init() {

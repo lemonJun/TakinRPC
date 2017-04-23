@@ -6,15 +6,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.reflect.AbstractInvocationHandler;
+import com.takin.emmet.util.AddressUtil;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
 import com.takin.rpc.client.loadbalance.LoadBalance;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
+import com.takin.rpc.remoting.util.RemotingHelper;
 
 /**
  * ProxyStandard
@@ -24,6 +27,8 @@ import com.takin.rpc.remoting.netty5.RemotingProtocol;
 public class ProxyStandard extends AbstractInvocationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ProxyStandard.class);
+
+    private final AtomicLong sequence = new AtomicLong();
 
     private Class<?> defineClass;
     private Class<?> implClass = null;
@@ -76,7 +81,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
                 throw new Exception("argument count error!");
             }
 
-            RemotingProtocol<?> message = new RemotingProtocol<>();
+            RemotingProtocol<?> message = new RemotingProtocol<>(AddressUtil.getLocalAddress(), sequence.getAndIncrement());
             message.setDefineClass(defineClass);
             message.setImplClass(implClass);
             message.setMethod(method.getName());
@@ -94,7 +99,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
-            return result.getResultJson();
+            return result.getResultVal();
         } catch (Exception e) {
             logger.error("invoke error", e);
         }

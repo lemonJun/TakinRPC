@@ -26,10 +26,10 @@ import com.takin.rpc.remoting.codec.FstEncoder;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
 import com.takin.rpc.remoting.exception.RemotingSendRequestException;
 import com.takin.rpc.remoting.exception.RemotingTimeoutException;
-import com.takin.rpc.remoting.netty5.ChannelWrapper;
-import com.takin.rpc.remoting.netty5.RemotingAbstract;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
-import com.takin.rpc.remoting.netty5.ResponseFuture;
+import com.takin.rpc.remoting.netty4.ChannelWrapper;
+import com.takin.rpc.remoting.netty4.RemotingAbstract;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.ResponseFuture;
 import com.takin.rpc.remoting.util.RemotingHelper;
 
 import io.netty.bootstrap.Bootstrap;
@@ -96,11 +96,9 @@ public class RemotingNettyClient extends RemotingAbstract {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 //                ch.pipeline().addLast(new IdleStateHandler(1, 1, 5));
-                //                ch.pipeline().addLast(new KyroMsgDecoder());
-                //                ch.pipeline().addLast(new KyroMsgEncoder());
                 ch.pipeline().addLast(new FstDecoder());
                 ch.pipeline().addLast(new FstEncoder());
-                ch.pipeline().addLast(new ResponseHandler());
+                ch.pipeline().addLast(new ClientHandler());
             }
         });
 

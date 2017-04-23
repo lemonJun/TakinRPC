@@ -19,7 +19,7 @@ import com.takin.emmet.reflect.GenericsUtils;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.codec.FstDecoder;
 import com.takin.rpc.remoting.codec.FstEncoder;
-import com.takin.rpc.remoting.netty5.ResponseFuture;
+import com.takin.rpc.remoting.netty4.ResponseFuture;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -59,22 +59,18 @@ public class RemotingNettyServer {
         bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         bootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
-        bootstrap.option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 64 * 1024);
-        bootstrap.option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 32 * 1024);
         bootstrap.localAddress(serverconfig.getListenPort());
         bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws IOException {
                 //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
                 //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
-                //                ch.pipeline().addLast(new KyroMsgDecoder());
-                //                ch.pipeline().addLast(new KyroMsgEncoder());
                 ch.pipeline().addLast(new FstDecoder());
                 ch.pipeline().addLast(new FstEncoder());
-                ch.pipeline().addLast("invoker", new RemotingInvokeHandler());
+                ch.pipeline().addLast("invoker", new NettyServerHandler());
             }
         });
-        
+
         ChannelFuture channelFuture = this.bootstrap.bind().sync();
         //        channelFuture.channel().closeFuture().sync();
         logger.info("server started on port:" + serverconfig.getListenPort());

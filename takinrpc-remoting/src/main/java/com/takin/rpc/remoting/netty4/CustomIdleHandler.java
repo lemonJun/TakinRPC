@@ -31,7 +31,7 @@ public class CustomIdleHandler extends ChannelHandlerAdapter {
                 ctx.close();
             } else if (e.state() == IdleState.WRITER_IDLE) {
                 RemotingProtocol msg = new RemotingProtocol();
-                msg.setResultJson(String.format("Channed Write Idle ,id=%s", ctx.channel().id()));
+                msg.setResultVal(String.format("Channed Write Idle ,id=%s", ctx.channel().id()));
                 logger.info(String.format("Channed Write Idle ,id=%s", ctx.channel().id()));
                 ctx.writeAndFlush(msg);
             }

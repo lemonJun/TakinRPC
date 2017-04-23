@@ -46,7 +46,7 @@ public class ServiceInfosHolder {
     //
     public Object getOjbectFromClass(String clazz) {
         if (implMap.get(clazz) == null) {
-            synchronized (RemotingInvokeHandler.class) {
+            synchronized (ServiceInfosHolder.class) {
                 if (implMap.get(clazz) == null) {
                     try {
                         //此处需要无参的构造器

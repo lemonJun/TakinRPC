@@ -1,9 +1,6 @@
 package com.takin.rpc.remoting.netty4;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.takin.emmet.util.AddressUtil;
 
 /**
  * netty 服务交互的实体类
@@ -18,21 +15,28 @@ import com.takin.emmet.util.AddressUtil;
 public final class RemotingProtocol<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    private static final AtomicLong RequestId = new AtomicLong(1);
-    private final String identity = AddressUtil.getLocalAddress();//这个是节点组的唯一标识符 可能是task也可能是job
+
+    private String identity;//这个是节点组的唯一标识符 可能是task也可能是job
     private long start = System.currentTimeMillis();
     private int flag = 0;
-    private final long opaque = RequestId.getAndIncrement();
+    private long opaque;
 
-    /**-----------------*/
     private Class<?> defineClass;//接口类
     private Class<?> implClass;//实现类
     private String method;//调用方法
     private Object[] args;//方法参数
     private Class<?>[] mParamsTypes;//方法的参数类型
     private Class<?> mReturnType;
-    private T resultJson;
+    private T resultVal;
+
+    public RemotingProtocol() {
+
+    }
+
+    public RemotingProtocol(String identity, long opaque) {
+        this.identity = identity;
+        this.opaque = opaque;
+    }
 
     public String getUUID() {//此次调用的唯一标识
         return String.format("%s-%d", getIdentity(), opaque);
@@ -56,10 +60,6 @@ public final class RemotingProtocol<T> implements Serializable {
 
     public void setImplClass(Class<?> implClass) {
         this.implClass = implClass;
-    }
-
-    public static AtomicLong getRequestid() {
-        return RequestId;
     }
 
     public String getMethod() {
@@ -98,16 +98,16 @@ public final class RemotingProtocol<T> implements Serializable {
         return flag;
     }
 
+    public T getResultVal() {
+        return resultVal;
+    }
+
+    public void setResultVal(T resultVal) {
+        this.resultVal = resultVal;
+    }
+
     public void setFlag(int flag) {
         this.flag = flag;
-    }
-
-    public T getResultJson() {
-        return resultJson;
-    }
-
-    public void setResultJson(T resultJson) {
-        this.resultJson = resultJson;
     }
 
     public String getIdentity() {

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.takin.emmet.reflect.RMethodUtils;
 import com.takin.rpc.remoting.exception.NoImplClassException;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.ServiceInfosHolder;
 
@@ -44,7 +44,7 @@ public class JavassistInvoker implements Invoker {
             logger.info(String.format("search method:%s", methodName));
             method = methodCache.putIfAbsent(mkey, method);
         }
-        
+
         Object invoker = Javassis.newInvoker(msg.getDefineClass(), implClass, methodName, msg.getmParamsTypes(), msg.getmReturnType());
 
         if (method == null) {

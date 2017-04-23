@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.takin.rpc.remoting.exception.NoImplClassException;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.ServiceInfosHolder;
 

@@ -1,6 +1,6 @@
 package com.takin.rpc.server;
 
-import com.takin.rpc.remoting.netty5.RemotingContext;
+import com.takin.rpc.remoting.netty4.RemotingContext;
 
 public interface IFilter {
 

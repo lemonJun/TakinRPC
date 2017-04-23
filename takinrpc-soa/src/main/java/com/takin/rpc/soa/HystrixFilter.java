@@ -1,6 +1,6 @@
 package com.takin.rpc.soa;
 
-import com.takin.rpc.remoting.netty5.RemotingContext;
+import com.takin.rpc.remoting.netty4.RemotingContext;
 import com.takin.rpc.server.IFilter;
 import com.takin.rpc.server.anno.FilterAnno;
 
