@@ -11,7 +11,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.google.common.base.Stopwatch;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

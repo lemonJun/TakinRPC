@@ -1,6 +1,6 @@
 package com.takin.rpc.remoting.codec;
 
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,8 +17,13 @@ public class FstDecoder extends ByteToMessageDecoder {
 
     private static final Logger logger = LoggerFactory.getLogger(FstDecoder.class);
 
-    private final FSTConfiguration config = FSTConfiguration.createDefaultConfiguration();
+    public static ThreadLocal<FSTConfiguration> conf = new ThreadLocal<FSTConfiguration>() {
+        public FSTConfiguration initialValue() {
+            return FSTConfiguration.createDefaultConfiguration();
+        }
+    };
 
+    @SuppressWarnings("rawtypes")
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         final Stopwatch watch = Stopwatch.createStarted();
@@ -29,7 +34,7 @@ public class FstDecoder extends ByteToMessageDecoder {
         in.readBytes(body);
         //        byte[] rawbyte = Snappy.uncompress(body);
 
-        RemotingProtocol object2 = (RemotingProtocol) config.asObject(body);
+        RemotingProtocol object2 = (RemotingProtocol) conf.get().asObject(body);
         out.add(object2);
         logger.info("fst decoder convert use:" + watch.toString());
     }

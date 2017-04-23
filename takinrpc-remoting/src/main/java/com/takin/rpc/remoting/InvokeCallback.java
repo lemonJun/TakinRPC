@@ -16,7 +16,7 @@
  */
 package com.takin.rpc.remoting;
 
-import com.takin.rpc.remoting.netty5.ResponseFuture;
+import com.takin.rpc.remoting.netty4.ResponseFuture;
 
 /**
  * @author lemon

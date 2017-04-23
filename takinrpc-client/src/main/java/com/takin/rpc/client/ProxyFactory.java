@@ -33,6 +33,7 @@ public class ProxyFactory {
      * @throws MalformedURLException
      */
     //url = "tcp://demo/NewsService";
+    @SuppressWarnings("unchecked")
     public static <T> T create(Class<?> interfaceclass, String serviceName) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
         String key = String.format("%s_%s", interfaceclass.getName(), serviceName);
         Object proxy = null;
@@ -48,6 +49,7 @@ public class ProxyFactory {
         return (T) proxy;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T create(Class<?> interfaceclass, String serviceName, Class<?> implMethod, LoadBalance balance) {//<T> T返回任意类型的数据？  返回代理的实例  泛型
         String key = String.format("%s_%s", interfaceclass.getName(), serviceName);
         Object proxy = null;

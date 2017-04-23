@@ -29,6 +29,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private Class<?> implClass = null;
     private String serviceName = "";
     private LoadBalance balance = new ConsistentHashLoadBalance();
+    @SuppressWarnings("unused")
     private boolean asyn = false;
 
     private final ExecutorService executor;
@@ -61,6 +62,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         String address = "";
@@ -100,6 +102,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
     }
 }
 
+@SuppressWarnings("rawtypes")
 class InvokeThread implements Callable<RemotingProtocol> {
 
     private String address;

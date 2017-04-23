@@ -1,6 +1,6 @@
 package com.takin.rpc.remoting;
 
-import com.takin.rpc.remoting.netty5.RemotingContext;
+import com.takin.rpc.remoting.netty4.RemotingContext;
 
 /**
  * 主要存放每个线程请求的上下文

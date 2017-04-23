@@ -22,7 +22,7 @@ public class ClientTest {
 
             System.out.println("result: " + hello.say("dd"));
             System.out.println("");
-
+            
             System.out.println("result: " + hello.say("ee"));
             System.out.println("");
 

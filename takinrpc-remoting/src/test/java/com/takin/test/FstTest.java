@@ -3,7 +3,7 @@ package com.takin.test;
 import org.nustaq.serialization.FSTConfiguration;
 
 import com.alibaba.fastjson.JSON;
-import com.takin.rpc.remoting.netty5.RemotingProtocol;
+import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 public class FstTest {
 
