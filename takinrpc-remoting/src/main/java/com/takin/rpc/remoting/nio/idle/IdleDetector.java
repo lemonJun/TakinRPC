@@ -1,9 +1,8 @@
 package com.takin.rpc.remoting.nio.idle;
 
-import java.util.concurrent.Future;
-
 import com.takin.emmet.concurrent.ConcurrentHashSet;
 import com.takin.emmet.util.SystemClock;
+import com.takin.rpc.remoting.netty4.ResponseFuture;
 import com.takin.rpc.remoting.nio.channel.NioChannel;
 import com.takin.rpc.remoting.nio.channel.NioChannelImpl;
 import com.takin.rpc.remoting.nio.config.NioConfig;
@@ -22,7 +21,7 @@ public class IdleDetector {
 
         channel.getCloseFuture().addListener(new IoFutureListener() {
             @Override
-            public void operationComplete(Future future) throws Exception {
+            public void operationComplete(ResponseFuture future) throws Exception {
                 removeChannel(((Futures.CloseFuture) future).channel());
             }
         });

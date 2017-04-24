@@ -25,6 +25,13 @@ import com.takin.rpc.remoting.nio.handler.NioHandler;
 import com.takin.rpc.remoting.nio.idle.IdleDetector;
 import com.takin.rpc.remoting.nio.loop.NioSelectorLoop;
 
+/**
+ * 
+ *
+ * @author WangYazhou
+ * @date  2017年4月24日 下午1:53:18
+ * @see
+ */
 public abstract class AbstractNioProcessor implements NioProcessor {
     protected static final Logger LOGGER = LoggerFactory.getLogger(NioProcessor.class);
     private NioHandler eventHandler;
@@ -56,11 +63,9 @@ public abstract class AbstractNioProcessor implements NioProcessor {
         }
         return write(channel, msg, true);
     }
-
+    
     private Futures.WriteFuture write(NioChannel channel, Object msg, boolean flush) {
-
         Futures.WriteFuture future = Futures.newWriteFuture();
-
         if (msg == null) {
             future.setSuccess(true);
             future.setMsg("msg is null");

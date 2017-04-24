@@ -17,7 +17,6 @@ import com.takin.emmet.util.AddressUtil;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
 import com.takin.rpc.client.loadbalance.LoadBalance;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
-import com.takin.rpc.remoting.util.RemotingHelper;
 
 /**
  * ProxyStandard

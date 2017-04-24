@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Stopwatch;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.InvokeCallback;
-import com.takin.rpc.remoting.codec.FstDecoder;
-import com.takin.rpc.remoting.codec.FstEncoder;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
 import com.takin.rpc.remoting.codec.KyroMsgEncoder;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
@@ -229,7 +227,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             logger.error("shutdown error", e);
         }
     }
-
+    
     /**
      * 如果通道不可用  则应将其关闭 以免占用资源
      * @param channel

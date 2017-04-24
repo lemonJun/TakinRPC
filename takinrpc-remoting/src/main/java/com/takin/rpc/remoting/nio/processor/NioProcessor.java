@@ -7,7 +7,6 @@ import com.takin.rpc.remoting.nio.channel.NioChannel;
 import com.takin.rpc.remoting.nio.handler.Futures;
 
 /**
- * @author Robert HG (254963746@qq.com) on 1/24/16.
  */
 public interface NioProcessor {
 

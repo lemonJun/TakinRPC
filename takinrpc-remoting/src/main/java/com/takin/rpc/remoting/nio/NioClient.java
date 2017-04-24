@@ -15,11 +15,11 @@ public class NioClient {
     public NioClient(NioClientConfig clientConfig, NioHandler eventHandler, ChannelInitializer channelInitializer) {
         this.processor = new NioClientProcessor(clientConfig, eventHandler, channelInitializer);
     }
-
+    
     public Futures.ConnectFuture connect(SocketAddress remoteAddress) {
 
         processor.start();
-
+        
         return processor.connect(remoteAddress);
     }
 
