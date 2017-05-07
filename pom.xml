@@ -17,7 +17,6 @@
 		<module>takinrpc-server</module>
 		<module>takinrpc-client</module>
 		<module>takinrpc-tcc</module>
-		<module>takinrpc-soa</module>
 		<module>takinrpc-example</module>
 		<module>takinrpc-remoting</module>
 		<module>takinrpc-registry</module>
@@ -98,6 +97,12 @@
 				<version>3.0</version>
 			</dependency>
 
+			<dependency>
+				<groupId>io.reactivex.rxjava2</groupId>
+				<artifactId>rxjava</artifactId>
+				<version>2.0.9</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>com.takin</groupId>
 				<artifactId>emmet</artifactId>
@@ -190,7 +195,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

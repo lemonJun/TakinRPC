@@ -16,7 +16,7 @@ public class ClientTest {
             System.out.println("");
             System.out.println("result: " + hello.say("aa"));
             System.out.println("");
-            
+
             System.out.println("result: " + hello.say("bb"));
             System.out.println("");
 

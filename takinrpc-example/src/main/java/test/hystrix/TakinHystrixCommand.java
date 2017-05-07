@@ -1,4 +1,4 @@
-package com.takin.rpc.soa;
+package test.hystrix;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

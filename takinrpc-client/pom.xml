@@ -19,6 +19,14 @@
 			<groupId>com.takinrpc</groupId>
 			<artifactId>takinrpc-remoting</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.netflix.hystrix</groupId>
+			<artifactId>hystrix-metrics-event-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxjava</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
