@@ -26,8 +26,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>lemon</groupId>
+			<artifactId>takinmysql</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
