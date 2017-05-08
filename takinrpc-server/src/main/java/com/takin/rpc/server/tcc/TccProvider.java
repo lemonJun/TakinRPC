@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -24,16 +28,21 @@ import com.takin.rpc.server.ServiceInfos.SessionBean;
 @Singleton
 public class TccProvider {
 
+    private static final Logger logger = LoggerFactory.getLogger(TccProvider.class);
+
     private final Multimap<Class<?>, Tcc> compenMap = ArrayListMultimap.create();
 
+    @SuppressWarnings("unchecked")
     @Inject
     private TccProvider() {
         ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
         List<SessionBean> sessionBeanList = serviceInfos.getSessionBeanList();
         if (CollectionUtil.isNotEmpty(sessionBeanList)) {
             for (SessionBean bean : sessionBeanList) {
-                if (bean.getImplClass().getClass().isAnnotationPresent(Compensable.class)) {
-                    Compensable compenanno = bean.getImplClass().getClass().getAnnotation(Compensable.class);
+                logger.info(JSON.toJSONString(bean));
+                if (bean.getImplClass().getCls().isAnnotationPresent(Compensable.class)) {
+                    Compensable compenanno = (Compensable) bean.getImplClass().getCls().getAnnotation(Compensable.class);
+                    logger.info(JSON.toJSONString(compenanno));
                     compenMap.put(compenanno.interfaceClass(), new Tcc(compenanno.cancellableKey(), compenanno.confirmableKey()));
                 }
             }
