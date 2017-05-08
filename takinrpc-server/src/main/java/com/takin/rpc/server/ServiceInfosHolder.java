@@ -1,5 +1,7 @@
 package com.takin.rpc.server;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Singleton;
@@ -7,17 +9,29 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.takin.emmet.collection.CollectionUtil;
 import com.takin.rpc.server.ServiceInfos.SessionBean;
+
+import io.netty.util.internal.StringUtil;
 
 @Singleton
 public class ServiceInfosHolder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceInfosHolder.class);
 
+    private final Multimap<String, SessionBean> serviceimplmap = ArrayListMultimap.create();
+
     @Inject
     private ServiceInfosHolder() {
+        ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
+        if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
+            for (SessionBean bean : serviceInfos.getSessionBeanList()) {
+                serviceimplmap.put(bean.getDefineName(), bean);
+            }
+        }
     }
 
     /** 
@@ -31,11 +45,19 @@ public class ServiceInfosHolder {
         if (implClass != null) {
             return implClass;
         }
-        ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
-        if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
-            for (SessionBean bean : serviceInfos.getSessionBeanList()) {
-                if (bean.getDefineClass().getCls().getName().equals(defineClass.getName())) {
-                    return bean.getImplClass().getCls();
+
+        Collection<SessionBean> beans = serviceimplmap.get(defineClass.getName());
+        if (CollectionUtil.isNotEmpty(beans)) {
+            Iterator<SessionBean> beanite = beans.iterator();
+            if (beans.size() == 1) {
+                SessionBean bean = beanite.next();
+                return bean.getImplClass().getCls();
+            } else {
+                while (beanite.hasNext()) {
+                    SessionBean bean = beanite.next();
+                    if (bean.isDefaultimpl()) {
+                        return bean.getImplClass().getCls();
+                    }
                 }
             }
         }
@@ -49,10 +71,15 @@ public class ServiceInfosHolder {
      * @return
      */
     public Class<?> getImplClass(Class<?> defineClass, String lookup) {
-        ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
-        if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
-            for (SessionBean bean : serviceInfos.getSessionBeanList()) {
-                if (bean.getDefineClass().getCls().getName().equals(defineClass.getName())) {
+        if (StringUtil.isNullOrEmpty(lookup)) {
+            return null;
+        }
+        Collection<SessionBean> beans = serviceimplmap.get(defineClass.getName());
+        if (CollectionUtil.isNotEmpty(beans)) {
+            Iterator<SessionBean> beanite = beans.iterator();
+            while (beanite.hasNext()) {
+                SessionBean bean = beanite.next();
+                if (lookup.toLowerCase().equals(bean.getLookup().toLowerCase())) {
                     return bean.getImplClass().getCls();
                 }
             }

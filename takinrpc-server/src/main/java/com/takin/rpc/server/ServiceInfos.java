@@ -3,6 +3,8 @@ package com.takin.rpc.server;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 /**
  * 
  * @author Service Platform Architecture Team (spat@58.com)
@@ -16,22 +18,28 @@ public class ServiceInfos {
     private List<SessionBean> sessionBeanList;
 
     public ServiceInfos() {
-
+        sessionBeanList = Lists.newArrayList();
     }
 
     public ServiceInfos(List<SessionBean> sessionBeanList) {
-        super();
         this.sessionBeanList = sessionBeanList;
+        if (sessionBeanList == null) {
+            sessionBeanList = Lists.newArrayList();
+        }
     }
 
     public void setSessionBeanList(List<SessionBean> sessionBeanList) {
         this.sessionBeanList = sessionBeanList;
+        if (sessionBeanList == null) {
+            sessionBeanList = Lists.newArrayList();
+        }
     }
 
     public List<SessionBean> getSessionBeanList() {
         return sessionBeanList;
     }
 
+    @SuppressWarnings("rawtypes")
     public static class SessionBean {
         private String defineName;
         private ClassInfo defineClass;

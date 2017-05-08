@@ -5,12 +5,12 @@ import java.util.List;
 
 import com.takin.rpc.server.anno.ServiceImpl;
 
-@ServiceImpl
-public class HelloImpl implements Hello {
+@ServiceImpl(isdefault = true)
+public class HelloImpl2 implements Hello {
 
     @Override
     public String say(String name) {
-        return "hello  111" + name;
+        return "hello 333" + name;
     }
 
     @Override
