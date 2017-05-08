@@ -21,4 +21,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ServiceImpl {
     public String lookUP() default "";
+
+    public String name() default "";
 }

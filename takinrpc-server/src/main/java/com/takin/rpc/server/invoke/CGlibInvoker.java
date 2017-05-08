@@ -15,6 +15,13 @@ import com.takin.rpc.server.ServiceInfosHolder;
 import net.sf.cglib.reflect.FastClass;
 import net.sf.cglib.reflect.FastMethod;
 
+/**
+ * 此处可以加入事务控制
+ *
+ * @author WangYazhou
+ * @date  2017年5月8日 上午11:57:40
+ * @see
+ */
 @Singleton
 public class CGlibInvoker implements Invoker {
 
@@ -24,6 +31,7 @@ public class CGlibInvoker implements Invoker {
     public CGlibInvoker() {
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Object invoke(RemotingProtocol msg) throws Exception {
         Stopwatch watch = Stopwatch.createStarted();
