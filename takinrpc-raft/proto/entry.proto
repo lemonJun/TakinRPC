@@ -1,0 +1,4 @@
+message Entry {
+	required int64 term = 1;
+	required bytes command = 2;
+}

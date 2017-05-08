@@ -8,7 +8,7 @@ public class ServerTest {
         try {
             RPCServer server = new RPCServer();
             server.init(new String[] {}, false);
-            server.start();
+            server.init(new String[] {}, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
