@@ -1,5 +1,6 @@
 package com.takin.rpc.server.tcc;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.inject.Inject;
@@ -8,6 +9,7 @@ import com.takin.emmet.util.Tuple;
 import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.Scaner;
 import com.takin.rpc.server.ServiceInfos;
+import com.takin.rpc.server.ServiceInfos.SessionBean;
 
 /**
  * 
@@ -27,11 +29,13 @@ public class TccProvider {
     }
 
     /**
+     * 
      * 初始化接口服务的事务补偿关系
      */
     public void init() {
         ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
-
+        List<SessionBean> sessionBeanList = serviceInfos.getSessionBeanList();
+        
     }
 
     //判断此接口服务是否需要补偿 

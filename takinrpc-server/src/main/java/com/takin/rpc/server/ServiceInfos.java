@@ -34,9 +34,10 @@ public class ServiceInfos {
 
     public static class SessionBean {
         private String defineName;
-        private Map<String, String> instanceMap;
         private ClassInfo defineClass;
         private ClassInfo implClass;
+        private String lookup;
+        private boolean defaultimpl = false;
 
         public SessionBean() {
 
@@ -45,7 +46,6 @@ public class ServiceInfos {
         public SessionBean(String defineName, Map<String, String> instanceMap, ClassInfo defineClass) {
             super();
             this.defineName = defineName;
-            this.instanceMap = instanceMap;
             this.defineClass = defineClass;
         }
 
@@ -65,20 +65,28 @@ public class ServiceInfos {
             this.defineClass = defineClass;
         }
 
-        public void setInstanceMap(Map<String, String> instanceMap) {
-            this.instanceMap = instanceMap;
-        }
-
-        public Map<String, String> getInstanceMap() {
-            return instanceMap;
-        }
-
         public ClassInfo getImplClass() {
             return implClass;
         }
 
         public void setImplClass(ClassInfo implClass) {
             this.implClass = implClass;
+        }
+
+        public String getLookup() {
+            return lookup;
+        }
+
+        public void setLookup(String lookup) {
+            this.lookup = lookup;
+        }
+
+        public boolean isDefaultimpl() {
+            return defaultimpl;
+        }
+
+        public void setDefaultimpl(boolean defaultimpl) {
+            this.defaultimpl = defaultimpl;
         }
 
     }

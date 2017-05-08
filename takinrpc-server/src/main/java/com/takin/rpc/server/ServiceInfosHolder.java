@@ -16,20 +16,39 @@ public class ServiceInfosHolder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceInfosHolder.class);
 
-    private ServiceInfos serviceInfos;
-
     @Inject
-    public ServiceInfosHolder() {
+    private ServiceInfosHolder() {
     }
 
-    public ServiceInfos getServiceInfos() {
-        return serviceInfos;
-    }
-
+    /** 
+     * 
+     * 获得一个接口的实现类
+     * @param defineClass 接口类
+     * @param implClass  多实现类的情况下   客户端可以指定   一般都是null 
+     * @return
+     */
     public Class<?> getImplClass(Class<?> defineClass, Class<?> implClass) {
         if (implClass != null) {
             return implClass;
         }
+        ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
+        if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
+            for (SessionBean bean : serviceInfos.getSessionBeanList()) {
+                if (bean.getDefineClass().getCls().getName().equals(defineClass.getName())) {
+                    return bean.getImplClass().getCls();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取一个接口的实现类
+     * @param defineClass
+     * @param lookup  指定名称的实现类
+     * @return
+     */
+    public Class<?> getImplClass(Class<?> defineClass, String lookup) {
         ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
         if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
             for (SessionBean bean : serviceInfos.getSessionBeanList()) {

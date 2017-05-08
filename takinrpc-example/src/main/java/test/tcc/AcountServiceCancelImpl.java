@@ -2,7 +2,7 @@ package test.tcc;
 
 import com.takin.rpc.server.anno.ServiceImpl;
 
-@ServiceImpl(name = "acountcancle")
+@ServiceImpl(lookUP = "acountcancle")
 public class AcountServiceCancelImpl implements AcountService {
 
     @Override

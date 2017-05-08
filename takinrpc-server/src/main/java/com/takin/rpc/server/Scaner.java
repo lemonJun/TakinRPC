@@ -4,9 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,6 +13,7 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.takin.rpc.server.ServiceInfos.SessionBean;
@@ -45,7 +44,7 @@ public class Scaner {
      * 从jar中扫描出服务类
      * @param path
      * @param classLoader
-     * @return
+     * @return 
      * @throws Exception
      */
 
@@ -114,7 +113,7 @@ public class Scaner {
                 }
             }
         }
-        contractInfo = createContractInfo(contractClassInfos, behaviorClassInfos);
+        contractInfo = createSeriveImpl(contractClassInfos, behaviorClassInfos);
         logger.info("finish scan jar");
     }
 
@@ -241,38 +240,67 @@ public class Scaner {
     }
 
     /**
+     * 这部分有问题  一个接口类默认只能有一个实现类   这样是不对的
      * create ContractInfo from contracts, behaviors
      * @param contracts
      * @param behaviors
      * @return
      */
-
-    private ServiceInfos createContractInfo(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
+    private ServiceInfos createSeriveImpl(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
         ServiceInfos contractInfo = new ServiceInfos();
         List<SessionBean> sessionBeanList = new ArrayList<SessionBean>();
-        for (ClassInfo c : contracts) {
-            SessionBean bean = new SessionBean();
-            bean.setDefineClass(c);
-            bean.setDefineName(c.getCls().getName());
-            Map<String, String> implMap = new HashMap<String, String>();
+        for (ClassInfo c : behaviors) {
+            try {
+                SessionBean bean = new SessionBean();
+                bean.setImplClass(c);
+                ServiceImpl implanno = (ServiceImpl) c.getCls().getAnnotation(ServiceImpl.class);
+                bean.setDefaultimpl(implanno.isdefault());
+                bean.setLookup(implanno.lookUP());
 
-            for (ClassInfo b : behaviors) {
-                Class<?>[] interfaceAry = b.getCls().getInterfaces();
-                for (Class<?> item : interfaceAry) {
-                    if (item == c.getCls()) {
-                        implMap.put(b.getLookUP(), b.getCls().getName());
-                        bean.setImplClass(b);
-                        break;
+                for (ClassInfo b : contracts) {
+                    Class<?>[] interfaceAry = c.getCls().getInterfaces();
+                    for (Class<?> item : interfaceAry) {
+                        if (item == b.getCls()) {
+                            bean.setDefineClass(b);
+                            bean.setDefineName(b.getCls().getName());
+                            break;
+                        }
                     }
                 }
+                logger.info(JSON.toJSONString(bean));
+                sessionBeanList.add(bean);
+            } catch (Exception e) {
+                logger.error("{}", c.getClass().getName(), e);
             }
-            bean.setInstanceMap(implMap);
-            sessionBeanList.add(bean);
         }
-
         contractInfo.setSessionBeanList(sessionBeanList);
         return contractInfo;
     }
+    //    private ServiceInfos createSeriveImpl(List<ClassInfo> contracts, List<ClassInfo> behaviors) {
+    //        ServiceInfos contractInfo = new ServiceInfos();
+    //        List<SessionBean> sessionBeanList = new ArrayList<SessionBean>();
+    //        for (ClassInfo c : contracts) {
+    //            SessionBean bean = new SessionBean();
+    //            bean.setDefineClass(c);
+    //            bean.setDefineName(c.getCls().getName());
+    //            //            Map<String, String> implMap = new HashMap<String, String>();
+    //            for (ClassInfo b : behaviors) {
+    //                Class<?>[] interfaceAry = b.getCls().getInterfaces();
+    //                for (Class<?> item : interfaceAry) {
+    //                    if (item == c.getCls()) {
+    //                        //                        implMap.put(b.getLookUP(), b.getCls().getName());
+    //                        bean.setImplClass(b);
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //            //            bean.setInstanceMap(implMap);
+    //            sessionBeanList.add(bean);
+    //        }
+    //        
+    //        contractInfo.setSessionBeanList(sessionBeanList);
+    //        return contractInfo;
+    //    }
 
     /**
      * get all interfaces

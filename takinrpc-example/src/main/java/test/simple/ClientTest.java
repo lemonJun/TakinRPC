@@ -17,20 +17,20 @@ public class ClientTest {
             System.out.println("result: " + hello.say("aa"));
             System.out.println("");
 
-            System.out.println("result: " + hello.say("bb"));
-            System.out.println("");
-
-            System.out.println("result: " + hello.say("dd"));
-            System.out.println("");
-            
-            System.out.println("result: " + hello.say("ee"));
-            System.out.println("");
-
-            System.out.println("result: " + hello.say("ff"));
-            System.out.println("");
-
-            System.out.println("result: " + hello.say("hh"));
-            System.out.println("");
+            //            System.out.println("result: " + hello.say("bb"));
+            //            System.out.println("");
+            //
+            //            System.out.println("result: " + hello.say("dd"));
+            //            System.out.println("");
+            //
+            //            System.out.println("result: " + hello.say("ee"));
+            //            System.out.println("");
+            //
+            //            System.out.println("result: " + hello.say("ff"));
+            //            System.out.println("");
+            //
+            //            System.out.println("result: " + hello.say("hh"));
+            //            System.out.println("");
 
             System.out.println("result: " + hello.say("u"));
         } catch (Exception e) {

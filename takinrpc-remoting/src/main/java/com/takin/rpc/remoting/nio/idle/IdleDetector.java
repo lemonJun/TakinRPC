@@ -19,12 +19,12 @@ public class IdleDetector {
     public void addChannel(NioChannel channel) {
         channels.add(channel);
 
-        channel.getCloseFuture().addListener(new IoFutureListener() {
-            @Override
-            public void operationComplete(ResponseFuture future) throws Exception {
-                removeChannel(((Futures.CloseFuture) future).channel());
-            }
-        });
+        //        channel.getCloseFuture().addListener(new IoFutureListener() {
+        //            @Override
+        //            public void operationComplete(ResponseFuture future) throws Exception {
+        //                removeChannel(((Futures.CloseFuture) future).channel());
+        //            }
+        //        });
     }
 
     public void removeChannel(NioChannel channel) {

@@ -37,10 +37,11 @@ public class CGlibInvoker implements Invoker {
         Stopwatch watch = Stopwatch.createStarted();
         Object[] args = msg.getArgs();
         Class<?> implClass = GuiceDI.getInstance(ServiceInfosHolder.class).getImplClass(msg.getDefineClass(), msg.getImplClass());
-
         if (implClass == null) {
             throw new NoImplClassException(msg.getDefineClass().getName());
         }
+        logger.info(implClass.getName());
+
         FastClass fastClazz = FastClass.create(implClass);
         // fast class反射调用  
         Object target = fastClazz.newInstance();

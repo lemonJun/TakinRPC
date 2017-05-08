@@ -22,5 +22,6 @@ import java.lang.annotation.Target;
 public @interface ServiceImpl {
     public String lookUP() default "";
 
-    public String name() default "";
+    public boolean isdefault() default false;
+
 }
