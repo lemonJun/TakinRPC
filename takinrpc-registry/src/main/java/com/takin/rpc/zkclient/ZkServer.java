@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +25,8 @@ import org.apache.zookeeper.server.ZooKeeperServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.zkclient.exception.ZkException;
-import com.github.zkclient.exception.ZkInterruptedException;
+import com.takin.rpc.zkclient.exception.ZkException;
+import com.takin.rpc.zkclient.exception.ZkInterruptedException;
 
 /**
  * 内嵌方式起动一个zk

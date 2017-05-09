@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.util.List;
 

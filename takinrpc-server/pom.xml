@@ -25,6 +25,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>com.takinrpc</groupId>
+			<artifactId>takinrpc-registry</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
@@ -33,7 +37,7 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

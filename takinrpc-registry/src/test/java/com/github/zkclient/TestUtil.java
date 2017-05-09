@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Ignore;
 
-import com.github.zkclient.ZkServer;
+import com.takin.rpc.zkclient.ZkServer;
 
 @Ignore
 public class TestUtil {

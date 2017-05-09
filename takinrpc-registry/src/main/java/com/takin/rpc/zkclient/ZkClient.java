@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.util.Date;
 import java.util.List;
@@ -39,13 +39,13 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.zkclient.ZkEventThread.ZkEvent;
-import com.github.zkclient.exception.ZkBadVersionException;
-import com.github.zkclient.exception.ZkException;
-import com.github.zkclient.exception.ZkInterruptedException;
-import com.github.zkclient.exception.ZkNoNodeException;
-import com.github.zkclient.exception.ZkNodeExistsException;
-import com.github.zkclient.exception.ZkTimeoutException;
+import com.takin.rpc.zkclient.ZkEventThread.ZkEvent;
+import com.takin.rpc.zkclient.exception.ZkBadVersionException;
+import com.takin.rpc.zkclient.exception.ZkException;
+import com.takin.rpc.zkclient.exception.ZkInterruptedException;
+import com.takin.rpc.zkclient.exception.ZkNoNodeException;
+import com.takin.rpc.zkclient.exception.ZkNodeExistsException;
+import com.takin.rpc.zkclient.exception.ZkTimeoutException;
 
 /**
  * 

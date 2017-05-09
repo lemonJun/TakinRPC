@@ -3,7 +3,7 @@ package zk;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
 
-import com.github.zkclient.ZkClient;
+import com.takin.rpc.zkclient.ZkClient;
 
 public class ZKClientTest {
 

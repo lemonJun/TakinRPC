@@ -2,7 +2,7 @@ package zk;
 
 import java.util.List;
 
-import com.github.zkclient.IZkChildListener;
+import com.takin.rpc.zkclient.IZkChildListener;
 
 public class CustomListener implements IZkChildListener {
 

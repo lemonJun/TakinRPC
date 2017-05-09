@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 /**
  * An {@link IZkDataListener} can be registered at a {@link ZkClient} for listening on zk data changes for a given path.

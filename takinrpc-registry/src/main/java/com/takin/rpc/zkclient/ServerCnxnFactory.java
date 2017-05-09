@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 
 import org.apache.zookeeper.server.ZooKeeperServer;
 
-import com.github.zkclient.ZkClientUtils.ZkVersion;
+import com.takin.rpc.zkclient.ZkClientUtils.ZkVersion;
 
 /**
  * Adapter for zookeeper 3.3.x/3.4.x

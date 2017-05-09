@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.takin.rpc.registry;
+package com.takin.rpc.server.registry;
 
 public class ZkGroupDirs {
 

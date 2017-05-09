@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -24,7 +24,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import com.github.zkclient.exception.ZkInterruptedException;
+import com.takin.rpc.zkclient.exception.ZkInterruptedException;
 
 public class ZkClientUtils {
 

@@ -1,6 +1,6 @@
-package com.takin.rpc.registry;
+package com.takin.rpc.server.registry;
 
-import com.github.zkclient.ZkClient;
+import com.takin.rpc.zkclient.ZkClient;
 
 public class ServerRegistryInit {
 
@@ -11,5 +11,5 @@ public class ServerRegistryInit {
     public void init(String zkhosts) {
         zkclient = new ZkClient(zkhosts);
     }
-    
+
 }

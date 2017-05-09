@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.takin.rpc.zkclient.ZkClientUtils;
+
 /**
  * 
  * @author adyliu(imxylz@gmail.com)
@@ -16,7 +18,7 @@ public class ZkClientUtilsTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClientUtils#leadingZeros(long, int)}.
+     * {@link com.takin.rpc.zkclient.ZkClientUtils#leadingZeros(long, int)}.
      */
     @Test
     public void testLeadingZeros() {

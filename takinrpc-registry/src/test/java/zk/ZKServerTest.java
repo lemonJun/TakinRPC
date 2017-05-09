@@ -2,7 +2,7 @@ package zk;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import com.github.zkclient.ZkServer;
+import com.takin.rpc.zkclient.ZkServer;
 
 public class ZKServerTest {
 

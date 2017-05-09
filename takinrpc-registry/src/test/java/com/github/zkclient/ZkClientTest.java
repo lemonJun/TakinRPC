@@ -3,7 +3,6 @@
  */
 package com.github.zkclient;
 
-import com.github.zkclient.exception.ZkNoNodeException;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.data.Stat;
@@ -13,6 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.takin.rpc.zkclient.AbstractListener;
+import com.takin.rpc.zkclient.IZkChildListener;
+import com.takin.rpc.zkclient.IZkDataListener;
+import com.takin.rpc.zkclient.IZkStateListener;
+import com.takin.rpc.zkclient.ZkClient;
+import com.takin.rpc.zkclient.ZkServer;
+import com.takin.rpc.zkclient.exception.ZkNoNodeException;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +105,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#subscribeChildChanges(java.lang.String, com.github.zkclient.IZkChildListener)}
+     * {@link com.takin.rpc.zkclient.ZkClient#subscribeChildChanges(java.lang.String, com.takin.rpc.zkclient.IZkChildListener)}
      * .
      */
     @Test
@@ -241,7 +248,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#subscribeDataChanges(java.lang.String, com.github.zkclient.IZkDataListener)}
+     * {@link com.takin.rpc.zkclient.ZkClient#subscribeDataChanges(java.lang.String, com.takin.rpc.zkclient.IZkDataListener)}
      * .
      */
     @Test
@@ -321,7 +328,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#createPersistent(java.lang.String, boolean)}
+     * {@link com.takin.rpc.zkclient.ZkClient#createPersistent(java.lang.String, boolean)}
      * .
      */
     @Test
@@ -339,7 +346,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#createPersistent(java.lang.String, byte[])}
+     * {@link com.takin.rpc.zkclient.ZkClient#createPersistent(java.lang.String, byte[])}
      * .
      */
     @Test
@@ -352,7 +359,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#createPersistentSequential(java.lang.String, byte[])}
+     * {@link com.takin.rpc.zkclient.ZkClient#createPersistentSequential(java.lang.String, byte[])}
      * .
      */
     @Test
@@ -366,7 +373,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#createEphemeral(java.lang.String)}.
+     * {@link com.takin.rpc.zkclient.ZkClient#createEphemeral(java.lang.String)}.
      */
     @Test
     public void testCreateEphemeralString() {
@@ -379,7 +386,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#create(java.lang.String, byte[], org.apache.zookeeper.CreateMode)}
+     * {@link com.takin.rpc.zkclient.ZkClient#create(java.lang.String, byte[], org.apache.zookeeper.CreateMode)}
      * .
      */
     @Test
@@ -403,7 +410,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#getChildren(java.lang.String)}.
+     * {@link com.takin.rpc.zkclient.ZkClient#getChildren(java.lang.String)}.
      */
     @Test
     public void testGetChildrenString() {
@@ -420,7 +427,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#exists(java.lang.String)}.
+     * {@link com.takin.rpc.zkclient.ZkClient#exists(java.lang.String)}.
      */
     @Test
     public void testExistsString() {
@@ -434,7 +441,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#deleteRecursive(java.lang.String)}.
+     * {@link com.takin.rpc.zkclient.ZkClient#deleteRecursive(java.lang.String)}.
      */
     @Test
     public void testDeleteRecursive() {
@@ -449,7 +456,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#waitUntilExists(java.lang.String, java.util.concurrent.TimeUnit, long)}
+     * {@link com.takin.rpc.zkclient.ZkClient#waitUntilExists(java.lang.String, java.util.concurrent.TimeUnit, long)}
      * .
      */
     @Test
@@ -468,7 +475,7 @@ public class ZkClientTest {
     }
 
     /**
-     * Test method for {@link com.github.zkclient.ZkClient#waitUntilConnected()}
+     * Test method for {@link com.takin.rpc.zkclient.ZkClient#waitUntilConnected()}
      * .
      */
     @Test
@@ -486,7 +493,7 @@ public class ZkClientTest {
 
     /**
      * Test method for
-     * {@link com.github.zkclient.ZkClient#readData(java.lang.String, org.apache.zookeeper.data.Stat)}
+     * {@link com.takin.rpc.zkclient.ZkClient#readData(java.lang.String, org.apache.zookeeper.data.Stat)}
      * .
      */
     @Test
@@ -500,7 +507,7 @@ public class ZkClientTest {
 
 
     /**
-     * Test method for {@link com.github.zkclient.ZkClient#numberOfListeners()}.
+     * Test method for {@link com.takin.rpc.zkclient.ZkClient#numberOfListeners()}.
      */
     @Test
     public void testNumberOfListeners() {
@@ -530,7 +537,7 @@ public class ZkClientTest {
     }
 
     /**
-     * Test method for {@link com.github.zkclient.ZkClient#getZooKeeper()}.
+     * Test method for {@link com.takin.rpc.zkclient.ZkClient#getZooKeeper()}.
      */
     @Test
     public void testGetZooKeeper() {

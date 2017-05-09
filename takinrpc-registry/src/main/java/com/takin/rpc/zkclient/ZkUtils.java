@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-package com.takin.rpc.registry;
+package com.takin.rpc.zkclient;
 
 import java.util.List;
 
-import com.github.zkclient.ZkClient;
-import com.github.zkclient.exception.ZkNoNodeException;
-import com.github.zkclient.exception.ZkNodeExistsException;
 import com.takin.emmet.io.NIOUtils;
+import com.takin.rpc.zkclient.exception.ZkNoNodeException;
+import com.takin.rpc.zkclient.exception.ZkNodeExistsException;
 
 /**
  * @author adyliu (imxylz@gmail.com)

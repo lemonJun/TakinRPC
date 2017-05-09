@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
-import com.github.zkclient.exception.ZkException;
-import com.github.zkclient.exception.ZkInterruptedException;
-import com.github.zkclient.exception.ZkNoNodeException;
-import com.github.zkclient.exception.ZkNodeExistsException;
-import com.github.zkclient.exception.ZkTimeoutException;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+
+import com.takin.rpc.zkclient.exception.ZkException;
+import com.takin.rpc.zkclient.exception.ZkInterruptedException;
+import com.takin.rpc.zkclient.exception.ZkNoNodeException;
+import com.takin.rpc.zkclient.exception.ZkNodeExistsException;
+import com.takin.rpc.zkclient.exception.ZkTimeoutException;
 
 import java.io.Closeable;
 import java.util.List;
@@ -141,7 +142,7 @@ public interface IZkClient extends Closeable {
     /**
      * Create a persistent node with empty data (null)
      * <p>
-     * If the createParents is true, neither {@link ZkNodeExistsException} nor {@link com.github.zkclient.exception.ZkNoNodeException} were throwed.
+     * If the createParents is true, neither {@link ZkNodeExistsException} nor {@link com.takin.rpc.zkclient.exception.ZkNoNodeException} were throwed.
      * </p>
      *
      * @param path          the path for the node
@@ -237,7 +238,7 @@ public interface IZkClient extends Closeable {
      *
      * @param path the path for the node
      * @return the data for the node
-     * @throws com.github.zkclient.exception.ZkNoNodeException if the node not exists
+     * @throws com.takin.rpc.zkclient.exception.ZkNoNodeException if the node not exists
      * @see #readData(String, boolean)
      */
     byte[] readData(String path);
@@ -246,7 +247,7 @@ public interface IZkClient extends Closeable {
      * read the data for the node
      *
      * @param path                      the path for the node
-     * @param returnNullIfPathNotExists if true no {@link com.github.zkclient.exception.ZkNoNodeException} thrown
+     * @param returnNullIfPathNotExists if true no {@link com.takin.rpc.zkclient.exception.ZkNoNodeException} thrown
      * @return the data for the node
      */
     byte[] readData(String path, boolean returnNullIfPathNotExists);
@@ -386,7 +387,7 @@ public interface IZkClient extends Closeable {
      * @param data            the data for the node
      * @param expectedVersion the version for the node
      * @return the stat for the node
-     * @see #cas(String, com.github.zkclient.IZkClient.DataUpdater)
+     * @see #cas(String, com.takin.rpc.zkclient.IZkClient.DataUpdater)
      */
     Stat writeData(String path, byte[] data, int expectedVersion);
 

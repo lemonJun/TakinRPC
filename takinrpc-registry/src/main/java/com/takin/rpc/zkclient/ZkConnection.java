@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient;
+package com.takin.rpc.zkclient;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +32,7 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.zkclient.exception.ZkException;
+import com.takin.rpc.zkclient.exception.ZkException;
 
 public class ZkConnection {
 

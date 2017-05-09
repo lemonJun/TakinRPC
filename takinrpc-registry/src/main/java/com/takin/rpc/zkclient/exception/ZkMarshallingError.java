@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient.exception;
+package com.takin.rpc.zkclient.exception;
 
-public class ZkInterruptedException extends ZkException {
+public class ZkMarshallingError extends ZkException {
 
     private static final long serialVersionUID = 1L;
 
-    public ZkInterruptedException(InterruptedException e) {
-        super(e);
-        Thread.currentThread().interrupt();
+    public ZkMarshallingError() {
+        super();
+    }
+
+    public ZkMarshallingError(Throwable cause) {
+        super(cause);
+    }
+
+    public ZkMarshallingError(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ZkMarshallingError(String message) {
+        super(message);
     }
 }

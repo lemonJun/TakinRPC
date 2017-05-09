@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient.exception;
+package com.takin.rpc.zkclient.exception;
 
 import org.apache.zookeeper.KeeperException;
 

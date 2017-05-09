@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.zkclient.exception;
+package com.takin.rpc.zkclient.exception;
 
 import org.apache.zookeeper.KeeperException;
 
-public class ZkNodeExistsException extends ZkException {
+public class ZkBadVersionException extends ZkException {
 
     private static final long serialVersionUID = 1L;
 
-    public ZkNodeExistsException() {
+    public ZkBadVersionException() {
         super();
     }
 
-    public ZkNodeExistsException(KeeperException cause) {
+    public ZkBadVersionException(KeeperException cause) {
         super(cause);
     }
 
-    public ZkNodeExistsException(String message, KeeperException cause) {
+    public ZkBadVersionException(String message, KeeperException cause) {
         super(message, cause);
     }
 
-    public ZkNodeExistsException(String message) {
+    public ZkBadVersionException(String message) {
         super(message);
     }
 }
