@@ -53,7 +53,7 @@ public class ServerCnxnFactory {
                 factory.shutdownMethod = clazz.getDeclaredMethod("shutdown", new Class[0]);
                 factory.joinMethod = clazz.getMethod("join", new Class[0]);
                 factory.startupMethod = clazz.getDeclaredMethod("startup", ZooKeeperServer.class);
-            } else {
+            } else if (ZkClientUtils.zkVersion == ZkVersion.V34) {
                 Class<?> clazz = Class.forName(zk34Factory);
                 factory.target = clazz.getMethod("createFactory", int.class, int.class).invoke(null, port, maxcc);
                 factory.shutdownMethod = clazz.getDeclaredMethod("shutdown", new Class[0]);

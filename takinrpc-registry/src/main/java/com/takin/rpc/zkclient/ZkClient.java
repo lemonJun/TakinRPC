@@ -56,7 +56,7 @@ import com.takin.rpc.zkclient.exception.ZkTimeoutException;
  */
 public class ZkClient implements Watcher, IZkClient {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ZkClient.class);
+    private final static Logger logger = LoggerFactory.getLogger(ZkClient.class);
 
     protected ZkConnection _connection;
 
@@ -132,7 +132,6 @@ public class ZkClient implements Watcher, IZkClient {
     public ZkClient(String connectString, int sessionTimeout, int connectionTimeout) {
         this(new ZkConnection(connectString, sessionTimeout), connectionTimeout);
     }
-    
 
     /**
      * Create a client with special implementation
@@ -177,7 +176,7 @@ public class ZkClient implements Watcher, IZkClient {
             listeners.add(listener);
         }
         watchForData(path);
-        LOG.debug("Subscribed data changes for " + path);
+        logger.debug("Subscribed data changes for " + path);
     }
 
     public void unsubscribeDataChanges(String path, IZkDataListener dataListener) {
@@ -273,7 +272,7 @@ public class ZkClient implements Watcher, IZkClient {
     }
 
     public void process(WatchedEvent event) {
-        LOG.debug("Received event: " + event);
+        logger.debug("Received event: " + event);
         _zookeeperEventThread = Thread.currentThread();
 
         boolean stateChanged = event.getPath() == null;
@@ -287,7 +286,7 @@ public class ZkClient implements Watcher, IZkClient {
 
             // We might have to install child change event listener if a new node was created
             if (getShutdownTrigger()) {
-                LOG.debug("ignoring event '{" + event.getType() + " | " + event.getPath() + "}' since shutdown triggered");
+                logger.debug("ignoring event '{" + event.getType() + " | " + event.getPath() + "}' since shutdown triggered");
                 return;
             }
             if (stateChanged) {
@@ -317,7 +316,7 @@ public class ZkClient implements Watcher, IZkClient {
                 getEventLock().getDataChangedCondition().signalAll();
             }
             getEventLock().unlock();
-            LOG.debug("Leaving process event");
+            logger.debug("Leaving process event");
         }
     }
 
@@ -374,7 +373,7 @@ public class ZkClient implements Watcher, IZkClient {
     }
 
     private void processStateChanged(WatchedEvent event) {
-        LOG.info("zookeeper state changed (" + event.getState() + ")");
+        logger.info("zookeeper state changed (" + event.getState() + ")");
         setCurrentState(event.getState());
         if (getShutdownTrigger()) {
             return;
@@ -501,13 +500,13 @@ public class ZkClient implements Watcher, IZkClient {
                 });
             }
         } catch (Exception e) {
-            LOG.error("Failed to fire child changed event. Unable to getChildren.  ", e);
+            logger.error("Failed to fire child changed event. Unable to getChildren.  ", e);
         }
     }
 
     public boolean waitUntilExists(String path, TimeUnit timeUnit, long time) throws ZkInterruptedException {
         Date timeout = new Date(System.currentTimeMillis() + timeUnit.toMillis(time));
-        LOG.debug("Waiting until znode '" + path + "' becomes available.");
+        logger.debug("Waiting until znode '" + path + "' becomes available.");
         if (exists(path)) {
             return true;
         }
@@ -541,7 +540,7 @@ public class ZkClient implements Watcher, IZkClient {
         }
         Date timeout = new Date(System.currentTimeMillis() + timeUnit.toMillis(time));
 
-        LOG.debug("Waiting for keeper state " + keeperState);
+        logger.debug("Waiting for keeper state " + keeperState);
         acquireEventLock();
         try {
             boolean stillWaiting = true;
@@ -551,7 +550,7 @@ public class ZkClient implements Watcher, IZkClient {
                 }
                 stillWaiting = getEventLock().getStateChangedCondition().awaitUntil(timeout);
             }
-            LOG.debug("State is " + _currentState);
+            logger.debug("State is " + _currentState);
             return true;
         } catch (InterruptedException e) {
             throw new ZkInterruptedException(e);
@@ -743,7 +742,7 @@ public class ZkClient implements Watcher, IZkClient {
             _eventThread.start();//这样的 线程很可能会直接退回
             _connection.connect(watcher);
 
-            LOG.debug("Awaiting connection to Zookeeper server: " + maxMsToWaitUntilConnected);
+            logger.debug("Awaiting connection to Zookeeper server: " + maxMsToWaitUntilConnected);
             if (!waitUntilConnected(maxMsToWaitUntilConnected, TimeUnit.MILLISECONDS)) {
                 throw new ZkTimeoutException(String.format("Unable to connect to zookeeper server[%s] within timeout %dms", _connection.getServers(), maxMsToWaitUntilConnected));
             }
@@ -779,7 +778,7 @@ public class ZkClient implements Watcher, IZkClient {
         if (_eventThread == null) {
             return;
         }
-        LOG.debug("Closing ZkClient...");
+        logger.debug("Closing ZkClient...");
         getEventLock().lock();
         try {
             setShutdownTrigger(true);
@@ -793,7 +792,7 @@ public class ZkClient implements Watcher, IZkClient {
         } finally {
             getEventLock().unlock();
         }
-        LOG.debug("Closing ZkClient...done");
+        logger.debug("Closing ZkClient...done");
     }
 
     private void reconnect() {
