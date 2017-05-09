@@ -12,6 +12,7 @@ import org.robotninjas.barge.Replica;
 import org.robotninjas.barge.StateMachine;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Service;
 
 public class Test implements StateMachine {
 
@@ -20,17 +21,8 @@ public class Test implements StateMachine {
         System.out.println(entry.getLong());
     }
 
-    //    static {
-    //        PropertyConfigurator.configure("D:/log4j.properties");
-    //    }
-
     public static void main(String... args) throws Exception {
         PropertyConfigurator.configure("D:/log4j.properties");
-
-        //        ClusterConfig config = ClusterConfig.from(Replica.fromString("localhost:10000"), // local
-        //                        Replica.fromString("localhost:10001"), // remote
-        //                        Replica.fromString("localhost:10002") // remote
-        //        );
 
         try {
             List<Replica> members = Lists.newArrayList();
@@ -43,7 +35,8 @@ public class Test implements StateMachine {
             RaftService raft = RaftService.newBuilder().local(Replica.fromString("localhost:10000")).members(members).logDir(logDir).timeout(300).build(new Test());
 
             // start this replica
-            raft.startAsync().awaitRunning();
+            Service guavaservice = raft.startAsync();
+            guavaservice.awaitRunning();
 
             // let's commit some things
             //            for (int i = 0; i < 10; i++) {
@@ -52,7 +45,5 @@ public class Test implements StateMachine {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

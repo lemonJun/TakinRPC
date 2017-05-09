@@ -36,10 +36,6 @@ public class Test2 implements StateMachine {
             // start this replica
             raft.startAsync().awaitRunning();
 
-            // let's commit some things
-            //            for (int i = 0; i < 10; i++) {
-            //                raft.commit(new byte[] { 'O', '_', 'o' });
-            //            }
         } catch (Exception e) {
             e.printStackTrace();
         }

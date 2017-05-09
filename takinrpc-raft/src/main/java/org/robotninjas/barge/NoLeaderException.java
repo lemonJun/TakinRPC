@@ -21,6 +21,11 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class NoLeaderException extends RaftException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public NoLeaderException() {
     }
 

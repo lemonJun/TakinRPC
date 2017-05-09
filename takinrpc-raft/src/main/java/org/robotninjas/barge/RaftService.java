@@ -54,8 +54,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 @Immutable
 public class RaftService extends AbstractService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RaftService.class);
-
     private final ListeningExecutorService executor;
     private final RpcServer rpcServer;
     private final RaftStateContext ctx;

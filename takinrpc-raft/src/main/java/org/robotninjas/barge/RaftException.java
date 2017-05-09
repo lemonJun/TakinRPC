@@ -18,6 +18,11 @@ package org.robotninjas.barge;
 
 public class RaftException extends Exception {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public RaftException() {
     }
 

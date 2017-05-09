@@ -36,7 +36,6 @@ import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator
 
 public class RpcModule extends PrivateModule {
 
-    private static final int NUM_THREADS = 1;
     private final SocketAddress saddr;
     private final Optional<NioEventLoopGroup> eventLoopGroup;
 
@@ -101,5 +100,5 @@ public class RpcModule extends PrivateModule {
         bind(Client.class).asEagerSingleton();
         expose(Client.class);
     }
-    
+
 }
