@@ -150,6 +150,12 @@
 				<version>${junit.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-core</artifactId>
+				<version>0.7.7</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.apache.commons</groupId>
