@@ -25,11 +25,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.netflix.hystrix</groupId>
-			<artifactId>hystrix-metrics-event-stream</artifactId>
+			<artifactId>hystrix-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxjava</artifactId>
+			<groupId>com.netflix.hystrix</groupId>
+			<artifactId>hystrix-metrics-event-stream</artifactId>
 		</dependency>
 	</dependencies>
 

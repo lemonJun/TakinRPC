@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service.Listener;
+import com.google.common.util.concurrent.Service.State;
 import com.takin.emmet.file.PropertiesHelper;
 import com.takin.rpc.server.registry.ServerRegistry;
 
@@ -74,12 +77,25 @@ public class RPCServer {
      * @throws Exception
      */
     public void start() throws Exception {
-        GuiceDI.getInstance(ServerRegistry.class).startAsync();
-        GuiceDI.getInstance(RemotingNettyServer.class).start();
+        GuiceDI.getInstance(ServerRegistry.class).startAsync().addListener(new Listener() {
+            @Override
+            public void running() {
+                logger.info("zk registry running");
+            }
+        }, MoreExecutors.directExecutor());
+        GuiceDI.getInstance(RemotingNettyServer.class).startAsync().awaitRunning();
     }
 
     public void shutdown() {
-        GuiceDI.getInstance(RemotingNettyServer.class).doStop();
+        GuiceDI.getInstance(ServerRegistry.class).stopAsync();
+        GuiceDI.getInstance(RemotingNettyServer.class).stopAsync().addListener(new Listener() {
+
+            @Override
+            public void terminated(State from) {
+                super.terminated(from);
+                logger.info("zk registry stopped");
+            }
+        }, MoreExecutors.directExecutor());
     }
 
     /**

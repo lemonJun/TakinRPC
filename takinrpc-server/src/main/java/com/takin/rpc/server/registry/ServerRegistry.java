@@ -50,7 +50,7 @@ public class ServerRegistry extends AbstractService {
             }
         }
     }
-    
+
     @Override
     protected void doStop() {
         logger.info("zk registry stop:");

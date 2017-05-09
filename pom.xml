@@ -103,12 +103,6 @@
 			</dependency>
 
 			<dependency>
-				<groupId>io.reactivex.rxjava2</groupId>
-				<artifactId>rxjava</artifactId>
-				<version>2.0.9</version>
-			</dependency>
-
-			<dependency>
 				<groupId>com.takin</groupId>
 				<artifactId>emmet</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
@@ -117,13 +111,13 @@
 			<dependency>
 				<groupId>com.netflix.hystrix</groupId>
 				<artifactId>hystrix-core</artifactId>
-				<version>1.5.8</version>
+				<version>1.5.11</version>
 			</dependency>
-
+			
 			<dependency>
 				<groupId>com.netflix.hystrix</groupId>
 				<artifactId>hystrix-metrics-event-stream</artifactId>
-				<version>1.5.8</version>
+				<version>1.5.11</version>
 			</dependency>
 
 			<dependency>
@@ -155,12 +149,7 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>javax.transaction</groupId>
-				<artifactId>javax.transaction-api</artifactId>
-				<version>1.2</version>
-			</dependency>
+			
 
 			<dependency>
 				<groupId>org.apache.commons</groupId>

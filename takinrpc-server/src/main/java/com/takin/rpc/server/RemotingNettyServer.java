@@ -53,34 +53,40 @@ public class RemotingNettyServer extends AbstractService {
         this.serverconfig = serverconfig;
     }
 
-    public void start() throws Exception {
-        bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
-        bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
-        bootstrap.option(ChannelOption.SO_REUSEADDR, true);
-        bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-        bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
-        bootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
-        bootstrap.localAddress(serverconfig.getListenPort());
-        bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            public void initChannel(SocketChannel ch) throws IOException {
-                //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
-                //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
-                ch.pipeline().addLast(new KyroMsgDecoder());
-                ch.pipeline().addLast(new KyroMsgEncoder());
-                ch.pipeline().addLast("invoker", new NettyServerHandler());
-            }
-        });
+    @Override
+    protected void doStart() {
+        try {
+            bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
+            bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
+            bootstrap.option(ChannelOption.SO_REUSEADDR, true);
+            bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+            bootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
+            bootstrap.localAddress(serverconfig.getListenPort());
+            bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws IOException {
+                    //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
+                    //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
+                    ch.pipeline().addLast(new KyroMsgDecoder());
+                    ch.pipeline().addLast(new KyroMsgEncoder());
+                    ch.pipeline().addLast("invoker", new NettyServerHandler());
+                }
+            });
 
-        ChannelFuture channelFuture = this.bootstrap.bind().sync();
-        //        channelFuture.channel().closeFuture().sync();
-        logger.info("server started on port:" + serverconfig.getListenPort());
-        respScheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                scanResponseTable(5000);
-            }
-        }, 60 * 1000, 60 * 1000, TimeUnit.MILLISECONDS);
+            ChannelFuture channelFuture = this.bootstrap.bind().sync();
+            //        channelFuture.channel().closeFuture().sync();
+            logger.info("server started on port:" + serverconfig.getListenPort());
+            respScheduler.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    scanResponseTable(5000);
+                }
+            }, 60 * 1000, 60 * 1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            logger.error("", e);
+            System.exit(-1);
+        }
     }
 
     /**
@@ -124,11 +130,6 @@ public class RemotingNettyServer extends AbstractService {
         } catch (Exception e) {
             logger.error("shutsown error", e);
         }
-
-    }
-    
-    @Override
-    protected void doStart() {
 
     }
 
