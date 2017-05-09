@@ -22,7 +22,6 @@ public class ZkGroupDirs {
     public final String group;
 
     public ZkGroupDirs(String group) {
-        super();
         this.group = group;
     }
 

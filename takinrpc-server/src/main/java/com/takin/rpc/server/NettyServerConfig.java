@@ -32,10 +32,10 @@ public class NettyServerConfig {
     //
     private String servername = "test";
     private int listenPort = 6871;
-
+    
     private boolean usezk = false;
     private String zkhosts = "";
-
+    
     private int workerThreads = 32;
     private int callbackExecutorThreads = 1;
     private int selectorThreads = 4;

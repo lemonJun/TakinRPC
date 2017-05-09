@@ -8,6 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import com.takin.emmet.file.PropertiesHelper;
 
+/**
+ * rpc服务主入口类
+ *
+ * @author WangYazhou
+ * @date  2017年5月9日 上午11:51:48
+ * @see
+ */
 public class RPCServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
@@ -56,15 +63,23 @@ public class RPCServer {
         }
     }
 
+    /**
+     * 启动过滤器
+     * 启动注册服务
+     * 启动服务 
+     * 
+     * @throws Exception
+     */
     public void start() throws Exception {
-        GuiceDI.getInstance(RemotingNettyServer.class).start();
         GuiceDI.getInstance(FilterChain.class).init();
+
+        GuiceDI.getInstance(RemotingNettyServer.class).start();
     }
 
     public void shutdown() {
-
+        GuiceDI.getInstance(RemotingNettyServer.class).doStop();
     }
-
+    
     /**
     * 扫描:
     * 接口服务类

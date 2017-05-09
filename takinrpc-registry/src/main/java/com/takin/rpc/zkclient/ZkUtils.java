@@ -29,6 +29,11 @@ import com.takin.rpc.zkclient.exception.ZkNodeExistsException;
  */
 public class ZkUtils {
 
+    /**
+     * 确保持久化路径存在
+     * @param zkClient
+     * @param path
+     */
     public static void makeSurePersistentPathExists(ZkClient zkClient, String path) {
         if (!zkClient.exists(path)) {
             zkClient.createPersistent(path, true);

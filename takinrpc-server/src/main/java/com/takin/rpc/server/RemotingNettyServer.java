@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.takin.emmet.reflect.GenericsUtils;
@@ -31,7 +32,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 @Singleton
-public class RemotingNettyServer {
+public class RemotingNettyServer extends AbstractService {
 
     private static final Logger logger = LoggerFactory.getLogger(RemotingNettyServer.class);
 
@@ -104,7 +105,8 @@ public class RemotingNettyServer {
      * 监听到虚拟机停止时调用
      * 当系统启动失败时也调用
      */
-    public void shutdown() {
+    @Override
+    protected void doStop() {
         try {
             logger.info("receive shutdown listener ");
             if (bossGroup != null) {
@@ -124,4 +126,11 @@ public class RemotingNettyServer {
         }
 
     }
+
+    @Override
+    protected void doStart() {
+        // TODO Auto-generated method stub
+
+    }
+
 }
