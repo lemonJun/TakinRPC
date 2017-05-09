@@ -32,6 +32,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private Class<?> defineClass;
     private Class<?> implClass = null;
     private String serviceName = "";
+    //    private LoadBalance balance = new RandomLoadBalance();
     private LoadBalance balance = new ConsistentHashLoadBalance();
     @SuppressWarnings("unused")
     private boolean asyn = false;

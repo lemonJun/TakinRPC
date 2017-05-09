@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.takin.emmet.collection.CollectionUtil;
 import com.takin.rpc.zkclient.IZkChildListener;
@@ -26,7 +27,7 @@ public class ClientRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientRegistry.class);
 
-    private final String homepath = "/takin/rpc/";
+    private final String homepath = "/takin/rpc";
 
     private final Lock lock = new ReentrantLock();
 
@@ -81,9 +82,12 @@ public class ClientRegistry {
         }
         //
         List<String> address = Lists.newArrayList();
+        logger.info(JSON.toJSONString(list));
         for (String child : list) {
-            address.add(child.substring(0, child.lastIndexOf("/") + 1));
+            address.add(child);
         }
+        config.setAddress(address);
+        naming.putConfig(config);
     }
 
     private String servertpath(String servername) {

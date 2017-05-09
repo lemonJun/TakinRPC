@@ -60,7 +60,7 @@ public class DynamicClassLoader extends SecureClassLoader {
      */
     public Class<?> findClass(String jarPath, String className, boolean fromCache) throws ClassNotFoundException {
 
-        logger.debug("find class jarPath: " + jarPath + "  className: " + className + "  fromCache:" + fromCache);
+        //        logger.debug("find class jarPath: " + jarPath + "  className: " + className + "  fromCache:" + fromCache);
 
         if (fromCache && classCache.containsKey(className)) {
             return classCache.get(className);

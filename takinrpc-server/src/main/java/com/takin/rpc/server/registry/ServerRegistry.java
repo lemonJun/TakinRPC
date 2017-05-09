@@ -27,23 +27,30 @@ public class ServerRegistry extends AbstractService {
 
     private ZkClient zkclient;
 
-    private final String homepath = "/takin/rpc/";
+    private final String homepath = "/takin/rpc";
 
     private NettyServerConfig serverconfig;
 
     @Inject
     private ServerRegistry(final NettyServerConfig serverconfig) {
         this.serverconfig = serverconfig;
-        zkclient = new ZkClient(serverconfig.getZkhosts());
-        ZkUtils.makeSurePersistentPathExists(zkclient, parentpath());
+
     }
 
     @Override
     protected void doStart() {
-        ZkUtils.createEphemeralPathExpectConflict(zkclient, mypath(), DateUtils.formatYMD_HMS(new Date()));
-        logger.info("zk registry succ: " + mypath());
+        if (serverconfig.isUsezk()) {
+            try {
+                zkclient = new ZkClient(serverconfig.getZkhosts());
+                ZkUtils.makeSurePersistentPathExists(zkclient, parentpath());
+                ZkUtils.createEphemeralPathExpectConflict(zkclient, mypath(), DateUtils.formatYMD_HMS(new Date()));
+                logger.info("zk registry succ: " + mypath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
-
+    
     @Override
     protected void doStop() {
         logger.info("zk registry stop:");

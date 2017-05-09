@@ -107,7 +107,8 @@ public class ZkClient implements Watcher, IZkClient {
      *                          would be relative to this root - ie getting/setting/etc...
      *                          "/foo/bar" would result in operations being run on
      *                          "/app/a/foo/bar" (from the server perspective).
-     * @param connectionTimeout connection timeout in milliseconds
+     * @param
+     *  connectionTimeout connection timeout in milliseconds
      */
     public ZkClient(String connectString, int connectionTimeout) {
         this(connectString, DEFAULT_SESSION_TIMEOUT, connectionTimeout);
@@ -131,6 +132,7 @@ public class ZkClient implements Watcher, IZkClient {
     public ZkClient(String connectString, int sessionTimeout, int connectionTimeout) {
         this(new ZkConnection(connectString, sessionTimeout), connectionTimeout);
     }
+    
 
     /**
      * Create a client with special implementation
@@ -738,7 +740,7 @@ public class ZkClient implements Watcher, IZkClient {
             getEventLock().lockInterruptibly();
             setShutdownTrigger(false);
             _eventThread = new ZkEventThread(_connection.getServers());
-            _eventThread.start();//这样的放在 线程很可能会直接退回
+            _eventThread.start();//这样的 线程很可能会直接退回
             _connection.connect(watcher);
 
             LOG.debug("Awaiting connection to Zookeeper server: " + maxMsToWaitUntilConnected);

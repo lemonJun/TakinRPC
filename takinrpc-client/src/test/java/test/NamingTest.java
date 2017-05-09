@@ -15,4 +15,13 @@ public class NamingTest {
     public void init() {
         NamingFactory.getInstance();
     }
+
+    public static void main(String[] args) {
+        try {
+            NamingFactory.getInstance();
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -71,7 +71,7 @@ public class Scaner {
         List<String> jarPathList = classLoader.getJarList();
 
         for (String jpath : jarPathList) {
-            logger.info("scan jar at:" + jpath);
+            //            logger.info("scan jar at:" + jpath);
             Set<Class<?>> clsSet = null;
             try {
                 clsSet = ClassHelper.getClassFromJar(jpath, classLoader);

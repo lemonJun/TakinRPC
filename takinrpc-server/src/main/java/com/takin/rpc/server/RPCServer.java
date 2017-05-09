@@ -6,7 +6,9 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.takin.emmet.file.PropertiesHelper;
+import com.takin.rpc.server.registry.ServerRegistry;
 
 /**
  * rpc服务主入口类
@@ -26,6 +28,7 @@ public class RPCServer {
             rpc.start();
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             System.exit(-1);
         } finally {
 
@@ -71,15 +74,14 @@ public class RPCServer {
      * @throws Exception
      */
     public void start() throws Exception {
-        GuiceDI.getInstance(FilterChain.class).init();
-
+        GuiceDI.getInstance(ServerRegistry.class).startAsync();
         GuiceDI.getInstance(RemotingNettyServer.class).start();
     }
 
     public void shutdown() {
         GuiceDI.getInstance(RemotingNettyServer.class).doStop();
     }
-    
+
     /**
     * 扫描:
     * 接口服务类
@@ -92,6 +94,7 @@ public class RPCServer {
             DynamicClassLoader classloader = GuiceDI.getInstance(DynamicClassLoader.class);
             classloader.addFolder(context.getServicePath(), context.getLibPath());
             GuiceDI.getInstance(Scaner.class).scanInfo(classloader);
+            GuiceDI.getInstance(FilterChain.class).init();
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -127,6 +130,10 @@ public class RPCServer {
             config.setSelectorThreads(pro.getInt("selectorThreads"));
             config.setWorkerThreads(pro.getInt("workerThreads"));
             config.setListenPort(pro.getInt("server.Port"));
+            config.setUsezk(pro.getBoolean("use.zk"));
+            config.setZkhosts(pro.getString("zk.hosts"));
+
+            logger.info(JSON.toJSONString(config));
 
         } catch (Exception e) {
             logger.error("", e);

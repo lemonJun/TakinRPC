@@ -126,10 +126,9 @@ public class RemotingNettyServer extends AbstractService {
         }
 
     }
-
+    
     @Override
     protected void doStart() {
-        // TODO Auto-generated method stub
 
     }
 

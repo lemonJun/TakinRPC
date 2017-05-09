@@ -55,8 +55,10 @@ public class NamingFactory {
                 config.setServiceid(pro.getInt("server.id", "0"));
                 config.setUsezk(pro.getBoolean("use.zk"));
                 config.setZkhosts(pro.getString("zk.hosts"));
+                serviceconfigs.put(config.getServicename(), config);
                 config.setAddress(Splitter.on(",").splitToList(pro.getString("server.hosts")));
                 registry.listen(config.getServicename());
+
                 logger.info(JSON.toJSONString(config));
             } catch (Exception e) {
                 logger.error("", e);

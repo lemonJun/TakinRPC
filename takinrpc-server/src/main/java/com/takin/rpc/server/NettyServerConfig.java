@@ -19,6 +19,7 @@ package com.takin.rpc.server;
 import javax.inject.Singleton;
 
 import com.google.inject.Inject;
+import com.takin.rpc.remoting.util.RemotingUtil;
 
 /**
 
@@ -32,10 +33,10 @@ public class NettyServerConfig {
     //
     private String servername = "test";
     private int listenPort = 6871;
-    
+
     private boolean usezk = false;
     private String zkhosts = "";
-    
+
     private int workerThreads = 32;
     private int callbackExecutorThreads = 1;
     private int selectorThreads = 4;
@@ -54,7 +55,7 @@ public class NettyServerConfig {
     }
 
     public String getUUID() {
-        return String.format("%s_%d", servername, listenPort);
+        return String.format("%s:%d", RemotingUtil.getLocalAddress(), listenPort);
     }
 
     public String getServername() {
