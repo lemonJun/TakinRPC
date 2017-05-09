@@ -20,6 +20,10 @@
 			<artifactId>takinrpc-remoting</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.takinrpc</groupId>
+			<artifactId>takinrpc-registry</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.netflix.hystrix</groupId>
 			<artifactId>hystrix-metrics-event-stream</artifactId>
 		</dependency>

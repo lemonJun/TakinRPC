@@ -46,7 +46,7 @@ public class NettyClientConfig {
     public void setWorkerThreads(int workerThreads) {
         this.workerThreads = workerThreads;
     }
-
+    
     public int getCallbackExecutorThreads() {
         return callbackExecutorThreads;
     }

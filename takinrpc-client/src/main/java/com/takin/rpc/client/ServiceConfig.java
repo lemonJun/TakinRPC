@@ -14,14 +14,12 @@ public final class ServiceConfig {
     private String servicename;
     private int serviceid;
     private List<String> address = new ArrayList<String>();
-
     private long autoShrink = 20;
-
-    private long sendTimeout;
-
-    private long receiveTimeout;
-
-    private long waitTimeout;
+    private long sendTimeout = 2000;
+    private long receiveTimeout = 3000;
+    private long waitTimeout = 3000;
+    private boolean usezk = false;
+    private String zkhosts = "";
 
     public String getServicename() {
         return servicename;
@@ -77,6 +75,22 @@ public final class ServiceConfig {
 
     public void setWaitTimeout(long waitTimeout) {
         this.waitTimeout = waitTimeout;
+    }
+
+    public boolean isUsezk() {
+        return usezk;
+    }
+
+    public void setUsezk(boolean usezk) {
+        this.usezk = usezk;
+    }
+
+    public String getZkhosts() {
+        return zkhosts;
+    }
+
+    public void setZkhosts(String zkhosts) {
+        this.zkhosts = zkhosts;
     }
 
 }

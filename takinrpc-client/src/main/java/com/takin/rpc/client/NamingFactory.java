@@ -1,10 +1,16 @@
 package com.takin.rpc.client;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Splitter;
+import com.takin.emmet.file.PropertiesHelper;
 
 /**
  * 
@@ -17,10 +23,10 @@ import com.google.common.collect.ImmutableList;
  */
 public class NamingFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(NamingFactory.class);
+
     //存储服务配置
     private final ConcurrentHashMap<String, ServiceConfig> serviceconfigs = new ConcurrentHashMap<String, ServiceConfig>();
-
-    private AtomicBoolean once = new AtomicBoolean(false);
 
     public static volatile NamingFactory instance;
 
@@ -36,22 +42,50 @@ public class NamingFactory {
     }
 
     private NamingFactory() {
-        initServiceConfig();
-    }
+        ClientRegistry registry = new ClientRegistry(this);
 
-    public void initServiceConfig() {
-        ServiceConfig config = new ServiceConfig();
-        config.setServicename("test");
-        config.setAddress(ImmutableList.of("127.0.0.1:6871", "127.0.0.1:6871"));
-        serviceconfigs.put(config.getServicename(), config);
+        File directory = new File("conf/services");
+        String[] services = directory.list(new IndexFileNameFilter());
+
+        for (String str : services) {
+            try {
+                PropertiesHelper pro = new PropertiesHelper("conf/services/" + str);
+                ServiceConfig config = new ServiceConfig();
+                config.setServicename(pro.getString("server.name"));
+                config.setServiceid(pro.getInt("server.id", "0"));
+                config.setUsezk(pro.getBoolean("use.zk"));
+                config.setZkhosts(pro.getString("zk.hosts"));
+                config.setAddress(Splitter.on(",").splitToList(pro.getString("server.hosts")));
+                registry.listen(config.getServicename());
+                logger.info(JSON.toJSONString(config));
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        }
     }
 
     public ServiceConfig getConfig(String serviceName) {
         return serviceconfigs.get(serviceName);
     }
 
+    //更新配置
+    public void putConfig(ServiceConfig config) {
+        serviceconfigs.put(config.getServicename(), config);
+    }
+
     public List<String> getConfigAddr(String serviceName) {
         return serviceconfigs.get(serviceName).getAddress();
+    }
+
+    final class IndexFileNameFilter implements FilenameFilter {
+        @Override
+        public boolean accept(File dir, String name) {
+            if (name.endsWith(".properties")) {
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }
