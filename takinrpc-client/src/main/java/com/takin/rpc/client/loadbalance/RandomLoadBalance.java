@@ -13,10 +13,10 @@ public class RandomLoadBalance extends AbstractLoadBalance {
 
     @Override
     protected <S> S doSelect(List<S> shards, String seed) {
-        logger.info(JSON.toJSONString(shards));
+        //        logger.info(JSON.toJSONString(shards));
 
         S s = shards.get(ThreadLocalRandom.current().nextInt(shards.size()));
-        logger.info("random s=" + s);
+        //        logger.info("random s=" + s);
 
         return s;
     }

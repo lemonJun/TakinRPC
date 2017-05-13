@@ -6,12 +6,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Stopwatch;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.takin.emmet.util.AddressUtil;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
@@ -47,13 +49,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
      * @param balance 使用哪一个负载均衡算法
      */
     public ProxyStandard(Class<?> defineClass, String serviceName, Class<?> implClass, LoadBalance balance) {
-        this.defineClass = defineClass;
-        this.serviceName = serviceName;
-        this.implClass = implClass;
-        if (balance != null) {
-            this.balance = balance;
-        }
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        this(defineClass, serviceName, implClass, balance, false);
     }
 
     public ProxyStandard(Class<?> defineClass, String serviceName, Class<?> implClass, LoadBalance balance, boolean asyn) {
@@ -65,13 +61,18 @@ public class ProxyStandard extends AbstractInvocationHandler {
         }
         this.asyn = asyn;
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, 1000, 1000, TimeUnit.MILLISECONDS);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         String address = "";
         try {
+            Stopwatch watch = Stopwatch.createStarted();
             Type[] typeAry = method.getGenericParameterTypes();//ex:java.util.Map<java.lang.String, java.lang.String>
             Class<?>[] clsAry = method.getParameterTypes();//ex:java.util.Map
             if (args == null) {
@@ -93,17 +94,20 @@ public class ProxyStandard extends AbstractInvocationHandler {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));
             }
 
-            //            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
-            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
-            RemotingProtocol result = fu.get();
+            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+            logger.info(String.format("invoke sync 1use:%s", watch.toString()));
+
+            //            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
+            //            RemotingProtocol result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
-            return result.getResultVal();
+            logger.info(String.format("invoke sync 2use:%s", watch.toString()));
+            return message.getResultVal();
         } catch (Exception e) {
             logger.error("invoke error", e);
+            throw e;
         }
-        return null;
     }
 }
 

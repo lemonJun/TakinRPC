@@ -71,10 +71,10 @@ public class ResponseFuture {
 
     //为什么这一步操作这么耗时???
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
-        logger.debug(String.format("start wait use:%s", watch.toString()));
+        //        logger.debug(String.format("start wait use:%s", watch.toString()));
         countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
         //        LockSupport.parkUntil(timeoutMillis);
-        logger.debug(String.format("finsh wait use:%s", watch.toString()));
+        //        logger.debug(String.format("finsh wait use:%s", watch.toString()));
 
         return this.message;
     }
@@ -85,10 +85,10 @@ public class ResponseFuture {
 
     @SuppressWarnings("rawtypes")
     public void putResponse(final RemotingProtocol message) {
-        logger.info("currentthread:" + Thread.currentThread().getName());
+        //        logger.info("currentthread:" + Thread.currentThread().getName());
         this.message = message;
         this.countDownLatch.countDown();
-        logger.info(String.format("put response down:%s", watch.toString()));
+        //        logger.info(String.format("put response down:%s", watch.toString()));
     }
 
     public long getBeginTimestamp() {

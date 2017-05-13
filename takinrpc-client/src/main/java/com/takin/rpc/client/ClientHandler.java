@@ -16,16 +16,16 @@ public class ClientHandler extends SimpleChannelInboundHandler<RemotingProtocol>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol message) throws Exception {
         long start = System.currentTimeMillis();
-        
+
         final ResponseFuture responseFuture = RemotingNettyClient.responseTable.get(message.getOpaque());
-        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
+        //        logger.info(String.format("getfuture from table use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
 
         if (responseFuture != null) {
             responseFuture.putResponse(message);
-            logger.info(String.format("put resopnse use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
+            //            logger.info(String.format("put resopnse use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
         }
         RemotingNettyClient.responseTable.remove(message.getOpaque());
-        logger.info(String.format("client channel read use:%s", responseFuture.getWatch().toString()));
+        //        logger.info(String.format("client channel read use:%s", responseFuture.getWatch().toString()));
     }
 
 }

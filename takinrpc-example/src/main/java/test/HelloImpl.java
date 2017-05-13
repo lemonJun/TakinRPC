@@ -9,7 +9,7 @@ import com.takin.rpc.server.anno.ServiceImpl;
 public class HelloImpl implements Hello {
 
     @Override
-    public String say(String name) {
+    public String say(String name) throws Exception {
         return "hello  111" + name;
     }
 

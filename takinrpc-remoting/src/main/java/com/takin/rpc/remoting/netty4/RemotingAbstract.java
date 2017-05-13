@@ -60,17 +60,17 @@ public abstract class RemotingAbstract {
         try {
             final ResponseFuture responseFuture = new ResponseFuture(message.getOpaque(), timeout);
             responseFuture.setWatch(watch);
-            logger.info("currentthread:" + Thread.currentThread().getName());
-            logger.debug(String.format("create respnse future use:%s", watch.toString()));
+            //            logger.info("currentthread:" + Thread.currentThread().getName());
+            //            logger.debug(String.format("create respnse future use:%s", watch.toString()));
             responseTable.put(message.getOpaque(), responseFuture);
-            logger.debug(String.format("put future use:%s", watch.toString()));
+            //            logger.debug(String.format("put future use:%s", watch.toString()));
             channel.writeAndFlush(message).addListener(new ChannelFutureListener() {
                 //什么时候会触发这一个接口呢
                 @Override
                 public void operationComplete(ChannelFuture f) throws Exception {
                     if (f.isSuccess()) {
                         responseFuture.setSendRequestOK(true);
-                        logger.debug(String.format("operationcomplete use:%s", watch.toString()));
+                        //                        logger.debug(String.format("operationcomplete use:%s", watch.toString()));
                         return;
                     } else {
                         responseFuture.setSendRequestOK(false);
@@ -79,14 +79,14 @@ public abstract class RemotingAbstract {
                     responseTable.remove(message.getOpaque());
                     responseFuture.setCause(f.cause());
                     responseFuture.putResponse(null);
-                    logger.debug(String.format("operation no use:%s", watch.toString()));
+                    //                    logger.debug(String.format("operation no use:%s", watch.toString()));
                 }
             });
-            logger.info("currentthread:" + Thread.currentThread().getName());
+            //            logger.info("currentthread:" + Thread.currentThread().getName());
 
-            logger.debug(String.format("finish listener use:%s", watch.toString()));
+            //            logger.debug(String.format("finish listener use:%s", watch.toString()));
             RemotingProtocol result = responseFuture.waitResponse();
-            logger.info(String.format("wait response use:%s", watch.toString()));
+            //            logger.info(String.format("wait response use:%s", watch.toString()));
             if (null == result) {
                 if (responseFuture.isSendRequestOK()) {
                     throw new Exception("request timeout ");
@@ -94,7 +94,7 @@ public abstract class RemotingAbstract {
                     throw new Exception("request error");
                 }
             }
-            logger.info(String.format("invoke channel:%s,use:%s", channel.toString(), watch.toString()));
+            //            logger.info(String.format("invoke sync,use:%s", watch.toString()));
             return result;
         } catch (Exception e) {
             throw e;
@@ -140,7 +140,7 @@ public abstract class RemotingAbstract {
                         } finally {
                             responseFuture.release();
                         }
-                        
+
                         logger.warn("send a request command to channel <{}> failed.", RemotingHelper.parseChannelRemoteAddr(channel));
                     }
                 });

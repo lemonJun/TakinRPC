@@ -180,11 +180,11 @@ public class RemotingNettyClient extends RemotingAbstract {
         Stopwatch watch = Stopwatch.createStarted();
 
         final Channel channel = this.createChannel(address);
-        logger.info(String.format("create channel use:%s", watch.toString()));
+        //        logger.info(String.format("create channel use:%s", watch.toString()));
         if (channel != null && channel.isActive()) {
             try {
                 RemotingProtocol proto = invokeSyncImpl(channel, message, timeout);
-                logger.info(String.format("invokesync  use:%s", watch.toString()));
+                logger.info(String.format("invokesync use:%s", watch.toString()));
                 return proto;
             } catch (Exception e) {
                 logger.error("", e);
@@ -227,7 +227,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             logger.error("shutdown error", e);
         }
     }
-    
+
     /**
      * 如果通道不可用  则应将其关闭 以免占用资源
      * @param channel

@@ -15,13 +15,13 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
     @Override
     protected <S> S doSelect(List<S> shards, String seed) {
-        logger.info(JSON.toJSONString(shards));
+        //        logger.info(JSON.toJSONString(shards));
         if (StringUtil.isNullOrEmpty(seed)) {
             seed = "HASH-".concat(String.valueOf(ThreadLocalRandom.current().nextInt()));
         }
         ConsistentHashSelector<S> selector = new ConsistentHashSelector<S>(shards);
         S s = selector.selectForKey(seed);
-        logger.info("consistent s=" + s);
+        //        logger.info("consistent s=" + s);
         return s;
     }
 }
