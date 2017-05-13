@@ -16,7 +16,6 @@
 	<modules>
 		<module>takinrpc-server</module>
 		<module>takinrpc-client</module>
-		<module>takinrpc-tcc</module>
 		<module>takinrpc-example</module>
 		<module>takinrpc-remoting</module>
 		<module>takinrpc-registry</module>
@@ -55,16 +54,6 @@
 			<dependency>
 				<groupId>com.takinrpc</groupId>
 				<artifactId>takinrpc-client</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.takinrpc</groupId>
-				<artifactId>takinrpc-tcc</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.takinrpc</groupId>
-				<artifactId>takinrpc-soa</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
