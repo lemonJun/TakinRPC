@@ -47,7 +47,7 @@ public class CGlibInvoker implements Invoker {
         logger.info(implClass.getName());
 
         Tcc tcc = GuiceDI.getInstance(TccProvider.class).getCompensable(msg.getDefineClass());
-        logger.info(JSON.toJSONString(tcc));
+        //        logger.info(JSON.toJSONString(tcc));
         try {
             FastClass fastClazz = FastClass.create(implClass);
             // fast class反射调用  

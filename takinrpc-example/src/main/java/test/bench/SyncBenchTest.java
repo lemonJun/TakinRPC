@@ -13,7 +13,7 @@ import test.Hello;
 
 public class SyncBenchTest {
 
-    private static final RateLimiter limit = RateLimiter.create(200.0);
+    private static final RateLimiter limit = RateLimiter.create(5000.0);
 
     public static void main(String[] args) {
         try {
@@ -23,6 +23,11 @@ public class SyncBenchTest {
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
             hello.say("a");
+            hello.say("a");
+            for (int i = 5; i >= 0; i--) {
+                Thread.sleep(1000);
+                System.out.println(i + " ...");
+            }
 
             Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
                 @Override

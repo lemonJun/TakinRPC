@@ -18,7 +18,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Stopwatch;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
@@ -86,7 +85,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             }
         });
 
-        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(4));
+        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(1));
     }
 
     public void start() {
@@ -177,14 +176,14 @@ public class RemotingNettyClient extends RemotingAbstract {
      */
     @SuppressWarnings("rawtypes")
     public RemotingProtocol invokeSync(String address, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        Stopwatch watch = Stopwatch.createStarted();
+        //        Stopwatch watch = Stopwatch.createStarted();
 
         final Channel channel = this.createChannel(address);
         //        logger.info(String.format("create channel use:%s", watch.toString()));
         if (channel != null && channel.isActive()) {
             try {
                 RemotingProtocol proto = invokeSyncImpl(channel, message, timeout);
-                logger.info(String.format("invokesync use:%s", watch.toString()));
+                //                logger.info(String.format("invokesync use:%s", watch.toString()));
                 return proto;
             } catch (Exception e) {
                 logger.error("", e);

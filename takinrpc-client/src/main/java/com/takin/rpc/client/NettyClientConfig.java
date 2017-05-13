@@ -21,7 +21,7 @@ package com.takin.rpc.client;
  *
  */
 public class NettyClientConfig {
-    private int workerThreads = 8;
+    private int workerThreads = 2;
     private int callbackExecutorThreads = 2;
     private int onewaySemaphoreValue = 64;
     private int asyncSemaphoreValue = 64;
@@ -46,7 +46,7 @@ public class NettyClientConfig {
     public void setWorkerThreads(int workerThreads) {
         this.workerThreads = workerThreads;
     }
-    
+
     public int getCallbackExecutorThreads() {
         return callbackExecutorThreads;
     }

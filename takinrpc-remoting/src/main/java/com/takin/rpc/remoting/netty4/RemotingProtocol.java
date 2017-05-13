@@ -16,11 +16,10 @@ public final class RemotingProtocol<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String identity;//这个是节点组的唯一标识符 可能是task也可能是job
+    private String local;//这个是节点组的唯一标识符 可能是task也可能是job
     private long start = System.currentTimeMillis();
     private int flag = 0;
     private long opaque;
-
     private Class<?> defineClass;//接口类
     private Class<?> implClass;//实现类
     private String method;//调用方法
@@ -33,13 +32,13 @@ public final class RemotingProtocol<T> implements Serializable {
 
     }
 
-    public RemotingProtocol(String identity, long opaque) {
-        this.identity = identity;
+    public RemotingProtocol(String local, long opaque) {
+        this.local = local;
         this.opaque = opaque;
     }
 
     public String getUUID() {//此次调用的唯一标识
-        return String.format("%s-%d", getIdentity(), opaque);
+        return String.format("%s-%d", getLocal(), opaque);
     }
 
     public Class<?> getDefineClass() {
@@ -110,8 +109,16 @@ public final class RemotingProtocol<T> implements Serializable {
         this.flag = flag;
     }
 
-    public String getIdentity() {
-        return identity;
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public void setOpaque(long opaque) {
+        this.opaque = opaque;
     }
 
     public Class<?> getmReturnType() {

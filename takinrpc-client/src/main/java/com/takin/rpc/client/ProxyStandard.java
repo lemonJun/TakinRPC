@@ -3,9 +3,9 @@ package com.takin.rpc.client;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -38,8 +38,9 @@ public class ProxyStandard extends AbstractInvocationHandler {
     private LoadBalance balance = new ConsistentHashLoadBalance();
     @SuppressWarnings("unused")
     private boolean asyn = false;
+    private String localaddress = "";
 
-    private final ExecutorService executor;
+    private final ThreadPoolExecutor executor;
 
     /** 
      * 
@@ -60,12 +61,16 @@ public class ProxyStandard extends AbstractInvocationHandler {
             this.balance = balance;
         }
         this.asyn = asyn;
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        localaddress = AddressUtil.getLocalAddress();
+
+        //        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                logger.info(String.format("taskcount:%d completecount:%d", executor.getTaskCount(), executor.getCompletedTaskCount()));
             }
-        }, 1000, 1000, TimeUnit.MILLISECONDS);
+        }, 1000, 2000, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -81,29 +86,29 @@ public class ProxyStandard extends AbstractInvocationHandler {
             if (args.length != typeAry.length) {
                 throw new Exception("argument count error!");
             }
+            RemotingProtocol<?> message = new RemotingProtocol<>(localaddress, sequence.getAndIncrement());
 
-            RemotingProtocol<?> message = new RemotingProtocol<>(AddressUtil.getLocalAddress(), sequence.getAndIncrement());
             message.setDefineClass(defineClass);
             message.setImplClass(implClass);
             message.setMethod(method.getName());
             message.setArgs(args);
             message.setmParamsTypes(clsAry);
             message.setmReturnType(method.getReturnType());
+
             address = balance.select(NamingFactory.getInstance().getConfigAddr(serviceName), "");
+
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));
             }
+            //            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
 
-            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
-            logger.info(String.format("invoke sync 1use:%s", watch.toString()));
-
-            //            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
-            //            RemotingProtocol result = fu.get();
+            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
+            RemotingProtocol result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
-            logger.info(String.format("invoke sync 2use:%s", watch.toString()));
-            return message.getResultVal();
+            //            logger.info(String.format("invoke sync use:%s", watch.toString()));
+            return result.getResultVal();
         } catch (Exception e) {
             logger.error("invoke error", e);
             throw e;
