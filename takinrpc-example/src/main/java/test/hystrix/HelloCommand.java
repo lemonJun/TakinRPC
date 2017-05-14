@@ -23,7 +23,7 @@ public class HelloCommand extends HystrixCommand<String> {
         HystrixCommandKey commandkey = HystrixCommandKey.Factory.asKey("say");
         HystrixThreadPoolKey threadpoolkey = HystrixThreadPoolKey.Factory.asKey("hello-1");
         HystrixThreadPoolProperties.Setter threadproperties = HystrixThreadPoolProperties.Setter()//
-                        .withCoreSize(20).withKeepAliveTimeMinutes(5).withMaxQueueSize(1000).withQueueSizeRejectionThreshold(100);
+                        .withCoreSize(1).withKeepAliveTimeMinutes(1).withMaxQueueSize(1000).withQueueSizeRejectionThreshold(2);
 
         HystrixCommandProperties.Setter commandproperty = HystrixCommandProperties.Setter()//
                         .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD);
