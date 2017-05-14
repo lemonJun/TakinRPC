@@ -20,9 +20,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {
         try {
             Stopwatch watch = Stopwatch.createStarted();
-            //            if (logger.isDebugEnabled()) {
-            //                logger.debug("REQUEST: " + JSON.toJSONString(msg));
-            //            }
 
             RemotingContext context = new RemotingContext(ctx, msg);
             GlobalContext.getSingleton().setThreadLocal(context);
@@ -32,9 +29,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
                 result = GuiceDI.getInstance(Invoker.class).invoke(msg);
             }
             msg.setResultVal(result);
-            //            if (logger.isDebugEnabled()) {
-            //                logger.debug("RESPONSE: " + JSON.toJSONString(msg));
-            //            }
             logger.info(String.format("server invoke use:%s", watch.toString()));
         } catch (Exception e) {
             logger.error("netty server invoke error", e);

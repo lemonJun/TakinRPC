@@ -32,7 +32,6 @@ public abstract class RemotingAbstract {
 
     private static final Logger logger = LoggerFactory.getLogger(RemotingAbstract.class);
     protected final Semaphore semaphoreOneway;
-
     protected final Semaphore semaphoreAsync;
 
     public final static ConcurrentHashMap<Long, ResponseFuture> responseTable = new ConcurrentHashMap<Long, ResponseFuture>(256);
@@ -56,10 +55,9 @@ public abstract class RemotingAbstract {
      */
     @SuppressWarnings("rawtypes")
     protected RemotingProtocol invokeSyncImpl(final Channel channel, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        final Stopwatch watch = Stopwatch.createStarted();
+        //        final Stopwatch watch = Stopwatch.createStarted();
         try {
             final ResponseFuture responseFuture = new ResponseFuture(message.getOpaque(), timeout);
-            responseFuture.setWatch(watch);
             //            logger.info("currentthread:" + Thread.currentThread().getName());
             //            logger.debug(String.format("create respnse future use:%s", watch.toString()));
             responseTable.put(message.getOpaque(), responseFuture);
@@ -68,6 +66,8 @@ public abstract class RemotingAbstract {
                 //什么时候会触发这一个接口呢
                 @Override
                 public void operationComplete(ChannelFuture f) throws Exception {
+                    //此步代表发送操作成功   设置的sendrequest值是为了区分发送失败还是服务端处理失败的
+
                     if (f.isSuccess()) {
                         responseFuture.setSendRequestOK(true);
                         //                        logger.debug(String.format("operationcomplete use:%s", watch.toString()));
@@ -112,49 +112,43 @@ public abstract class RemotingAbstract {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
+    @SuppressWarnings("rawtypes")
     public void invokeAsyncImpl(final Channel channel, final RemotingProtocol request, final long timeoutMillis, final InvokeCallback invokeCallback) throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
         final long opaque = request.getOpaque();
-        boolean acquired = this.semaphoreAsync.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
-        if (acquired) {
-            final SemaphoreOnce once = new SemaphoreOnce(this.semaphoreAsync);
-
-            final ResponseFuture responseFuture = new ResponseFuture(opaque, timeoutMillis, invokeCallback, once);
-            this.responseTable.put(opaque, responseFuture);
-            try {
-                channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture f) throws Exception {
-                        if (f.isSuccess()) {
-                            responseFuture.setSendRequestOK(true);
-                            return;
-                        } else {
-                            responseFuture.setSendRequestOK(false);
-                        }
-
-                        responseFuture.putResponse(null);
-                        responseTable.remove(opaque);
-                        try {
-                            executeInvokeCallback(responseFuture);
-                        } catch (Throwable e) {
-                            logger.warn("excute callback in writeAndFlush addListener, and callback throw", e);
-                        } finally {
-                            responseFuture.release();
-                        }
-
-                        logger.warn("send a request command to channel <{}> failed.", RemotingHelper.parseChannelRemoteAddr(channel));
+        //        boolean acquired = this.semaphoreAsync.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
+        final SemaphoreOnce once = new SemaphoreOnce(this.semaphoreAsync);
+        final ResponseFuture responseFuture = new ResponseFuture(opaque, timeoutMillis, invokeCallback, once);
+        responseTable.put(opaque, responseFuture);
+        try {
+            channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture f) throws Exception {
+                    //此步代表发送操作成功   设置的sendrequest值是为了区分发送失败还是服务端处理失败的
+                    if (f.isSuccess()) {
+                        responseFuture.setSendRequestOK(true);
+                        return;
+                    } else {
+                        responseFuture.setSendRequestOK(false);
                     }
-                });
-            } catch (Exception e) {
-                responseFuture.release();
-                logger.warn("send a request command to channel <" + RemotingHelper.parseChannelRemoteAddr(channel) + "> Exception", e);
-                throw new RemotingSendRequestException(RemotingHelper.parseChannelRemoteAddr(channel), e);
-            }
-        } else {
-            String info = String.format("invokeAsyncImpl tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreAsyncValue: %d", //
-                            timeoutMillis, this.semaphoreAsync.getQueueLength(), this.semaphoreAsync.availablePermits());
-            logger.warn(info);
-            throw new RemotingTooMuchRequestException(info);
+                    responseFuture.putResponse(null);
+                    responseFuture.executeInvokeCallback();
+                    responseTable.remove(opaque);
+                    //                    try {
+                    //                        executeInvokeCallback(responseFuture);
+                    //                    } catch (Throwable e) {
+                    //                        logger.warn("excute callback in writeAndFlush addListener, and callback throw", e);
+                    //                    } finally {
+                    //                        responseFuture.release();
+                    //                    }
+                    logger.warn("send a request command to channel <{}> failed.", RemotingHelper.parseChannelRemoteAddr(channel));
+                }
+            });
+        } catch (Exception e) {
+            responseFuture.release();
+            logger.warn("send a request command to channel <" + RemotingHelper.parseChannelRemoteAddr(channel) + "> Exception", e);
+            throw new RemotingSendRequestException(RemotingHelper.parseChannelRemoteAddr(channel), e);
         }
+
     }
 
     /**

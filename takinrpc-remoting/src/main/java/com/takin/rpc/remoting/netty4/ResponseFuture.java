@@ -4,9 +4,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
@@ -17,7 +14,6 @@ import com.takin.rpc.remoting.InvokeCallback;
  */
 public class ResponseFuture {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResponseFuture.class);
     private final long opaque;
     private final long timeoutMillis;
     private final long timeoutNanos;
@@ -29,17 +25,13 @@ public class ResponseFuture {
     private volatile RemotingProtocol<?> message;
     private volatile Throwable cause;
     private InvokeCallback invokeCallback;
+
     private SemaphoreOnce once;
-    private Stopwatch watch;
 
     public ResponseFuture(long opaque, long timeoutMillis) {
         this.opaque = opaque;
         this.timeoutMillis = timeoutMillis;
         this.timeoutNanos = timeoutMillis * 1000 * 1000;
-    }
-
-    public void setWatch(Stopwatch watch) {
-        this.watch = watch;
     }
 
     public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, SemaphoreOnce once) {
@@ -78,11 +70,7 @@ public class ResponseFuture {
 
         return this.message;
     }
-
-    public Stopwatch getWatch() {
-        return watch;
-    }
-
+    
     @SuppressWarnings("rawtypes")
     public void putResponse(final RemotingProtocol message) {
         //        logger.info("currentthread:" + Thread.currentThread().getName());
@@ -117,6 +105,10 @@ public class ResponseFuture {
 
     public long getOpaque() {
         return opaque;
+    }
+
+    public InvokeCallback getInvokeCallback() {
+        return invokeCallback;
     }
 
 }

@@ -176,10 +176,7 @@ public class RemotingNettyClient extends RemotingAbstract {
      */
     @SuppressWarnings("rawtypes")
     public RemotingProtocol invokeSync(String address, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        //        Stopwatch watch = Stopwatch.createStarted();
-
         final Channel channel = this.createChannel(address);
-        //        logger.info(String.format("create channel use:%s", watch.toString()));
         if (channel != null && channel.isActive()) {
             try {
                 RemotingProtocol proto = invokeSyncImpl(channel, message, timeout);
