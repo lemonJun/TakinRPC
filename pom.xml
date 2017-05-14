@@ -98,6 +98,13 @@
 			</dependency>
 
 			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-core</artifactId>
+				<version>0.7.7</version>
+			</dependency>
+
+
+			<dependency>
 				<groupId>com.netflix.hystrix</groupId>
 				<artifactId>hystrix-core</artifactId>
 				<version>1.5.11</version>
@@ -138,14 +145,7 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>co.paralleluniverse</groupId>
-				<artifactId>quasar-core</artifactId>
-				<version>0.7.7</version>
-			</dependency>
-
-
+			
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
