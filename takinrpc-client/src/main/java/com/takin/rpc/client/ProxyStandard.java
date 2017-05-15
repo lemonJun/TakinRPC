@@ -71,7 +71,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
             }
         }, 1000, 2000, TimeUnit.MILLISECONDS);
     }
-
+    
     @Override
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         String address = "";

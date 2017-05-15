@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.takin.rpc.remoting.exception.NoImplClassException;
@@ -43,7 +42,7 @@ public class CGlibInvoker implements Invoker {
         if (implClass == null) {
             throw new NoImplClassException(msg.getDefineClass().getName());
         }
-
+        
         logger.info(implClass.getName());
 
         Tcc tcc = GuiceDI.getInstance(TccProvider.class).getCompensable(msg.getDefineClass());
@@ -52,7 +51,7 @@ public class CGlibInvoker implements Invoker {
             FastClass fastClazz = FastClass.create(implClass);
             // fast class反射调用  
             Object target = fastClazz.newInstance();
-
+            
             FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
             Object obj = method.invoke(target, args);
             logger.info(String.format("cglib invoke use:%s", watch.toString()));
