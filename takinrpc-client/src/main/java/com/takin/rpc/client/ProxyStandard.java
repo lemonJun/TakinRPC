@@ -17,6 +17,7 @@ import com.google.common.reflect.AbstractInvocationHandler;
 import com.takin.emmet.util.AddressUtil;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
 import com.takin.rpc.client.loadbalance.LoadBalance;
+import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 /**
@@ -71,16 +72,27 @@ public class ProxyStandard extends AbstractInvocationHandler {
             }
         }, 1000, 2000, TimeUnit.MILLISECONDS);
     }
-    
+
     @Override
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         String address = "";
         try {
+            InvokeCallback callback = null;
+            boolean sync = false;
             //            Stopwatch watch = Stopwatch.createStarted();
             Type[] typeAry = method.getGenericParameterTypes();//ex:java.util.Map<java.lang.String, java.lang.String>
             Class<?>[] clsAry = method.getParameterTypes();//ex:java.util.Map
             if (args == null) {
                 args = new Object[0];
+            } else {
+                for (int i = 0; i < args.length; i++) {
+                    Class<?> clz = clsAry[i];
+                    if (clz.isAssignableFrom(InvokeCallback.class)) {
+                        sync = true;
+                        callback = (InvokeCallback) args[i];
+                        break;
+                    }
+                }
             }
             if (args.length != typeAry.length) {
                 throw new Exception("argument count error!");
@@ -101,10 +113,11 @@ public class ProxyStandard extends AbstractInvocationHandler {
             }
             //             message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
 
-            Future<Object> fu = executor.submit(new InvokeThread(address, message));
-            if (method.getReturnType().equals(Future.class)) {
-                return fu;
+            if (sync) {
+                RemotingNettyClient.getInstance().invokeASync(address, message, 2000, callback);
+                return null;
             }
+            Future<Object> fu = executor.submit(new InvokeThread(address, message));
             Object result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));

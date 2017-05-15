@@ -28,7 +28,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<RemotingProtocol>
                 callbackExecutor.submit(new Runnable() {
                     @Override
                     public void run() {
-                        logger.info(String.format("exec callback:%s", JSON.toJSONString(responseFuture)));
+                        //                        logger.info(String.format("exec callback:%s", JSON.toJSONString(responseFuture)));
                         responseFuture.getInvokeCallback().operationComplete(message.getResultVal());
                     }
                 });
