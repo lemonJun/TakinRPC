@@ -16,15 +16,12 @@
  */
 package com.takin.rpc.remoting;
 
-import com.takin.rpc.remoting.netty4.ResponseFuture;
-import com.takin.rpc.remoting.nio.handler.IoFuture;
-
 /**
  * @author lemon
- * 
+ *  
  */
 public interface InvokeCallback {
-    public void operationComplete(final ResponseFuture responseFuture);
+    public abstract void operationComplete(final Object object);
 
-    public void operationComplete(final IoFuture responseFuture);
+    //    public void operationComplete(final IoFuture responseFuture);
 }

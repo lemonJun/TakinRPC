@@ -42,13 +42,13 @@ public class ResponseFuture {
         this.timeoutNanos = timeoutMillis * 1000 * 1000;
     }
 
-    public void executeInvokeCallback() {
-        if (invokeCallback != null) {
-            if (this.executeCallbackOnlyOnce.compareAndSet(false, true)) {
-                invokeCallback.operationComplete(this);
-            }
-        }
-    }
+    //    public void executeInvokeCallback() {
+    //        if (invokeCallback != null) {
+    //            if (this.executeCallbackOnlyOnce.compareAndSet(false, true)) {
+    //                invokeCallback.operationComplete(this);
+    //            }
+    //        }
+    //    }
 
     public void release() {
         if (this.once != null) {
@@ -70,7 +70,7 @@ public class ResponseFuture {
 
         return this.message;
     }
-    
+
     @SuppressWarnings("rawtypes")
     public void putResponse(final RemotingProtocol message) {
         //        logger.info("currentthread:" + Thread.currentThread().getName());
@@ -109,6 +109,14 @@ public class ResponseFuture {
 
     public InvokeCallback getInvokeCallback() {
         return invokeCallback;
+    }
+
+    public RemotingProtocol<?> getMessage() {
+        return message;
+    }
+
+    public void setMessage(RemotingProtocol<?> message) {
+        this.message = message;
     }
 
 }

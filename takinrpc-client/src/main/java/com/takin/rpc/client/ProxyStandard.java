@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.base.Stopwatch;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.takin.emmet.util.AddressUtil;
 import com.takin.rpc.client.loadbalance.ConsistentHashLoadBalance;
@@ -59,6 +58,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
         if (balance != null) {
             this.balance = balance;
         }
+
         this.asyn = asyn;
         localaddress = AddressUtil.getLocalAddress();
 
@@ -76,7 +76,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         String address = "";
         try {
-            Stopwatch watch = Stopwatch.createStarted();
+            //            Stopwatch watch = Stopwatch.createStarted();
             Type[] typeAry = method.getGenericParameterTypes();//ex:java.util.Map<java.lang.String, java.lang.String>
             Class<?>[] clsAry = method.getParameterTypes();//ex:java.util.Map
             if (args == null) {
@@ -99,15 +99,18 @@ public class ProxyStandard extends AbstractInvocationHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));
             }
-            //            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+            //             message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
 
-            Future<RemotingProtocol> fu = executor.submit(new InvokeThread(address, message));
-            RemotingProtocol result = fu.get();
+            Future<Object> fu = executor.submit(new InvokeThread(address, message));
+            if (method.getReturnType().equals(Future.class)) {
+                return fu;
+            }
+            Object result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
             //            logger.info(String.format("invoke sync use:%s", watch.toString()));
-            return result.getResultVal();
+            return result;
         } catch (Exception e) {
             logger.error("invoke error", e);
             throw e;
@@ -116,8 +119,8 @@ public class ProxyStandard extends AbstractInvocationHandler {
 }
 
 @SuppressWarnings("rawtypes")
-class InvokeThread implements Callable<RemotingProtocol> {
-    
+class InvokeThread implements Callable<Object> {
+
     private String address;
     private RemotingProtocol message;
 
@@ -127,9 +130,9 @@ class InvokeThread implements Callable<RemotingProtocol> {
     }
 
     @Override
-    public RemotingProtocol call() throws Exception {
+    public Object call() throws Exception {
         RemotingProtocol msg = RemotingNettyClient.getInstance().invokeSync(address, message, 3000);
-        return msg;
+        return msg.getResultVal();
     }
 
 }

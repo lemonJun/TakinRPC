@@ -29,11 +29,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<RemotingProtocol>
                     @Override
                     public void run() {
                         logger.info(String.format("exec callback:%s", JSON.toJSONString(responseFuture)));
-                        responseFuture.executeInvokeCallback();
+                        responseFuture.getInvokeCallback().operationComplete(message.getResultVal());
                     }
                 });
+            } else {
+                responseFuture.putResponse(message);
             }
-            responseFuture.putResponse(message);
             //            logger.info(String.format("put resopnse use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
         }
         RemotingNettyClient.responseTable.remove(message.getOpaque());

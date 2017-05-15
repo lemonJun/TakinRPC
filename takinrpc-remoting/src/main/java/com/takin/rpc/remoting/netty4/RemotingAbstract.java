@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
@@ -131,7 +130,6 @@ public abstract class RemotingAbstract {
                         responseFuture.setSendRequestOK(false);
                     }
                     responseFuture.putResponse(null);
-                    responseFuture.executeInvokeCallback();
                     responseTable.remove(opaque);
                     //                    try {
                     //                        executeInvokeCallback(responseFuture);
@@ -155,36 +153,36 @@ public abstract class RemotingAbstract {
      * execute callback in callback executor. If callback executor is null, run directly in current thread
      * @param responseFuture
      */
-    private void executeInvokeCallback(final ResponseFuture responseFuture) {
-        boolean runInThisThread = false;
-        ExecutorService executor = this.getCallbackExecutor();
-        if (executor != null) {
-            try {
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            responseFuture.executeInvokeCallback();
-                        } catch (Throwable e) {
-                            logger.warn("execute callback in executor exception, and callback throw", e);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                runInThisThread = true;
-                logger.warn("execute callback in executor exception, maybe executor busy", e);
-            }
-        } else {
-            runInThisThread = true;
-        }
-        if (runInThisThread) {
-            try {
-                responseFuture.executeInvokeCallback();
-            } catch (Throwable e) {
-                logger.warn("executeInvokeCallback Exception", e);
-            }
-        }
-    }
+    //    private void executeInvokeCallback(final ResponseFuture responseFuture) {
+    //        boolean runInThisThread = false;
+    //        ExecutorService executor = this.getCallbackExecutor();
+    //        if (executor != null) {
+    //            try {
+    //                executor.submit(new Runnable() {
+    //                    @Override
+    //                    public void run() {
+    //                        try {
+    //                            responseFuture.executeInvokeCallback();
+    //                        } catch (Throwable e) {
+    //                            logger.warn("execute callback in executor exception, and callback throw", e);
+    //                        }
+    //                    }
+    //                });
+    //            } catch (Exception e) {
+    //                runInThisThread = true;
+    //                logger.warn("execute callback in executor exception, maybe executor busy", e);
+    //            }
+    //        } else {
+    //            runInThisThread = true;
+    //        }
+    //        if (runInThisThread) {
+    //            try {
+    //                responseFuture.executeInvokeCallback();
+    //            } catch (Throwable e) {
+    //                logger.warn("executeInvokeCallback Exception", e);
+    //            }
+    //        }
+    //    }
 
     /**
      * 

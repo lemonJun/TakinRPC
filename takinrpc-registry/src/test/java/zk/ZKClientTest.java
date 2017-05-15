@@ -9,16 +9,11 @@ public class ZKClientTest {
 
     ZkClient client = null;
 
-    public static void main(String[] args) {
-
-    }
-
     public void init() {
         try {
             PropertyConfigurator.configure("conf/log4j.properties");
-            client = new ZkClient("localhost:2181");
-            client.createEphemeral("/rpc", "home".getBytes());
-            client.close();
+            client = new ZkClient("localhost:2182");
+            //            client.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,9 +21,13 @@ public class ZKClientTest {
 
     @Test
     public void add() {
-        init();
-        client.createPersistent("/rpc");
-        client.createPersistent("host1", "1".getBytes());
+        try {
+            init();
+            client.createPersistent("/te", "1".getBytes());
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

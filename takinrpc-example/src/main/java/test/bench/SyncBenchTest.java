@@ -24,7 +24,7 @@ public class SyncBenchTest {
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
             hello.say("a");
             hello.say("a");
-            for (int i = 5; i >= 0; i--) {
+            for (int i = 2; i >= 0; i--) {
                 Thread.sleep(1000);
                 System.out.println(i + " ...");
             }
