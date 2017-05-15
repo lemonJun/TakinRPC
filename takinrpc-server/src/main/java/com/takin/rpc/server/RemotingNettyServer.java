@@ -30,6 +30,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 
 @Singleton
 public class RemotingNettyServer extends AbstractService {
@@ -66,8 +67,9 @@ public class RemotingNettyServer extends AbstractService {
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws IOException {
-                    //                ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 60, 60));
-                    //                ch.pipeline().addLast("heartbeat", new CustomIdleHandler());
+
+                    ch.pipeline().addLast("idleState", new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS));
+                    ch.pipeline().addLast("heartbeat", new HeartbeatHandler());
                     ch.pipeline().addLast(new KyroMsgDecoder());
                     ch.pipeline().addLast(new KyroMsgEncoder());
                     ch.pipeline().addLast("invoker", new NettyServerHandler());
