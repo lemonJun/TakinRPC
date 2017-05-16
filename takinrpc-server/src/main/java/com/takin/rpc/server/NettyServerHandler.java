@@ -30,10 +30,12 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
 
             Object result = null;//GuiceDI.getInstance(FilterChain.class).dofilter(context);
             if (result == null) {
+                logger.info(String.format("server invoke 2use:%s", watch.toString()));
                 result = invoker.invoke(msg);
+                logger.info(String.format("server invoke 3use:%s", watch.toString()));
             }
             msg.setResultVal(result);
-            logger.info(String.format("server invoke 2use:%s", watch.toString()));
+            logger.info(String.format("server invoke 4use:%s", watch.toString()));
         } catch (Exception e) {
             logger.error("netty server invoke error", e);
             throw e;
