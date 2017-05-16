@@ -23,15 +23,15 @@ public class ServiceInfos {
 
     public ServiceInfos(List<SessionBean> sessionBeanList) {
         this.sessionBeanList = sessionBeanList;
-        if (sessionBeanList == null) {
-            sessionBeanList = Lists.newArrayList();
+        if (this.sessionBeanList == null) {
+            this.sessionBeanList = Lists.newArrayList();
         }
     }
 
     public void setSessionBeanList(List<SessionBean> sessionBeanList) {
         this.sessionBeanList = sessionBeanList;
-        if (sessionBeanList == null) {
-            sessionBeanList = Lists.newArrayList();
+        if (this.sessionBeanList == null) {
+            this.sessionBeanList = Lists.newArrayList();
         }
     }
 

@@ -43,10 +43,11 @@ public class NamingFactory {
 
     private NamingFactory() {
         ClientRegistry registry = new ClientRegistry(this);
-
         File directory = new File("conf/services");
         String[] services = directory.list(new IndexFileNameFilter());
-
+        if (services == null || services.length < 1) {
+            return;
+        }
         for (String str : services) {
             try {
                 PropertiesHelper pro = new PropertiesHelper("conf/services/" + str);
@@ -58,7 +59,7 @@ public class NamingFactory {
                 serviceconfigs.put(config.getServicename(), config);
                 config.setAddress(Splitter.on(",").splitToList(pro.getString("server.hosts")));
                 registry.listen(config.getServicename());
-                
+
                 logger.info(JSON.toJSONString(config));
             } catch (Exception e) {
                 logger.error("", e);

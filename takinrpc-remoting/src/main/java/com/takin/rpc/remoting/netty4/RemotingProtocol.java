@@ -1,7 +1,5 @@
 package com.takin.rpc.remoting.netty4;
 
-import java.io.Serializable;
-
 /**
  * netty 服务交互的实体类
  * 目前使用的是marshalling解码器   城朵实现序列化接口
@@ -12,10 +10,7 @@ import java.io.Serializable;
  * @see 
  * @since
  */
-public final class RemotingProtocol<T> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public final class RemotingProtocol<T> {
     private String local;//这个是节点组的唯一标识符 可能是task也可能是job
     private long start = System.currentTimeMillis();
     private int flag = 0;
@@ -28,7 +23,7 @@ public final class RemotingProtocol<T> implements Serializable {
     private Class<?> mReturnType;
     private T resultVal;
 
-    public RemotingProtocol() {
+    public RemotingProtocol() {//给序列化用
 
     }
 

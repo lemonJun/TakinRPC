@@ -16,20 +16,24 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProtocol> {
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
 
+    private final Invoker invoker = GuiceDI.getInstance(Invoker.class);
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {
         try {
             Stopwatch watch = Stopwatch.createStarted();
+            logger.info(String.format("server invoke 0use:%s", watch.toString()));
 
             RemotingContext context = new RemotingContext(ctx, msg);
             GlobalContext.getSingleton().setThreadLocal(context);
+            logger.info(String.format("server invoke 1use:%s", watch.toString()));
 
             Object result = null;//GuiceDI.getInstance(FilterChain.class).dofilter(context);
             if (result == null) {
-                result = GuiceDI.getInstance(Invoker.class).invoke(msg);
+                result = invoker.invoke(msg);
             }
             msg.setResultVal(result);
-            logger.info(String.format("server invoke use:%s", watch.toString()));
+            logger.info(String.format("server invoke 2use:%s", watch.toString()));
         } catch (Exception e) {
             logger.error("netty server invoke error", e);
             throw e;

@@ -40,7 +40,7 @@ public abstract class RemotingAbstract {
         this.semaphoreAsync = new Semaphore(permitsAsync, true);
     }
 
-    abstract public ExecutorService getCallbackExecutor();
+    //    abstract public ExecutorService getCallbackExecutor();
 
     /**
      * 发起同步调用
@@ -82,7 +82,7 @@ public abstract class RemotingAbstract {
                 }
             });
             //            logger.info("currentthread:" + Thread.currentThread().getName());
-            
+
             //            logger.debug(String.format("finish listener use:%s", watch.toString()));
             RemotingProtocol result = responseFuture.waitResponse();
             //            logger.info(String.format("wait response use:%s", watch.toString()));

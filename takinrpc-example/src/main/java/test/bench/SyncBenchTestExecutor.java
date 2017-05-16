@@ -36,8 +36,8 @@ public class SyncBenchTestExecutor {
                 }
             }, 1000, 1000, TimeUnit.MILLISECONDS);
 
-            Executors.newFixedThreadPool(3).submit(new Runnable() {
-
+            Executors.newFixedThreadPool(6).submit(new Runnable() {
+                
                 @Override
                 public void run() {
                     while (true) {

@@ -2,12 +2,14 @@ package com.takin.rpc.server.invoke;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.takin.emmet.reflect.RMethodUtils;
 import com.takin.rpc.remoting.exception.NoImplClassException;
@@ -21,14 +23,18 @@ public class JDKInvoker implements Invoker {
     private static final Logger logger = LoggerFactory.getLogger(JDKInvoker.class);
 
     private final ConcurrentHashMap<String, Method> methodCache = new ConcurrentHashMap<String, Method>();
+    private final AtomicBoolean once = new AtomicBoolean(false);
 
     @Inject
     public JDKInvoker() {
-
+        
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Object invoke(RemotingProtocol msg) throws Exception {
+        Stopwatch watch = Stopwatch.createStarted();
+
         String methodName = msg.getMethod();
         Object[] args = msg.getArgs();
         Class<?>[] mParamsType = msg.getmParamsTypes();
@@ -41,9 +47,11 @@ public class JDKInvoker implements Invoker {
 
         Method method = methodCache.get(mkey);
         if (method == null) {
-            method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
-            logger.info(String.format("search method:%s", methodName));
-            methodCache.putIfAbsent(mkey, method);
+            if (once.compareAndSet(false, true)) {
+                method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
+                //                logger.info(String.format("search method:%s", methodName));
+                methodCache.putIfAbsent(mkey, method);
+            }
         }
 
         if (method == null) {
@@ -51,12 +59,14 @@ public class JDKInvoker implements Invoker {
         }
         Object target = GuiceDI.getInstance(ServiceInfosHolder.class).getOjbectFromClass(implClass.getName());
 
+        Object retval = null;
         //此步反射 非常耗时 
         if (method != null) {
             method.setAccessible(true);
-            return method.invoke(target, args);
+            retval = method.invoke(target, args);
         }
-        return "";
+        logger.info(String.format("jdk invoke use:%s", watch.toString()));
+        return retval;
     }
 
 }

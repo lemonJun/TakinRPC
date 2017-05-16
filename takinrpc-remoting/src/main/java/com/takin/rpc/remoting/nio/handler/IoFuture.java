@@ -150,7 +150,6 @@ public class IoFuture implements Future {
             if (isDone()) {
                 return true;
             }
-
             if (timeoutMillis <= 0) {
                 return isDone();
             }

@@ -63,7 +63,6 @@ public class RemotingNettyClient extends RemotingAbstract {
             synchronized (RemotingNettyClient.class) {
                 if (instance == null) {
                     instance = new RemotingNettyClient(new NettyClientConfig());
-                    instance.start();
                 }
             }
         }
@@ -86,6 +85,8 @@ public class RemotingNettyClient extends RemotingAbstract {
         });
 
         group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(1));
+
+        start();
     }
 
     public void start() {
@@ -288,37 +289,36 @@ public class RemotingNettyClient extends RemotingAbstract {
         }
     }
 
-    @Override
-    public ExecutorService getCallbackExecutor() {
-        return null;
-    }
+    //    @Override
+    //    public ExecutorService getCallbackExecutor() {
+    //        return null;
+    //    }
 
-    public void updateNameServerAddressList(List<String> addrs) {
-        List<String> old = this.namesrvAddrList.get();
-        boolean update = false;
-
-        if (!addrs.isEmpty()) {
-            if (null == old) {
-                update = true;
-            } else if (addrs.size() != old.size()) {
-                update = true;
-            } else {
-                for (int i = 0; i < addrs.size() && !update; i++) {
-                    if (!old.contains(addrs.get(i))) {
-                        update = true;
-                    }
-                }
-            }
-
-            if (update) {
-                Collections.shuffle(addrs);
-                this.namesrvAddrList.set(addrs);
-            }
-        }
-    }
-
-    public List<String> getNameServerAddressList() {
-        return this.namesrvAddrList.get();
-    }
+    //    public void updateNameServerAddressList(List<String> addrs) {
+    //        List<String> old = this.namesrvAddrList.get();
+    //        boolean update = false;
+    //
+    //        if (!addrs.isEmpty()) {
+    //            if (null == old) {
+    //                update = true;
+    //            } else if (addrs.size() != old.size()) {
+    //                update = true;
+    //            } else {
+    //                for (int i = 0; i < addrs.size() && !update; i++) {
+    //                    if (!old.contains(addrs.get(i))) {
+    //                        update = true;
+    //                    }
+    //                }
+    //            }
+    //            if (update) {
+    //                Collections.shuffle(addrs);
+    //                this.namesrvAddrList.set(addrs);
+    //            }
+    //        }
+    //    }
+    //
+    //    public List<String> getNameServerAddressList() {
+    //        return this.namesrvAddrList.get();
+    //    }
 
 }

@@ -14,6 +14,7 @@ import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
@@ -27,8 +28,12 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        //        Stopwatch watch = Stopwatch.createStarted();
+        Stopwatch watch = Stopwatch.createStarted();
 
+        //        Input input = new Input(new ByteBufInputStream(in));
+        //        Object result = kryo.readClassAndObject(input);
+        //        out.add(result);
+        //        input.close();
         if (in.readableBytes() < HEAD_LENGTH) { //这个HEAD_LENGTH是我们用于表示头长度的字节数。  由于Encoder中我们传的是一个int类型的值，所以这里HEAD_LENGTH的值为4.
             return;
         }
@@ -48,7 +53,7 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
         RemotingProtocol o = convertToObject(body); //将byte数据转化为我们需要的对象
         out.add(o);
-        //        logger.info("kyro decoder use:" + watch.toString());
+        logger.info("kyro decoder use:" + watch.toString());
     }
 
     private RemotingProtocol convertToObject(byte[] body) {

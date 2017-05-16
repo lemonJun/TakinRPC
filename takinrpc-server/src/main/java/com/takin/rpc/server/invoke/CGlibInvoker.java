@@ -1,5 +1,8 @@
 package com.takin.rpc.server.invoke;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -7,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
+import com.takin.emmet.util.Tuple;
 import com.takin.rpc.remoting.exception.NoImplClassException;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
@@ -19,7 +23,7 @@ import net.sf.cglib.reflect.FastMethod;
 
 /**
  * 此处可以加入事务控制
- *
+ * 
  * @author WangYazhou
  * @date  2017年5月8日 上午11:57:40
  * @see
@@ -28,6 +32,10 @@ import net.sf.cglib.reflect.FastMethod;
 public class CGlibInvoker implements Invoker {
 
     private static final Logger logger = LoggerFactory.getLogger(CGlibInvoker.class);
+
+    private final ConcurrentHashMap<String, Tuple<Object, FastMethod>> map = new ConcurrentHashMap<String, Tuple<Object, FastMethod>>();
+
+    private final AtomicBoolean once = new AtomicBoolean(false);
 
     @Inject
     public CGlibInvoker() {
@@ -42,7 +50,7 @@ public class CGlibInvoker implements Invoker {
         if (implClass == null) {
             throw new NoImplClassException(msg.getDefineClass().getName());
         }
-        
+
         logger.info(implClass.getName());
 
         Tcc tcc = GuiceDI.getInstance(TccProvider.class).getCompensable(msg.getDefineClass());
@@ -50,14 +58,20 @@ public class CGlibInvoker implements Invoker {
         try {
             FastClass fastClazz = FastClass.create(implClass);
             // fast class反射调用  
-            Object target = fastClazz.newInstance();
-            
-            FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
-            Object obj = method.invoke(target, args);
-            logger.info(String.format("cglib invoke use:%s", watch.toString()));
+            String mkey = String.format("%s_%s", implClass.getSimpleName(), msg.getMethod());
+            Tuple<Object, FastMethod> classmethod = map.get(mkey);
+            if (classmethod == null) {
+                if (once.compareAndSet(false, true)) {
+                    Object target = fastClazz.newInstance();
+                    FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
+                    map.put(mkey, new Tuple<Object, FastMethod>(target, method));
+                }
+            }
+            Object obj = classmethod.value.invoke(classmethod.key, args);
             if (tcc != null) {
                 doconfirmorcancel(msg.getDefineClass(), tcc.getConfirm(), msg.getMethod(), msg.getmParamsTypes(), args);
             }
+            logger.info(String.format("cglib invoke use:%s", watch.toString()));
             return obj;
         } catch (Exception e) {
             if (tcc != null) {
