@@ -22,17 +22,13 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {
         try {
             Stopwatch watch = Stopwatch.createStarted();
-            logger.info(String.format("server invoke 0use:%s", watch.toString()));
-
+            
             RemotingContext context = new RemotingContext(ctx, msg);
             GlobalContext.getSingleton().setThreadLocal(context);
-            logger.info(String.format("server invoke 1use:%s", watch.toString()));
 
             Object result = null;//GuiceDI.getInstance(FilterChain.class).dofilter(context);
             if (result == null) {
-                logger.info(String.format("server invoke 2use:%s", watch.toString()));
                 result = invoker.invoke(msg);
-                logger.info(String.format("server invoke 3use:%s", watch.toString()));
             }
             msg.setResultVal(result);
             logger.info(String.format("server invoke 4use:%s", watch.toString()));

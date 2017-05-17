@@ -1,6 +1,5 @@
 package com.takin.rpc.client;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -51,7 +50,7 @@ public class RemotingNettyClient extends RemotingAbstract {
     @SuppressWarnings("unused")
     private final ExecutorService publicExecutor;
     //保存所有服务端的地址   
-    private final AtomicReference<List<String>> namesrvAddrList = new AtomicReference<List<String>>();
+    //    private final AtomicReference<List<String>> namesrvAddrList = new AtomicReference<List<String>>();
 
     private ConcurrentHashMap<String, ChannelWrapper> channelTables = new ConcurrentHashMap<String, ChannelWrapper>();
 

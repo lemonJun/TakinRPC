@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.Service.Listener;
 import com.google.common.util.concurrent.Service.State;
+import com.google.inject.Singleton;
 import com.takin.emmet.file.PropertiesHelper;
 import com.takin.rpc.server.registry.ServerRegistry;
 
@@ -18,8 +19,9 @@ import com.takin.rpc.server.registry.ServerRegistry;
  *
  * @author WangYazhou
  * @date  2017年5月9日 上午11:51:48
- * @see
+ * @see 
  */
+
 public class RPCServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);

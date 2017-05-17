@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Output;
-import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
@@ -24,7 +22,7 @@ public class KyroMsgEncoder extends MessageToByteEncoder<RemotingProtocol<?>> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RemotingProtocol<?> msg, ByteBuf out) throws Exception {
-        Stopwatch watch = Stopwatch.createStarted();
+        //        Stopwatch watch = Stopwatch.createStarted();
 
         byte[] body = convertToBytes(msg); //将对象转换为byte
         int dataLength = body.length; //读取消息的长度
@@ -35,7 +33,7 @@ public class KyroMsgEncoder extends MessageToByteEncoder<RemotingProtocol<?>> {
         //        Output output = new Output(bout);
         //        kryo.writeClassAndObject(output, msg);
         //        output.close();
-        logger.info(String.format("kyro encode use:%s", watch.toString()));
+        //        logger.info(String.format("kyro encode use:%s", watch.toString()));
     }
 
     private byte[] convertToBytes(RemotingProtocol<?> car) {
