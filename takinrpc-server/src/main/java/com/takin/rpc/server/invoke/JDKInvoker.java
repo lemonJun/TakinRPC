@@ -2,17 +2,18 @@ package com.takin.rpc.server.invoke;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.takin.emmet.reflect.RMethodUtils;
 import com.takin.rpc.remoting.exception.NoImplClassException;
+import com.takin.rpc.remoting.exception.NoImplMethodException;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 import com.takin.rpc.server.GuiceDI;
 import com.takin.rpc.server.ServiceInfosHolder;
@@ -23,11 +24,10 @@ public class JDKInvoker implements Invoker {
     private static final Logger logger = LoggerFactory.getLogger(JDKInvoker.class);
 
     private final ConcurrentHashMap<String, Method> methodCache = new ConcurrentHashMap<String, Method>();
-    private final AtomicBoolean once = new AtomicBoolean(false);
 
     @Inject
     public JDKInvoker() {
-        
+
     }
 
     @SuppressWarnings("rawtypes")
@@ -47,16 +47,17 @@ public class JDKInvoker implements Invoker {
 
         Method method = methodCache.get(mkey);
         if (method == null) {
-            if (once.compareAndSet(false, true)) {
-                method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
-                //                logger.info(String.format("search method:%s", methodName));
+            logger.info(String.format("method:%s args:%s", methodName, JSON.toJSONString(mParamsType)));
+            method = RMethodUtils.searchMethod(implClass, methodName, mParamsType);
+            if (method != null) {
                 methodCache.putIfAbsent(mkey, method);
             }
         }
 
         if (method == null) {
-            throw new NoImplClassException(msg.getDefineClass().getName());
+            throw new NoImplMethodException(implClass.getName(), methodName);
         }
+
         Object target = GuiceDI.getInstance(ServiceInfosHolder.class).getOjbectFromClass(implClass.getName());
 
         Object retval = null;

@@ -9,7 +9,7 @@ public interface Hello {
 
     String say(String name) throws Exception;
 
-    String auth(User u);
+    String hi(int i);
 
     List<String> getall(User u);
 

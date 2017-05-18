@@ -22,10 +22,8 @@ public class ClientBeanTest {
             u.setAge(12);
             u.setName("nana");
             u.setStart(new Date());
-            System.out.println("result: " + hello.auth(u));
             System.out.println("");
             u.setName("lua");
-            System.out.println("result: " + hello.auth(u));
             System.out.println("");
         } catch (Exception e) {
             e.printStackTrace();

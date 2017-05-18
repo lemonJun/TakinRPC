@@ -35,8 +35,6 @@ public class CGlibInvoker implements Invoker {
 
     private final ConcurrentHashMap<String, Tuple<Object, FastMethod>> map = new ConcurrentHashMap<String, Tuple<Object, FastMethod>>();
 
-    private final AtomicBoolean once = new AtomicBoolean(false);
-
     @Inject
     public CGlibInvoker() {
     }
@@ -61,9 +59,9 @@ public class CGlibInvoker implements Invoker {
             String mkey = String.format("%s_%s", implClass.getSimpleName(), msg.getMethod());
             Tuple<Object, FastMethod> classmethod = map.get(mkey);
             if (classmethod == null) {
-                if (once.compareAndSet(false, true)) {
-                    Object target = fastClazz.newInstance();
-                    FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
+                Object target = fastClazz.newInstance();
+                FastMethod method = fastClazz.getMethod(msg.getMethod(), msg.getmParamsTypes());
+                if (method != null) {
                     map.put(mkey, new Tuple<Object, FastMethod>(target, method));
                 }
             }

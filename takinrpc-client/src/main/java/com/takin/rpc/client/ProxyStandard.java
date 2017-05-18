@@ -68,7 +68,7 @@ public class ProxyStandard extends AbstractInvocationHandler {
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                logger.info(String.format("taskcount:%d completecount:%d", executor.getTaskCount(), executor.getCompletedTaskCount()));
+                //                logger.info(String.format("taskcount:%d completecount:%d", executor.getTaskCount(), executor.getCompletedTaskCount()));
             }
         }, 1000, 2000, TimeUnit.MILLISECONDS);
     }
