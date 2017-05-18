@@ -22,7 +22,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {
         try {
             Stopwatch watch = Stopwatch.createStarted();
-            
+
             RemotingContext context = new RemotingContext(ctx, msg);
             GlobalContext.getSingleton().setThreadLocal(context);
 
@@ -31,7 +31,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
                 result = invoker.invoke(msg);
             }
             msg.setResultVal(result);
-            logger.info(String.format("server invoke 4use:%s", watch.toString()));
+            //            logger.info(String.format("server invoke 4use:%s", watch.toString()));
         } catch (Exception e) {
             logger.error("netty server invoke error", e);
             throw e;

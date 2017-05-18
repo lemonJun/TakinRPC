@@ -66,7 +66,7 @@ public class JDKInvoker implements Invoker {
             method.setAccessible(true);
             retval = method.invoke(target, args);
         }
-        logger.info(String.format("jdk invoke use:%s", watch.toString()));
+        //        logger.info(String.format("jdk invoke use:%s", watch.toString()));
         return retval;
     }
 
