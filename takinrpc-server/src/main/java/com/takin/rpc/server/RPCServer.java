@@ -21,7 +21,6 @@ import com.takin.rpc.server.registry.ServerRegistry;
  * @date  2017年5月9日 上午11:51:48
  * @see 
  */
-
 public class RPCServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RPCServer.class);
@@ -161,7 +160,7 @@ public class RPCServer {
     public RPCContext getContext() {
         return context;
     }
-
+    
     private void initDI() {
         try {
             GuiceDI.init();

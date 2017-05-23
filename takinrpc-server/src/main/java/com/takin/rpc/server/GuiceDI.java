@@ -1,5 +1,7 @@
 package com.takin.rpc.server;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -9,8 +11,12 @@ public class GuiceDI {
 
     private static Injector injector;
 
+    public static final AtomicBoolean once = new AtomicBoolean(false);
+
     public static void init() {
-        injector = Guice.createInjector(new BindingModel());
+        if (once.compareAndSet(false, true)) {
+            injector = Guice.createInjector(new BindingModel());
+        }
     }
 
     public static <T> T getInstance(Class<T> type) {
