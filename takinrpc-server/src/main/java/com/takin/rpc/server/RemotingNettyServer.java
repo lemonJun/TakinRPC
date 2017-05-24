@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +15,7 @@ import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.takin.emmet.reflect.GenericsUtils;
+import com.takin.emmet.util.CustomThreadFactory;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
 import com.takin.rpc.remoting.codec.KyroMsgEncoder;
@@ -47,9 +46,9 @@ public class RemotingNettyServer extends AbstractService {
     @Inject
     public RemotingNettyServer(final NettyServerConfig serverconfig) {
         bootstrap = new ServerBootstrap();
-        bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads());
-        ExecutorService executor = Executors.newCachedThreadPool();
-        workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads(), executor);
+        bossGroup = new NioEventLoopGroup(serverconfig.getSelectorThreads(), new CustomThreadFactory("boss"));
+        //        ExecutorService executor = Executors.newCachedThreadPool();
+        workerGroup = new NioEventLoopGroup(serverconfig.getWorkerThreads(), new CustomThreadFactory("worker"));
         respScheduler = new ScheduledThreadPoolExecutor(1);
         this.serverconfig = serverconfig;
     }

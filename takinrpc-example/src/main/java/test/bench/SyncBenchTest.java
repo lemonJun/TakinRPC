@@ -13,7 +13,7 @@ import test.Hello;
 
 public class SyncBenchTest {
 
-    private static final RateLimiter limit = RateLimiter.create(5000.0);
+    private static final RateLimiter limit = RateLimiter.create(4000.0);
 
     public static void main(String[] args) {
         try {
@@ -29,7 +29,7 @@ public class SyncBenchTest {
                 System.out.println(i + " ...");
             }
 
-            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+            Executors.newScheduledThreadPool(2).scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     System.out.println(String.format("total:%d succ:%s fail:%s", total.get(), succ.get(), fail.get()));

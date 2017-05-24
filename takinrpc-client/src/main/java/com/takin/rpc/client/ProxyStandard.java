@@ -111,19 +111,20 @@ public class ProxyStandard extends AbstractInvocationHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("request: %s", JSON.toJSONString(message)));
             }
-            //             message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
 
             if (sync) {
                 RemotingNettyClient.getInstance().invokeASync(address, message, 2000, callback);
                 return null;
             }
-            Future<Object> fu = executor.submit(new InvokeThread(address, message));
-            Object result = fu.get();
+            message = RemotingNettyClient.getInstance().invokeSync(address, message, 2000);
+            
+            //            Future<Object> fu = executor.submit(new InvokeThread(address, message));
+            //            Object result = fu.get();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("response: %s", JSON.toJSONString(message)));
             }
             //            logger.info(String.format("invoke sync use:%s", watch.toString()));
-            return result;
+            return message.getResultVal();
         } catch (Exception e) {
             logger.error("invoke error", e);
             throw e;

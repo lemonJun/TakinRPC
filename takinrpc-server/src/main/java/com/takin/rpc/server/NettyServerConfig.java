@@ -36,10 +36,10 @@ public class NettyServerConfig {
 
     private boolean usezk = false;
     private String zkhosts = "";
-
-    private int workerThreads = 32;
+    private int selectorThreads = 2;
+    private int workerThreads = Runtime.getRuntime().availableProcessors() * 2;
     private int callbackExecutorThreads = 1;
-    private int selectorThreads = 4;
+
     private int onewaySemaphoreValue = 256;
     private int asyncSemaphoreValue = 64;
     private int channelMaxIdleTimeSeconds = 120;

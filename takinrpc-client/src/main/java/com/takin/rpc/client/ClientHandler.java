@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 import com.takin.rpc.remoting.netty4.ResponseFuture;
 
@@ -37,6 +36,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<RemotingProtocol>
             }
             //            logger.info(String.format("put resopnse use:%s pad:%d", responseFuture.getWatch().toString(), (System.currentTimeMillis() - start)));
         }
+        //        logger.info(String.format("%s", Thread.currentThread().getName()));
         RemotingNettyClient.responseTable.remove(message.getOpaque());
     }
 

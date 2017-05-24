@@ -1,7 +1,6 @@
 package com.takin.rpc.client;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -10,13 +9,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.takin.emmet.util.CustomThreadFactory;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.codec.KyroMsgDecoder;
@@ -83,7 +82,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             }
         });
 
-        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), Executors.newFixedThreadPool(1));
+        group = new NioEventLoopGroup(nettyClientConfig.getWorkerThreads(), new CustomThreadFactory("client"));
 
         start();
     }
@@ -180,6 +179,7 @@ public class RemotingNettyClient extends RemotingAbstract {
         if (channel != null && channel.isActive()) {
             try {
                 RemotingProtocol proto = invokeSyncImpl(channel, message, timeout);
+                //                logger.info(String.format("%s", Thread.currentThread().getName()));
                 //                logger.info(String.format("invokesync use:%s", watch.toString()));
                 return proto;
             } catch (Exception e) {
