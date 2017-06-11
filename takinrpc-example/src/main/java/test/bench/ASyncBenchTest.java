@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -19,7 +17,7 @@ import com.takin.rpc.client.ProxyFactory;
 import test.Hello;
 
 public class ASyncBenchTest {
-
+    
     private static final RateLimiter limit = RateLimiter.create(5000.0);
 
     private static ExecutorService sendexecutor = Executors.newFixedThreadPool(1);

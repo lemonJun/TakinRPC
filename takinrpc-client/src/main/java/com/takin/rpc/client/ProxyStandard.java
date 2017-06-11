@@ -147,5 +147,4 @@ class InvokeThread implements Callable<Object> {
         RemotingProtocol msg = RemotingNettyClient.getInstance().invokeSync(address, message, 3000);
         return msg.getResultVal();
     }
-
 }

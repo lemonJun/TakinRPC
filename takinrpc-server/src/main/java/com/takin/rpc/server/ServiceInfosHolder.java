@@ -1,6 +1,7 @@
 package com.takin.rpc.server;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,11 +25,14 @@ public class ServiceInfosHolder {
 
     private final Multimap<String, SessionBean> serviceimplmap = ArrayListMultimap.create();
 
+    private final HashMap<Class<?>, Class<?>> classMap = new HashMap<Class<?>, Class<?>>();
+
     @Inject
     private ServiceInfosHolder() {
         ServiceInfos serviceInfos = GuiceDI.getInstance(Scaner.class).getContractInfo();
         if (serviceInfos != null && CollectionUtil.isNotEmpty(serviceInfos.getSessionBeanList())) {
             for (SessionBean bean : serviceInfos.getSessionBeanList()) {
+                logger.info(bean.getDefineName() + "-->" + bean.getImplClass().getCls().getName());
                 serviceimplmap.put(bean.getDefineName(), bean);
             }
         }
@@ -46,16 +50,22 @@ public class ServiceInfosHolder {
             return implClass;
         }
 
+        if (classMap.get(defineClass) != null) {
+            return classMap.get(defineClass);
+        }
+
         Collection<SessionBean> beans = serviceimplmap.get(defineClass.getName());
         if (CollectionUtil.isNotEmpty(beans)) {
             Iterator<SessionBean> beanite = beans.iterator();
             if (beans.size() == 1) {
                 SessionBean bean = beanite.next();
+                classMap.put(defineClass, bean.getImplClass().getCls());
                 return bean.getImplClass().getCls();
             } else {
                 while (beanite.hasNext()) {
                     SessionBean bean = beanite.next();
                     if (bean.isDefaultimpl()) {
+                        classMap.put(defineClass, bean.getImplClass().getCls());
                         return bean.getImplClass().getCls();
                     }
                 }

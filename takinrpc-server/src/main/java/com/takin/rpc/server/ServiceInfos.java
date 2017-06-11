@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
  * 
  */
 public class ServiceInfos {
-
+    
     private List<SessionBean> sessionBeanList;
 
     public ServiceInfos() {

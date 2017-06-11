@@ -37,7 +37,6 @@ public class Scaner {
 
     @Inject
     private Scaner() {
-
     }
 
     /**
@@ -69,7 +68,6 @@ public class Scaner {
      */
     private void scan(DynamicClassLoader classLoader) throws Exception {
         List<String> jarPathList = classLoader.getJarList();
-
         for (String jpath : jarPathList) {
             //            logger.info("scan jar at:" + jpath);
             Set<Class<?>> clsSet = null;

@@ -7,7 +7,7 @@ import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.GlobalContext;
 import com.takin.rpc.remoting.netty4.RemotingContext;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
-import com.takin.rpc.server.invoke.Invoker;
+import com.takin.rpc.server.invoke.JDKInvoker;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,7 +16,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProtocol> {
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private final Invoker invoker = GuiceDI.getInstance(Invoker.class);
+    private final JDKInvoker invoker = GuiceDI.getInstance(JDKInvoker.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {
@@ -31,7 +31,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProt
                 result = invoker.invoke(msg);
             }
             msg.setResultVal(result);
-            //            logger.info(String.format("server invoke 4use:%s thread:%s", watch.toString(), Thread.currentThread().getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("server invoke 4use:%s thread:%s", watch.toString(), Thread.currentThread().getName()));
+            }
         } catch (Exception e) {
             logger.error("netty server invoke error", e);
             throw e;

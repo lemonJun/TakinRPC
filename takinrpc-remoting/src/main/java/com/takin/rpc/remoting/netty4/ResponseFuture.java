@@ -2,9 +2,7 @@ package com.takin.rpc.remoting.netty4;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 
@@ -20,7 +18,7 @@ public class ResponseFuture {
     private final long beginTimestamp = System.currentTimeMillis();
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     // 保证回调的callback方法至多至少只被执行一次
-    private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
+    //    private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
     private volatile boolean sendRequestOK = true;
     private volatile RemotingProtocol<?> message;
     private volatile Throwable cause;
@@ -63,20 +61,15 @@ public class ResponseFuture {
 
     //为什么这一步操作这么耗时???
     public RemotingProtocol<?> waitResponse() throws InterruptedException {
-        //        logger.debug(String.format("start wait use:%s", watch.toString()));
         countDownLatch.await(timeoutNanos, TimeUnit.NANOSECONDS);
-        //        LockSupport.parkUntil(timeoutMillis);
-        //        logger.debug(String.format("finsh wait use:%s", watch.toString()));
 
         return this.message;
     }
 
     @SuppressWarnings("rawtypes")
     public void putResponse(final RemotingProtocol message) {
-        //        logger.info("currentthread:" + Thread.currentThread().getName());
         this.message = message;
         this.countDownLatch.countDown();
-        //        logger.info(String.format("put response down:%s", watch.toString()));
     }
 
     public long getBeginTimestamp() {

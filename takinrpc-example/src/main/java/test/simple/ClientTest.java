@@ -16,11 +16,11 @@ public class ClientTest {
             System.out.println("");
             System.out.println("result: " + hello.hi(2));
             System.out.println("");
-            System.out.println("result: " + hello.hi(2));
-            System.out.println("");
-            System.out.println("result: " + hello.hi(2));
-            System.out.println("");
-            System.out.println("result: " + hello.hi(2));
+            //            System.out.println("result: " + hello.hi(2));
+            //            System.out.println("");
+            //            System.out.println("result: " + hello.hi(2));
+            //            System.out.println("");
+            //            System.out.println("result: " + hello.hi(2));
             System.out.println("");
             // 
         } catch (Exception e) {

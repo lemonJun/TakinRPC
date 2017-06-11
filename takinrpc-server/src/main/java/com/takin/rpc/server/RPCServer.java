@@ -108,7 +108,7 @@ public class RPCServer {
     */
     private void initService() throws Exception {
         try {
-            DynamicClassLoader classloader = GuiceDI.getInstance(DynamicClassLoader.class);
+            final DynamicClassLoader classloader = GuiceDI.getInstance(DynamicClassLoader.class);
             classloader.addFolder(context.getServicePath(), context.getLibPath());
             GuiceDI.getInstance(Scaner.class).scanInfo(classloader);
             GuiceDI.getInstance(FilterChain.class).init();
@@ -160,7 +160,7 @@ public class RPCServer {
     public RPCContext getContext() {
         return context;
     }
-    
+
     private void initDI() {
         try {
             GuiceDI.init();

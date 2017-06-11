@@ -12,7 +12,7 @@ import com.takin.rpc.remoting.InvokeCallback;
 
 public class ClientTest {
 
-    private static final RateLimiter limit = RateLimiter.create(2000.0);
+    private static final RateLimiter limit = RateLimiter.create(5000.0);
     private static AtomicInteger total = new AtomicInteger();
     private static AtomicInteger succ = new AtomicInteger();
     private static AtomicInteger fail = new AtomicInteger();

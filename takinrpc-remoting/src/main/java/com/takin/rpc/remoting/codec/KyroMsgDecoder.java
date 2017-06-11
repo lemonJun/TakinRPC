@@ -28,7 +28,7 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        //        Stopwatch watch = Stopwatch.createStarted();
+        Stopwatch watch = Stopwatch.createStarted();
 
         //        Input input = new Input(new ByteBufInputStream(in));
         //        Object result = kryo.readClassAndObject(input);
@@ -53,7 +53,8 @@ public class KyroMsgDecoder extends ByteToMessageDecoder {
 
         RemotingProtocol o = convertToObject(body); //将byte数据转化为我们需要的对象
         out.add(o);
-        //        logger.info("kyro decoder use:" + watch.toString());
+        if (logger.isDebugEnabled())
+            logger.debug("kyro decoder use:" + watch.toString());
     }
 
     private RemotingProtocol convertToObject(byte[] body) {

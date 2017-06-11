@@ -22,8 +22,8 @@ public class SyncBenchTest {
             AtomicInteger fail = new AtomicInteger();
             PropertyConfigurator.configure("conf/log4j.properties");
             final Hello hello = ProxyFactory.create(Hello.class, "test", null, null);
-            hello.say("a");
-            hello.say("a");
+            System.out.println(hello.say("a"));
+            System.out.println(hello.say("a"));
             for (int i = 2; i >= 0; i--) {
                 Thread.sleep(1000);
                 System.out.println(i + " ...");

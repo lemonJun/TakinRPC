@@ -46,8 +46,7 @@ public class DynamicClassLoader extends SecureClassLoader {
     }
 
     @Inject
-    public DynamicClassLoader() {
-
+    private DynamicClassLoader() {
     }
 
     /**

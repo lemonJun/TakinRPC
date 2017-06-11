@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.takin.emmet.concurrent.SemaphoreOnce;
 import com.takin.rpc.remoting.InvokeCallback;
 import com.takin.rpc.remoting.exception.RemotingConnectException;
@@ -53,11 +54,11 @@ public abstract class RemotingAbstract {
      */
     @SuppressWarnings("rawtypes")
     protected RemotingProtocol invokeSyncImpl(final Channel channel, final RemotingProtocol message, int timeout) throws Exception, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
-        //        final Stopwatch watch = Stopwatch.createStarted();
+        final Stopwatch watch = Stopwatch.createStarted();
         try {
             final ResponseFuture responseFuture = new ResponseFuture(message.getOpaque(), timeout);
             //            logger.info("currentthread:" + Thread.currentThread().getName());
-            //            logger.debug(String.format("create respnse future use:%s", watch.toString()));
+            logger.debug(String.format("create respnse future use:%s", watch.toString()));
             responseTable.put(message.getOpaque(), responseFuture);
             //            logger.debug(String.format("put future use:%s", watch.toString()));
             channel.writeAndFlush(message).addListener(new ChannelFutureListener() {
@@ -80,11 +81,11 @@ public abstract class RemotingAbstract {
                     //                    logger.debug(String.format("operation no use:%s", watch.toString()));
                 }
             });
-            //            logger.info("currentthread:" + Thread.currentThread().getName());
-
-            //            logger.debug(String.format("finish listener use:%s", watch.toString()));
+            if (logger.isDebugEnabled())
+                logger.debug(String.format("finish listener use:%s", watch.toString()));
             RemotingProtocol result = responseFuture.waitResponse();
-            //            logger.info(String.format("wait response use:%s", watch.toString()));
+            if (logger.isDebugEnabled())
+                logger.debug(String.format("wait response use:%s", watch.toString()));
             if (null == result) {
                 if (responseFuture.isSendRequestOK()) {
                     throw new Exception("request timeout ");
@@ -92,7 +93,8 @@ public abstract class RemotingAbstract {
                     throw new Exception("request error");
                 }
             }
-            //            logger.info(String.format("invoke sync,use:%s", watch.toString()));
+            if (logger.isDebugEnabled())
+                logger.debug(String.format("invoke sync,use:%s", watch.toString()));
             return result;
         } catch (Exception e) {
             throw e;

@@ -41,6 +41,7 @@ public class JDKInvoker implements Invoker {
         Class<?> implClass = GuiceDI.getInstance(ServiceInfosHolder.class).getImplClass(msg.getDefineClass(), msg.getImplClass());
 
         if (implClass == null) {
+            logger.error(String.format("define:%s impl:%s", msg.getDefineClass(), msg.getImplClass()));
             throw new NoImplClassException(msg.getDefineClass().getName());
         }
         String mkey = String.format("%s_%s", implClass.getSimpleName(), methodName);
@@ -66,7 +67,8 @@ public class JDKInvoker implements Invoker {
             method.setAccessible(true);
             retval = method.invoke(target, args);
         }
-        //        logger.info(String.format("jdk invoke use:%s", watch.toString()));
+        if (logger.isDebugEnabled())
+            logger.debug(String.format("jdk invoke use:%s", watch.toString()));
         return retval;
     }
 

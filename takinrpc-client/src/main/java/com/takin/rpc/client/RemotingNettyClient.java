@@ -105,7 +105,7 @@ public class RemotingNettyClient extends RemotingAbstract {
             public void run() {
                 scanResponseTable(3000);
             }
-        }, 5 * 1000, 5000, TimeUnit.MILLISECONDS);
+        }, 1000, 1000, TimeUnit.MILLISECONDS);
     }
 
     private final Lock lockChannelTables = new ReentrantLock();
@@ -276,6 +276,12 @@ public class RemotingNettyClient extends RemotingAbstract {
      * 此超时时间已经考虑了 任务的默认等待时间
      */
     public void scanResponseTable(long timeout) {
+
+        Iterator<Entry<String, ChannelWrapper>> channeit = channelTables.entrySet().iterator();
+        while (channeit.hasNext()) {
+            logger.info("outbuffer:" + channeit.next().getValue().getChannel().unsafe().outboundBuffer().size());
+        }
+
         Iterator<Entry<Long, ResponseFuture>> it = responseTable.entrySet().iterator();
         while (it.hasNext()) {
             Entry<Long, ResponseFuture> next = it.next();

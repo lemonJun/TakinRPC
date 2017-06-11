@@ -30,7 +30,7 @@ public class HelloImpl implements Hello {
     public String hi(int i) {
         return i * i + "";
     }
-    
+
     public static void main(String[] args) {
         PropertyConfigurator.configure("conf/log4j.properties");
         Method[] methods = HelloImpl.class.getDeclaredMethods();
