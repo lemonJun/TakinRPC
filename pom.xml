@@ -122,6 +122,12 @@
 				<version>${javassist.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.esotericsoftware</groupId>
+				<artifactId>reflectasm</artifactId>
+				<version>1.11.3</version>
+			</dependency>
+
 			<!-- log framework start -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -145,7 +151,7 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>

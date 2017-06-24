@@ -3,6 +3,7 @@ package test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -15,6 +16,8 @@ public class HelloImpl implements Hello {
 
     @Override
     public String say(String name) throws Exception {
+        TimeUnit.MILLISECONDS.sleep(20);
+        System.out.println(Thread.currentThread().getName());
         return "hello  111" + name;
     }
 

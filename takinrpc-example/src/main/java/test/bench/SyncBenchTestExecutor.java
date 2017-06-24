@@ -13,7 +13,7 @@ import test.Hello;
 
 public class SyncBenchTestExecutor {
 
-    private static final RateLimiter limit = RateLimiter.create(5000.0);
+    private static final RateLimiter limit = RateLimiter.create(50000.0);
 
     public static void main(String[] args) {
         try {
@@ -36,7 +36,7 @@ public class SyncBenchTestExecutor {
                 }
             }, 1000, 1000, TimeUnit.MILLISECONDS);
 
-            Executors.newFixedThreadPool(2).submit(new Runnable() {
+            Executors.newFixedThreadPool(5).submit(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {

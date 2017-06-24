@@ -279,7 +279,7 @@ public class RemotingNettyClient extends RemotingAbstract {
 
         Iterator<Entry<String, ChannelWrapper>> channeit = channelTables.entrySet().iterator();
         while (channeit.hasNext()) {
-            logger.info("outbuffer:" + channeit.next().getValue().getChannel().unsafe().outboundBuffer().size());
+            //            logger.info("outbuffer:" + channeit.next().getValue().getChannel().unsafe().outboundBuffer().size());
         }
 
         Iterator<Entry<Long, ResponseFuture>> it = responseTable.entrySet().iterator();

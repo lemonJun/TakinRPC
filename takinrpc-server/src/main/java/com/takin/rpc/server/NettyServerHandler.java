@@ -7,7 +7,8 @@ import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.GlobalContext;
 import com.takin.rpc.remoting.netty4.RemotingContext;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
-import com.takin.rpc.server.invoke.JDKInvoker;
+import com.takin.rpc.server.invoke.Invoker;
+import com.takin.rpc.server.invoke.ReflectAsmInvoker;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,7 +17,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingProtocol> {
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private final JDKInvoker invoker = GuiceDI.getInstance(JDKInvoker.class);
+    private final Invoker invoker = GuiceDI.getInstance(ReflectAsmInvoker.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingProtocol msg) throws Exception {

@@ -48,6 +48,12 @@
 			<artifactId>emmet</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.esotericsoftware</groupId>
+			<artifactId>reflectasm</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

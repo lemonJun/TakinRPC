@@ -1,7 +1,6 @@
 package com.takin.rpc.server.invoke;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Singleton;
 
