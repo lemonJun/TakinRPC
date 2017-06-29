@@ -1,9 +1,9 @@
 package com.takin.rpc.remoting.util;
 
-import io.netty.channel.Channel;
-
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+
+import io.netty.channel.Channel;
 
 /**
  * 工具类方法而已

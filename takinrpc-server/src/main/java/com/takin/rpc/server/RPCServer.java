@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.Service.Listener;
 import com.google.common.util.concurrent.Service.State;
-import com.google.inject.Singleton;
 import com.takin.emmet.file.PropertiesHelper;
 import com.takin.rpc.server.registry.ServerRegistry;
 

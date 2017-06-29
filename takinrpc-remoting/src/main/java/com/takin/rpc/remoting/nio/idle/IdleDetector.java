@@ -2,12 +2,9 @@ package com.takin.rpc.remoting.nio.idle;
 
 import com.takin.emmet.concurrent.ConcurrentHashSet;
 import com.takin.emmet.util.SystemClock;
-import com.takin.rpc.remoting.netty4.ResponseFuture;
 import com.takin.rpc.remoting.nio.channel.NioChannel;
 import com.takin.rpc.remoting.nio.channel.NioChannelImpl;
 import com.takin.rpc.remoting.nio.config.NioConfig;
-import com.takin.rpc.remoting.nio.handler.Futures;
-import com.takin.rpc.remoting.nio.handler.IoFutureListener;
 
 /**
  * @author Robert HG (254963746@qq.com) on 1/24/16.

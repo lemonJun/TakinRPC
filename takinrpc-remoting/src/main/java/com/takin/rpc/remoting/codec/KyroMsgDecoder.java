@@ -14,7 +14,6 @@ import com.google.common.base.Stopwatch;
 import com.takin.rpc.remoting.netty4.RemotingProtocol;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 

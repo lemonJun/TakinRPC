@@ -6,8 +6,6 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.google.common.util.concurrent.RateLimiter;
 
-import rx.Observable;
-
 public class ClientTest {
 
     public static void main(String[] args) {
