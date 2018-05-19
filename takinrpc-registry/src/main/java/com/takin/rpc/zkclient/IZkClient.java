@@ -17,6 +17,10 @@
 
 package com.takin.rpc.zkclient;
 
+import java.io.Closeable;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
@@ -28,10 +32,6 @@ import com.takin.rpc.zkclient.exception.ZkInterruptedException;
 import com.takin.rpc.zkclient.exception.ZkNoNodeException;
 import com.takin.rpc.zkclient.exception.ZkNodeExistsException;
 import com.takin.rpc.zkclient.exception.ZkTimeoutException;
-
-import java.io.Closeable;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * zookeeper client wrapper

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.takin.emmet.collection.CollectionUtil;
+import com.takin.emmet.util.CollectionUtil;
 import com.takin.rpc.zkclient.IZkChildListener;
 import com.takin.rpc.zkclient.ZkClient;
 import com.takin.rpc.zkclient.ZkUtils;

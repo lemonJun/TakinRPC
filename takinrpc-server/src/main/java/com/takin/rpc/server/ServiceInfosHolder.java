@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.takin.emmet.collection.CollectionUtil;
+import com.takin.emmet.util.CollectionUtil;
 import com.takin.rpc.server.ServiceInfos.SessionBean;
 
 import io.netty.util.internal.StringUtil;

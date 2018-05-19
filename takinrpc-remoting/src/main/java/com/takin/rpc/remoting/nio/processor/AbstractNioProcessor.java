@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.takin.emmet.collection.CollectionUtil;
+import com.takin.emmet.util.CollectionUtil;
 import com.takin.emmet.util.SystemClock;
 import com.takin.rpc.remoting.NamedThreadFactory;
 import com.takin.rpc.remoting.nio.NioException;

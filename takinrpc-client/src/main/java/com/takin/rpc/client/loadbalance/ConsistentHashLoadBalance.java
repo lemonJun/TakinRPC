@@ -3,8 +3,8 @@ package com.takin.rpc.client.loadbalance;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.takin.emmet.algo.ConsistentHashSelector;
 import com.takin.emmet.string.StringUtil;
+import com.takin.emmet.util.ConsistentHashSelector;
 
 /**
  * 一致性hash算法
